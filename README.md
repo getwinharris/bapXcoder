@@ -1,4 +1,4 @@
-# qwen3VL-Local-CLI
+# bapXcoder
 
 A command-line interface tool for running the Qwen3VL model locally using llama.cpp. This project includes the model file directly in the repository for completely offline usage.
 
