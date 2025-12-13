@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bapX Coder - AI-Powered IDE</title>
+    <title>bapXcoder - IDE</title>
     <meta name="description" content="Advanced AI-powered IDE with offline capabilities">
     <meta name="theme-color" content="#7c5cff">
     <link rel="manifest" href="/manifest.json">
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⬡</text></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.40.0/min/vs/loader.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -187,6 +189,16 @@
         .input-btn.active {
             background: #7c5cff;
             color: white;
+        }
+
+        .input-btn i {
+            font-size: 1.1em;
+            line-height: 1;
+        }
+
+        .logo-icon {
+            margin-right: 8px;
+            color: #7c5cff;
         }
 
         .terminal-container {
@@ -496,6 +508,103 @@
         .git-indicator.dirty {
             background: #ff6b6b;
         }
+
+        .editor-container {
+            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2d2d40;
+            height: 200px;
+        }
+
+        .editor-header {
+            background: linear-gradient(90deg, #1a1a25 0%, #14141c 100%);
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            color: #aaa;
+            border-bottom: 1px solid #2d2d40;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .editor-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .editor-filename {
+            color: #7c5cff;
+            font-size: 0.8rem;
+            margin-right: 10px;
+        }
+
+        .editor-btn {
+            background: #2d2d40;
+            color: #a0a0c0;
+            border: 1px solid #444460;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .editor-btn:hover {
+            background: #7c5cff;
+            color: white;
+            border-color: #7c5cff;
+        }
+
+        #editor {
+            flex: 1;
+        }
+
+        .editor-toolbar {
+            background: linear-gradient(90deg, #1a1a25 0%, #14141c 100%);
+            padding: 5px 10px;
+            border-bottom: 1px solid #2d2d40;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toolbar-buttons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toolbar-btn {
+            background: #2d2d40;
+            color: #a0a0c0;
+            border: 1px solid #444460;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toolbar-btn:hover {
+            background: #7c5cff;
+            color: white;
+            border-color: #7c5cff;
+        }
+
+        .current-file-name {
+            color: #7c5cff;
+            font-size: 0.75rem;
+            margin-left: 10px;
+            font-family: monospace;
+        }
     </style>
     <script>
         // Register service worker for PWA functionality
@@ -514,7 +623,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>bapX Coder</h1>
+            <h1><i class="fas fa-code logo-icon"></i>bapX Coder</h1>
             <div class="git-section">
                 <button class="git-btn" id="gitConnectBtn">Connect to Git</button>
                 <button class="git-btn" id="gitRepoBtn">Git Repo</button>
@@ -538,26 +647,55 @@
                     <input type="text" id="chatInput" placeholder="Ask me anything about your code, describe an image, or search the web...">
                     <div class="input-buttons">
                         <div class="tooltip">
-                            <button class="input-btn" id="webSearchBtn" title="Web Search">🌐</button>
+                            <button class="input-btn" id="webSearchBtn" title="Web Search"><i class="fas fa-globe"></i></button>
                             <span class="tooltiptext">Web Search</span>
                         </div>
                         <div class="tooltip">
-                            <button class="input-btn" id="attachBtn" title="Attach File">📎</button>
+                            <button class="input-btn" id="attachBtn" title="Attach File"><i class="fas fa-paperclip"></i></button>
                             <span class="tooltiptext">Attach File</span>
                         </div>
                         <div class="tooltip">
-                            <button class="input-btn" id="micBtn" title="Voice Input">🎤</button>
+                            <button class="input-btn" id="micBtn" title="Voice Input"><i class="fas fa-microphone"></i></button>
                             <span class="tooltiptext">Voice Input</span>
                         </div>
                         <input type="file" id="fileInput" class="file-input" accept="image/*">
-                        <button class="input-btn" id="chatSendBtn" title="Send">➤</button>
+                        <button class="input-btn" id="chatSendBtn" title="Send"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
                 <div id="webSearchContainer" class="web-search-container">
                     <input type="text" id="webSearchInput" class="web-search-input" placeholder="Enter search query...">
                     <button class="web-search-btn" id="webSearchExecuteBtn">Search</button>
                 </div>
+                <button id="continueBtn" class="continue-btn">Continue Reasoning</button>
             </div>
+
+            <!-- Editor Toolbar with Run Button -->
+            <div class="editor-toolbar" id="editorToolbar" style="display: none;">
+                <div class="toolbar-buttons">
+                    <button class="toolbar-btn" id="runFileBtn" title="Run Current File">
+                        <i class="fas fa-play"></i> Run
+                    </button>
+                    <button class="toolbar-btn" id="saveFileBtn" title="Save File">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                    <button class="toolbar-btn" id="openFileBtn" title="Open File">
+                        <i class="fas fa-folder-open"></i> Open
+                    </button>
+                    <span class="current-file-name" id="currentFileName">No file selected</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="editor-container">
+            <div class="editor-header">
+                <div>Code Editor</div>
+                <div class="editor-controls">
+                    <span class="editor-filename" id="editorFilename">No file selected</span>
+                    <button class="editor-btn" id="editorSaveBtn">Save</button>
+                    <button class="editor-btn" id="editorOpenBtn">Open</button>
+                </div>
+            </div>
+            <div id="editor" style="width:100%; height:calc(100% - 40px); border:1px solid #444;"></div>
         </div>
 
         <div class="todo-container">
@@ -673,6 +811,22 @@
             }
 
             addMessage(data.response, 'ai');
+
+            // Hide continue button if response seems complete
+            const continueBtn = document.getElementById('continueBtn');
+            if (data.response.length > 1000) { // If response is long
+                // Check if response seems complete
+                const endsWithPunctuation = /[\.\!\?]\s*$/.test(data.response);
+                const endsWithCodeBlock = /```\s*$/.test(data.response);
+
+                if (endsWithPunctuation || endsWithCodeBlock) {
+                    continueBtn.style.display = 'none';
+                } else {
+                    continueBtn.style.display = 'block';
+                }
+            } else {
+                continueBtn.style.display = 'none';
+            }
         });
 
         socket.on('command_output', function(data) {
@@ -907,10 +1061,39 @@
                 // Show thinking message
                 const thinkingMsg = addMessage('bapX Coder is thinking...', 'ai', true);
 
+                // Prepare conversation history to send - get all messages
+                const messages = document.querySelectorAll('#chatMessages .message');
+                const conversationHistory = [];
+
+                messages.forEach(messageElement => {
+                    const isUser = messageElement.classList.contains('user-message');
+                    const isAi = messageElement.classList.contains('ai-message');
+
+                    if (isUser || isAi) {
+                        // Extract content text from the div inside the message
+                        const contentDiv = messageElement.querySelector('div:not(.message-header)');
+                        if (contentDiv) {
+                            const content = contentDiv.textContent.trim();
+
+                            // Determine role based on the CSS classes
+                            const role = isUser ? 'user' : 'assistant';
+
+                            if (content && content !== 'bapX Coder is thinking...') { // Don't include thinking messages
+                                conversationHistory.push({
+                                    role: role,
+                                    content: content
+                                });
+                            }
+                        }
+                    }
+                });
+
                 // Prepare data to send
                 const dataToSend = {
                     message: message,
-                    hasFile: !!attachedFile
+                    hasFile: !!attachedFile,
+                    continue_reasoning: true, // Enable continue reasoning
+                    history: conversationHistory.slice(-10) // Send only last 10 exchanges to avoid context overflow
                 };
 
                 if (attachedFile) {
@@ -927,6 +1110,62 @@
                 chatInput.placeholder = "Ask me anything about your code, describe an image, or search the web...";
             }
         }
+
+        // Continue Reasoning functionality
+        const continueBtn = document.getElementById('continueBtn');
+        continueBtn.addEventListener('click', function() {
+            // Get all messages in the chat
+            const messages = document.querySelectorAll('#chatMessages .message');
+            const conversationHistory = [];
+
+            messages.forEach(messageElement => {
+                let role = 'unknown';
+                let content = '';
+
+                const isUser = messageElement.classList.contains('user-message');
+                const isAi = messageElement.classList.contains('ai-message');
+
+                if (isUser) {
+                    role = 'user';
+                    content = messageElement.textContent;
+                } else if (isAi) {
+                    role = 'assistant';
+                    content = messageElement.textContent;
+                }
+
+                // Extract content text from the div inside the message
+                const contentDiv = messageElement.querySelector('div:not(.message-header)');
+                if (contentDiv) {
+                    content = contentDiv.textContent.trim();
+                }
+
+                if (role !== 'unknown' && content.trim()) {
+                    conversationHistory.push({
+                        role: role,
+                        content: content
+                    });
+                }
+            });
+
+            // Get the original query that was cut off
+            const lastUserMessage = conversationHistory.filter(item => item.role === 'user').pop();
+            const lastAiMessage = conversationHistory.filter(item => item.role === 'assistant').pop();
+
+            if (lastUserMessage) {
+                socket.emit('continue_reasoning', {
+                    history: conversationHistory,
+                    query: lastUserMessage.content
+                });
+
+                // Show that we're continuing
+                continueBtn.textContent = 'Continuing...';
+                continueBtn.disabled = true;
+                setTimeout(() => {
+                    continueBtn.textContent = 'Continue Reasoning';
+                    continueBtn.disabled = false;
+                }, 2000);
+            }
+        });
 
         function executeCommand() {
             const command = terminalInput.value.trim();
@@ -966,11 +1205,292 @@
             if (isThinking) {
                 return messageDiv;
             }
+
+            // Show continue reasoning button if the AI message is long (suggesting possible truncation)
+            if (sender === 'ai' && message.length > 1000) { // If response is longer than 1000 characters
+                // Check if this is likely a complete response by looking for ending patterns
+                const endsWithPunctuation = /[\.\!\?]\s*$/.test(message);
+                const endsWithCodeBlock = /```\s*$/.test(message);
+
+                if (!endsWithPunctuation && !endsWithCodeBlock) {
+                    // Likely incomplete response, show continue button
+                    document.getElementById('continueBtn').style.display = 'block';
+                }
+            } else if (sender === 'ai') {
+                // For shorter responses, check if they seem complete
+                document.getElementById('continueBtn').style.display = 'none';
+            }
         }
 
         function updateStatus(msg) {
             statusEl.textContent = msg;
         }
+
+        // Initialize Monaco Editor
+        let editor;
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.40.0/min/vs' }});
+
+        require(['vs/editor/editor.main'], function() {
+            editor = monaco.editor.create(document.getElementById('editor'), {
+                value: '// Welcome to bapX Coder - AI-Powered IDE\n// Select a file to edit or start coding here',
+                language: 'python',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                fontSize: 14,
+                minimap: { enabled: true },
+                scrollbar: {
+                    vertical: 'auto',
+                    horizontal: 'auto'
+                },
+                lineNumbers: 'on',
+                roundedSelection: false,
+                scrollBeyondLastLine: false,
+                readOnly: false
+            });
+
+            // Update editor's language based on file extension
+            window.setEditorLanguage = function(filename) {
+                if (filename) {
+                    document.getElementById('editorFilename').textContent = filename;
+                    const ext = filename.split('.').pop().toLowerCase();
+                    let lang = 'plaintext';
+
+                    // Map common extensions to languages
+                    const extMap = {
+                        'py': 'python', 'js': 'javascript', 'ts': 'typescript',
+                        'html': 'html', 'css': 'css', 'json': 'json',
+                        'java': 'java', 'cpp': 'cpp', 'c': 'c',
+                        'go': 'go', 'rs': 'rust', 'vue': 'vue',
+                        'jsx': 'javascript', 'tsx': 'typescript'
+                    };
+
+                    if (extMap[ext]) {
+                        lang = extMap[ext];
+                    }
+
+                    editor.updateOptions({ language: lang });
+                }
+            };
+
+            // Set initial filename
+            window.setEditorLanguage('welcome.py');
+        });
+
+        // Plan/Ask/Edit mode controls
+        const modeButtons = {
+            plan: document.getElementById('planModeBtn'),
+            ask: document.getElementById('askModeBtn'),
+            edit: document.getElementById('editModeBtn')
+        };
+
+        let currentMode = 'ask'; // Default to ask mode
+
+        function setMode(mode) {
+            currentMode = mode;
+
+            // Update button styles
+            Object.keys(modeButtons).forEach(key => {
+                if (key === mode) {
+                    modeButtons[key].style.background = '#7c5cff';
+                    modeButtons[key].style.color = 'white';
+                } else {
+                    modeButtons[key].style.background = '#2d2d40';
+                    modeButtons[key].style.color = '#a0a0c0';
+                }
+            });
+
+            // Change behavior based on mode
+            if (mode === 'plan') {
+                chatInput.placeholder = "Describe your coding plan or project structure...";
+            } else if (mode === 'ask') {
+                chatInput.placeholder = "Ask me anything about your code, describe an image, or search the web...";
+            } else if (mode === 'edit') {
+                chatInput.placeholder = "Describe the code changes you want me to make...";
+            }
+        }
+
+        // Set up mode buttons
+        modeButtons.plan?.addEventListener('click', () => setMode('plan'));
+        modeButtons.ask?.addEventListener('click', () => setMode('ask'));
+        modeButtons.edit?.addEventListener('click', () => setMode('edit'));
+
+        // Set initial mode
+        setMode('ask');
+
+        // Terminal command approval system
+        function requestCommandApproval(command) {
+            return new Promise((resolve) => {
+                if (confirm(`Execute command?\n\n$ ${command}\n\nPress OK to approve or Cancel to deny.`)) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            });
+        }
+
+        // Update terminal handling to use approval system
+        async function executeCommand() {
+            const command = terminalInput.value.trim();
+            if (!command) return;
+
+            // Show command in terminal
+            terminalOutput.innerHTML += `\n$ ${command}\n`;
+
+            // Request approval if in edit mode
+            if (currentMode === 'edit') {
+                const approved = await requestCommandApproval(command);
+                if (!approved) {
+                    terminalOutput.innerHTML += `Command '${command}' denied by user.\n`;
+                    terminalInput.value = '';
+                    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                    return;
+                }
+            }
+
+            terminalInput.value = '';
+
+            // Send to backend
+            socket.emit('execute_command', { command: command });
+
+            // Auto-scroll to bottom
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        }
+
+        // Override the terminal send button handler
+        document.getElementById('terminalSendBtn').addEventListener('click', executeCommand);
+        document.getElementById('terminalInput').addEventListener('keypress', async function(e) {
+            if (e.key === 'Enter') {
+                executeCommand();
+            }
+        });
+
+        // File operations
+        document.getElementById('editorOpenBtn').addEventListener('click', function() {
+            // In a real implementation, this would open a file dialog
+            alert('File opening functionality would open a project file browser in a real implementation.');
+        });
+
+        document.getElementById('editorSaveBtn').addEventListener('click', function() {
+            if (editor) {
+                const content = editor.getValue();
+                // In a real implementation, this would save the file
+                socket.emit('save_file', {
+                    filename: document.getElementById('editorFilename').textContent,
+                    content: content
+                });
+                updateStatus('File save requested');
+            }
+        });
+
+        // Add mode buttons to the header if they don't exist
+        const gitSection = document.querySelector('.git-section');
+        if (gitSection) {
+            const modeControls = document.createElement('div');
+            modeControls.style.display = 'flex';
+            modeControls.style.gap = '8px';
+            modeControls.style.marginLeft = '15px';
+
+            const planBtn = document.createElement('button');
+            planBtn.id = 'planModeBtn';
+            planBtn.className = 'git-btn';
+            planBtn.textContent = 'Plan';
+            planBtn.title = 'Planning Mode';
+
+            const askBtn = document.createElement('button');
+            askBtn.id = 'askModeBtn';
+            askBtn.className = 'git-btn';
+            askBtn.textContent = 'Ask';
+            askBtn.title = 'Ask Mode';
+
+            const editBtn = document.createElement('button');
+            editBtn.id = 'editModeBtn';
+            editBtn.className = 'git-btn';
+            editBtn.textContent = 'Edit';
+            editBtn.title = 'Editing Mode';
+
+            modeControls.appendChild(planBtn);
+            modeControls.appendChild(askBtn);
+            modeControls.appendChild(editBtn);
+
+            gitSection.appendChild(modeControls);
+        }
+
+        // Editor toolbar functionality
+        const editorToolbar = document.getElementById("editorToolbar");
+        const runFileBtn = document.getElementById("runFileBtn");
+        const saveFileBtn = document.getElementById("saveFileBtn");
+        const openFileBtn = document.getElementById("openFileBtn");
+        const currentFileName = document.getElementById("currentFileName");
+
+        // Variables to track editor state
+        let currentFilePath = null;
+        let currentFileContent = "";
+
+        // Show editor toolbar
+        editorToolbar.style.display = "flex";
+
+        // Run file functionality
+        runFileBtn.addEventListener("click", function() {
+            if (!currentFilePath) {
+                alert("Please open a file first before running");
+                return;
+            }
+
+            // Determine the appropriate command based on file extension
+            let command = "";
+            const ext = currentFilePath.split(".").pop().toLowerCase();
+
+            if (ext === "py") {
+                command = `python "${currentFilePath}"`;
+            } else if (ext === "js") {
+                command = `node "${currentFilePath}"`;
+            } else if (ext === "sh" || ext === "bash") {
+                command = `bash "${currentFilePath}"`;
+            } else {
+                command = `python -c "exec(open(\\"${currentFilePath}\\").read())"`;
+            }
+
+            // Send command to backend
+            socket.emit("execute_command", { command: command });
+            updateStatus(`Running: ${currentFilePath}`);
+        });
+
+        // Save file functionality
+        saveFileBtn.addEventListener("click", function() {
+            if (!currentFilePath) {
+                alert("Please open a file first before saving");
+                return;
+            }
+
+            // Get content from editor
+            let content = "";
+            if (typeof editor !== 'undefined' && editor) {
+                content = editor.getValue();
+            } else {
+                content = "Content from editor";
+            }
+
+            socket.emit("save_file", {
+                filename: currentFilePath,
+                content: content
+            });
+            updateStatus(`Saving: ${currentFilePath}`);
+        });
+
+        // Open file functionality
+        openFileBtn.addEventListener("click", function() {
+            const filePath = prompt("Enter file path to open:");
+            if (filePath) {
+                currentFilePath = filePath;
+                currentFileName.textContent = `Current: ${currentFilePath}`;
+
+                // Load file content from backend
+                socket.emit("open_file", {
+                    filename: currentFilePath
+                });
+                updateStatus(`Loading: ${currentFilePath}`);
+            }
+        });
     </script>
 </body>
 </html>
