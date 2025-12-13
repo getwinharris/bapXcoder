@@ -238,7 +238,7 @@ The project includes a `config.ini` file that allows you to set default values f
 
 ### Common Issues
 
-1. **Model file not found**: The model will be downloaded automatically when first run, or you can run `python download_model.py` manually. The complete setup requires ~8.76GB: model weights (~5-6GB) + configurations + tools. The model will be saved as Qwen3VL-8B-Instruct-Q8_0.gguf.
+1. **Model file not found**: The model will be downloaded automatically when first run, or you can run `python download_model.py` manually. The complete setup requires ~9GB: model weights (~8.76GB) + configurations + tools. The model will be saved as Qwen3VL-8B-Instruct-Q8_0.gguf.
 
 2. **Dependencies not found**: Install all dependencies using `pip install -r requirements.txt`.
 
@@ -281,6 +281,117 @@ This project differs from cloud-based development tools in several key ways:
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
+## Acknowledgments
+
+This project was inspired by the innovative work at continue.dev, Google's CLI tools, Google Antigravity, and similar Qwen-based coding interfaces. We appreciate their contributions to AI-assisted development tools.
+
+## About the Qwen3VL Model
+
+The Qwen3-VL model powering bapX Coder is the most powerful vision-language model in its generation, delivering comprehensive upgrades across the board:
+
+- **Superior text understanding & generation**, deeper visual processing capabilities
+- **Visual Agent**: Operates PC/mobile GUIs—recognizes elements, understands functionality
+- **Visual Coding Boost**: Generates Draw.io/HTML/CSS/JS from images
+- **Advanced Spatial Perception**: Judges object positions, viewpoints, and occlusions; provides stronger 2D grounding and enables 3D grounding
+- **Long Context & Video Understanding**: Native 256K context, expandable to 1M; handles books and hours-long videos
+- **Upgraded Visual Recognition**: Broader, higher-quality pretraining is able to "recognize everything"—celebrities, anime, products, landmarks, flora/fauna
+- **Expanded OCR**: Supports 32 languages (up from 19); robust in low light, blur, and tilt; better with rare/ancient characters and jargon
+- **Text Understanding**: Enhanced capabilities for complex document analysis
+
+The Qwen3VL model is available as an open-source model from Alibaba Cloud. These files are compatible with llama.cpp, Ollama, and other GGUF-based tools, supporting inference on CPU, NVIDIA GPU (CUDA), Apple Silicon (Metal), Intel GPUs (SYCL), and more. You can mix precisions for optimal performance.
+
+Thank you to Alibaba for making this powerful multimodal model available as open source, enabling projects like bapX Coder to provide advanced AI capabilities locally without cloud dependencies.
+
+## bapX Coder IDE Capabilities Powered by Qwen3-VL & Project-Based Architecture
+
+Our IDE leverages the powerful Qwen3-VL model combined with our architectural innovations to provide unique capabilities:
+
+### Advanced Multimodal AI Assistance
+- **Enhanced Vision Processing**: Using Qwen3-VL's advanced visual capabilities to analyze UI mockups, diagrams, charts, and screenshots for code generation
+- **OCR Excellence**: Leveraging 32 language support and robust text extraction to process images of documents, handwritten notes, and code snippets
+- **Spatial Understanding**: The AI can comprehend layouts, positioning, and visual relationships in your design materials
+
+### Project-Based Memory System
+- **Persistent Context**: Unlike cloud IDEs that lose session context, bapX Coder maintains project-specific memory with `.bapXcoder` directories
+- **File-Level Association**: Todos, session trees, and conversation history are tied to individual projects, maintaining focused context
+- **Cross-File Understanding**: The AI remembers relationships between files in your project, providing better contextual suggestions
+- **Long-Term Learning**: The system improves its understanding of your codebase over time within each project
+
+### CLI-Integrated Development
+- **Terminal Integration**: Direct command execution within the project context for Git, build tools, and testing
+- **Repo-Wide Awareness**: The AI understands the entire project structure and can suggest commands based on context
+- **File System Navigation**: Direct integration with the project file structure for seamless development workflows
+
+### Advanced Task Management
+- **Project-Specific Todos**: Tasks are stored per project in `todo.json`, maintaining focus on current objectives
+- **Contextual Suggestions**: AI provides task suggestions based on actual code and project structure
+- **Progress Tracking**: Session trees track file usage and activity for better project management
+
+### Web Research & Retrieval Augmentation
+- **Integrated Research**: Web search capabilities within the IDE for up-to-date information retrieval
+- **Contextual Results**: Search results are processed by the local AI to provide relevant, project-specific responses
+- **Research Continuation**: The "Continue Reasoning" feature allows extended research sessions beyond context windows
+- **Local Processing**: All retrieved information is processed locally, maintaining privacy and security
+
+### Offline-Capable, Quota-Free Operation
+- **No Usage Limits**: Unlike cloud services with token quotas, bapX Coder runs entirely locally using your hardware resources
+- **Complete Privacy**: All code, conversations, and project data remain on your machine
+- **Always Available**: No internet connection required after initial setup; works regardless of service availability
+- **Cost-Effective**: No recurring costs once the system is set up
+
+## Contributions Welcome
+
+This is an open-source project and contributions are welcome! Anyone can contribute to bapX Coder development. If you find this project useful, consider contributing:
+
+- Code improvements and bug fixes
+- Feature enhancements
+- Documentation updates
+- Model optimization suggestions
+- Community support
+
+Feel free to fork the repository, make changes, and submit pull requests. Together we can make bapX Coder even better!
+
+## Developed By
+
+**Harris** ([getwinharris](https://github.com/getwinharris))
+Founder, Bapx Media Hub
+Coimbatore, Tamil Nadu, India
+
+### Connect With Me
+- 📘 [Facebook](https://www.facebook.com/getwinharris/)
+- 🐦 [Twitter/X](https://twitter.com/getwinharris)
+- 💼 [LinkedIn](https://www.linkedin.com/in/getwinharris/)
+- 🐙 [GitHub](https://github.com/getwinharris)
+- 📷 [Instagram](https://www.instagram.com/getwinharris/)
+
+### Follow Bapx Media Hub
+- 📺 [YouTube](https://www.youtube.com/@bapxmediahub)
+- 📷 [Instagram](https://www.instagram.com/bapxmediahub/)
+- 📘 [Facebook](https://www.facebook.com/bapxmediahub/)
+
 ## Disclaimer
 
 This tool is for educational and personal use. Be mindful of the computational resources required to run large language models. Respect the original model's licensing terms.
+
+## Qwen3-VL Model Capabilities
+
+The Qwen3-VL model powering bapX Coder has extensive multimodal capabilities:
+
+- **Visual Agent**: Can operate PC/mobile GUIs by recognizing elements and understanding functionality
+- **Visual Coding Boost**: Generates Draw.io/HTML/CSS/JS from images
+- **Advanced Spatial Perception**: Judges object positions, viewpoints, and occlusions
+- **Long Context & Video Understanding**: Native 256K context, expandable to 1M
+- **Expanded OCR**: Supports 32+ languages with robust performance in difficult conditions
+- **Text Understanding**: Advanced document analysis and comprehension
+
+## Contributions Welcome
+
+This project welcomes contributors! If you'd like to help enhance bapX Coder:
+
+- Report bugs or suggest features
+- Contribute code improvements
+- Help with documentation
+- Share your use cases and feedback
+- Improve multimodal processing capabilities
+
+Join our community to make bapX Coder even better!
