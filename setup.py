@@ -4,14 +4,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="qwen3vl-local-cli",
-    version="0.1.0",
+    name="bapxcoder",
+    version="1.0.0",
     author="Harris",
     author_email="getwinharris@gmail.com",
-    description="A CLI tool to run Qwen3VL model locally",
+    description="A standalone AI-powered IDE with integrated CLI and offline model",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/getwinharris/qwen3VL-Local-CLI",
+    url="https://github.com/getwinharris/bapXcoder",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -30,7 +30,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "qwen3vl-cli=qwen3VL_local_cli:main",
+            "bapxcoder=qwen3VL_local_cli:main",
         ],
     },
 )
