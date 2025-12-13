@@ -8,12 +8,13 @@ import sys
 import os
 from pathlib import Path
 import configparser
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_socketio import SocketIO, emit
 import subprocess
 import threading
 import json
 import time
+import webbrowser
 
 def load_config():
     """Load configuration from config.ini file"""
@@ -183,7 +184,7 @@ class Qwen3VLRunner:
 
     def run_interactive(self, max_tokens=512):
         """Run in interactive chat mode"""
-        print("\nbapXcoder Interactive Mode")
+        print("\nbapX Coder Interactive Mode")
         print("Type 'quit' or 'exit' to exit")
         print("Type 'help' for commands")
         print("-" * 40)
@@ -215,7 +216,7 @@ class Qwen3VLRunner:
                 # Build the full prompt with history
                 full_prompt = self._build_prompt(user_input)
 
-                print("\nbapXcoder: ", end="", flush=True)
+                print("\nbapX Coder: ", end="", flush=True)
 
                 # Generate response with streaming
                 response = self.model(
@@ -315,11 +316,271 @@ def start_ide(args):
     @app.route('/')
     def index():
         return render_template('index.html')
+
+    @app.route('/manifest.json')
+    def manifest():
+        return send_from_directory('templates', 'manifest.json', mimetype='application/manifest+json')
+
+    @app.route('/sw.js')
+    def sw():
+        return send_from_directory('templates', 'sw.js', mimetype='application/javascript')
+
+    @app.route('/favicon.ico')
+    def favicon():
+        # Return a simple icon for the favicon
+        from flask import Response
+        import base64
+        # This is a simple data URI for a text-based favicon
+        svg_data = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👨‍💻</text></svg>'
+        svg_b64 = base64.b64encode(svg_data.encode()).decode()
+        data_uri = f"data:image/svg+xml;base64,{svg_b64}"
+        # For now, return a simple response - in a full app this would serve actual icon
+        from flask import make_response
+        response = make_response("Favicon placeholder", 200)
+        response.headers['Content-Type'] = 'image/x-icon'
+        return response
     
     @socketio.on('connect')
     def handle_connect():
         print('Client connected')
+        # Initialize project session for this client
+        session_id = request.sid
         emit('status', {'msg': 'Connected to bapXcoder IDE'})
+        # Send initial project state
+        emit('project_state', {
+            'current_project': get_current_project_path(),
+            'todo_list': get_todo_list(),
+            'git_status': get_git_status()
+        })
+
+    @socketio.on('set_project')
+    def handle_set_project(data):
+        """Set the current project path for this session"""
+        project_path = data.get('project_path', '')
+        if project_path and os.path.isdir(project_path):
+            # Create bapXcoder directory structure in the project
+            bapxcoder_dir = os.path.join(project_path, '.bapXcoder')
+            if not os.path.exists(bapxcoder_dir):
+                os.makedirs(bapxcoder_dir)
+
+            # Create default todo.json if it doesn't exist
+            todo_file = os.path.join(bapxcoder_dir, 'todo.json')
+            if not os.path.exists(todo_file):
+                with open(todo_file, 'w') as f:
+                    json.dump([], f)
+
+            # Create default sessiontree.json if it doesn't exist
+            sessiontree_file = os.path.join(bapxcoder_dir, 'sessiontree.json')
+            if not os.path.exists(sessiontree_file):
+                # Initialize with basic session structure
+                session_tree = {
+                    'project_path': project_path,
+                    'session_timestamp': time.time(),
+                    'session_id': request.sid,
+                    'files_opened': [],
+                    'current_session': {
+                        'start_time': time.time(),
+                        'last_activity': time.time(),
+                        'active_files': []
+                    }
+                }
+                with open(sessiontree_file, 'w') as f:
+                    json.dump(session_tree, f, indent=2)
+
+            # Create project-specific storage
+            session_data = {
+                'project_path': project_path,
+                'session_id': request.sid
+            }
+            update_session_project(request.sid, session_data)
+            emit('project_state', {
+                'current_project': project_path,
+                'todo_list': get_todo_list(project_path),
+                'git_status': get_git_status(project_path)
+            })
+            emit('status', {'msg': f'Project set to: {project_path}. bapXcoder configuration created.'})
+        else:
+            emit('status', {'msg': 'Invalid project path'})
+
+    @socketio.on('add_todo')
+    def handle_add_todo(data):
+        """Add a todo item to the project"""
+        project_path = get_session_project_path(request.sid)
+        if project_path:
+            todo_item = data.get('todo', '')
+            add_todo_item(project_path, todo_item)
+            emit('todo_update', {'todo_list': get_todo_list(project_path)})
+        else:
+            emit('status', {'msg': 'No project set'})
+
+    @socketio.on('remove_todo')
+    def handle_remove_todo(data):
+        """Remove a todo item from the project"""
+        project_path = get_session_project_path(request.sid)
+        if project_path:
+            todo_index = data.get('index', -1)
+            remove_todo_item(project_path, todo_index)
+            emit('todo_update', {'todo_list': get_todo_list(project_path)})
+
+            # Update session tree with todo removal
+            update_session_tree(project_path, {
+                'last_todo_removed': time.time(),
+                'total_todos': len(get_todo_list(project_path))
+            })
+        else:
+            emit('status', {'msg': 'No project set'})
+
+    @socketio.on('add_todo')
+    def handle_add_todo(data):
+        """Add a todo item to the project"""
+        project_path = get_session_project_path(request.sid)
+        if project_path:
+            todo_item = data.get('todo', '')
+            add_todo_item(project_path, todo_item)
+
+            # Update session tree with todo addition
+            update_session_tree(project_path, {
+                'last_todo_added': time.time(),
+                'total_todos': len(get_todo_list(project_path))
+            })
+
+            emit('todo_update', {'todo_list': get_todo_list(project_path)})
+        else:
+            emit('status', {'msg': 'No project set'})
+
+    def get_session_project_path(session_id):
+        """Get the project path for a session"""
+        # In a real implementation, this would look up in a session store
+        # For now, return a default path
+        return get_current_project_path()
+
+    def update_session_project(session_id, project_data):
+        """Update session with project data"""
+        # In a real implementation, this would store in a session store
+        pass
+
+    def get_current_project_path():
+        """Get the default project path"""
+        return os.getcwd()
+
+    def get_todo_list(project_path=None):
+        """Get the todo list for a project"""
+        # In a real implementation, this would read from project-specific storage
+        if not project_path:
+            project_path = get_current_project_path()
+        todo_file = os.path.join(project_path, '.bapXcoder', 'todo.json')
+        if os.path.exists(todo_file):
+            try:
+                with open(todo_file, 'r') as f:
+                    return json.load(f)
+            except:
+                pass
+        return []
+
+    def update_session_tree(project_path, update_data):
+        """Update the session tree with new activity"""
+        if not project_path:
+            project_path = get_current_project_path()
+        sessiontree_file = os.path.join(project_path, '.bapXcoder', 'sessiontree.json')
+
+        # Load existing session tree
+        session_tree = {}
+        if os.path.exists(sessiontree_file):
+            try:
+                with open(sessiontree_file, 'r') as f:
+                    session_tree = json.load(f)
+            except:
+                session_tree = {}
+
+        # Update with new data
+        for key, value in update_data.items():
+            session_tree[key] = value
+
+        # Update the current session's last activity
+        if 'current_session' in session_tree:
+            session_tree['current_session']['last_activity'] = time.time()
+        else:
+            session_tree['current_session'] = {
+                'start_time': time.time(),
+                'last_activity': time.time(),
+                'active_files': []
+            }
+
+        # Save back to file
+        with open(sessiontree_file, 'w') as f:
+            json.dump(session_tree, f, indent=2)
+
+    def add_todo_item(project_path, todo_item):
+        """Add a todo item to the project"""
+        if not os.path.exists(os.path.join(project_path, '.bapXcoder')):
+            os.makedirs(os.path.join(project_path, '.bapXcoder'))
+
+        todo_file = os.path.join(project_path, '.bapXcoder', 'todo.json')
+        todo_list = get_todo_list(project_path)
+        todo_list.append({
+            'id': len(todo_list),
+            'text': todo_item,
+            'completed': False,
+            'timestamp': time.time()
+        })
+
+        with open(todo_file, 'w') as f:
+            json.dump(todo_list, f)
+
+    def remove_todo_item(project_path, index):
+        """Remove a todo item from the project"""
+        todo_file = os.path.join(project_path, '.bapXcoder', 'todo.json')
+        todo_list = get_todo_list(project_path)
+
+        if 0 <= index < len(todo_list):
+            del todo_list[index]
+            # Update IDs after removal
+            for i, item in enumerate(todo_list):
+                item['id'] = i
+
+            with open(todo_file, 'w') as f:
+                json.dump(todo_list, f)
+
+    def get_git_status(project_path=None):
+        """Get git status for project"""
+        if not project_path:
+            project_path = get_current_project_path()
+
+        try:
+            # Check if it's a git repo
+            result = subprocess.run(
+                ['git', 'rev-parse', '--is-inside-work-tree'],
+                cwd=project_path,
+                capture_output=True,
+                text=True
+            )
+            if result.returncode == 0:
+                # Get git status
+                status_result = subprocess.run(
+                    ['git', 'status', '--porcelain'],
+                    cwd=project_path,
+                    capture_output=True,
+                    text=True
+                )
+
+                # Get current branch
+                branch_result = subprocess.run(
+                    ['git', 'branch', '--show-current'],
+                    cwd=project_path,
+                    capture_output=True,
+                    text=True
+                )
+
+                return {
+                    'is_git_repo': True,
+                    'branch': branch_result.stdout.strip() or 'HEAD',
+                    'has_changes': bool(status_result.stdout.strip()),
+                    'changes': status_result.stdout.strip()
+                }
+            else:
+                return {'is_git_repo': False}
+        except Exception:
+            return {'is_git_repo': False}
     
     @socketio.on('disconnect')
     def handle_disconnect():
@@ -354,18 +615,55 @@ def start_ide(args):
         search_prompt = f"Please provide information about: {query}. This is a web search request."
         response = model_runner.run_prompt(search_prompt, args.max_tokens)
         emit('chat_response', {'response': f"Web search results for '{query}':\n\n{response}"})
+
+    @socketio.on('git_oauth')
+    def handle_git_oauth(data):
+        """Handle Git OAuth requests from the frontend"""
+        # For a real implementation, this would start the OAuth flow
+        # For now, we'll just open the GitHub OAuth URL in the user's browser
+        github_auth_url = "https://github.com/login/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=http://localhost:7860/git/callback&scope=repo"
+        emit('chat_response', {'response': f"Opening Git OAuth in your browser. Please complete authentication and return here.\n\nFor security, bapX Coder doesn't store your credentials."})
+
+        # In a real implementation, we would start OAuth flow
+        # webbrowser.open(github_auth_url)  # Commented for security reasons
+
+    @socketio.on('git_repo')
+    def handle_git_repo(data):
+        """Handle Git repository operations"""
+        repo_url = data.get('repo_url', '')
+        action = data.get('action', 'clone')  # clone, pull, push, etc.
+
+        if repo_url:
+            if action == 'clone':
+                response = f"Git repository clone requested: {repo_url}. In a complete implementation, this would clone the repository to your local workspace."
+            else:
+                response = f"Git operation '{action}' requested for: {repo_url}. In a complete implementation, this would perform Git operations."
+        else:
+            response = "Please provide a Git repository URL. Example: https://github.com/username/repository.git"
+
+        emit('chat_response', {'response': response})
     
     @socketio.on('execute_command')
     def handle_execute_command(data):
         """Handle terminal commands from the frontend"""
         command = data.get('command', '')
+        # Get the project path for this session
+        project_path = get_session_project_path(request.sid) or get_current_project_path()
+
+        # Update session tree with command execution
+        update_session_tree(project_path, {
+            'last_command': command,
+            'last_command_time': time.time()
+        })
+
         try:
             result = subprocess.run(
-                command, 
-                shell=True, 
-                capture_output=True, 
+                command,
+                shell=True,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
+                cwd=project_path  # Execute in the project directory
             )
             output = result.stdout if result.returncode == 0 else result.stderr
             emit('command_output', {

@@ -1,19 +1,45 @@
-# bapXcoder
+# bapX Coder - Advanced AI-Powered PWA IDE
 
-A comprehensive AI-powered standalone IDE with integrated CLI, chat interface, code editor, and development tools. This project provides a complete development environment with Qwen3VL model assistance, voice features, and internal terminal access.
+bapX Coder is an advanced, cross-platform PWA (Progressive Web App) Integrated Development Environment featuring the "bapX Coder" AI persona. This comprehensive web-based development environment includes chat interface, voice input/output, image analysis (OCR), web search, Git integration with OAuth, and all necessary tools for local AI development. The project automatically downloads the Qwen3VL model for completely offline usage after setup. Works on Mac, Windows, Linux and mobile devices through any modern web browser.
+
+## Why bapXcoder Exists
+
+Traditional development tools have critical limitations:
+
+• **Cloud IDEs** → quota walls
+• **Web AIs** → session loss
+• **Ollama** → model runs locally, but has no repo-wide awareness
+• **IDE copilots** → partial context, token truncation, silent edits
+
+So bapXcoder is:
+
+• **A deterministic CLI-first dev tool** with inbuilt model without losing repo-level awareness
+• **Local model (Qwen3VL)** never hits quota
+• **"Local ollama models are not automatically connected to the whole repo like CLI"**
+• **Local, quota-free, repo-aware AI IDE** that doesn't require extensions like VSCode
+• **One session for one project** with one todo list for one project on a certain path
+• **Aware of diff to Git Repo** after file updates
 
 ## Features
 
+- **bapX Coder AI Persona**: Advanced AI programming assistant with specialized coding expertise
 - Run Qwen3VL model locally without internet connection (after setup)
 - Interactive chat interface with conversation history
 - Voice input using Speech-to-Text (STT)
 - Voice output with auto-play using Text-to-Speech (TTS)
+- Image analysis and OCR capabilities (with file attachment)
+- Integrated web search functionality
+- Git OAuth integration for repository access
+- Support for Git operations (clone, pull, push, etc.)
 - Integrated CLI/terminal emulator for command execution
 - File system access and project management
 - Single prompt execution
 - Configurable parameters (temperature, max tokens, etc.)
 - Complete offline functionality - no cloud dependencies after setup
 - Auto-download of model from Hugging Face during initial setup
+- Cross-platform PWA (Progressive Web App) - works on Mac, Windows, Linux, and mobile
+- Installable on any device like a native application
+- Modern dark theme with purple accent color
 - Rich text editor for code editing with syntax highlighting
 - Integrated development tools for AI-assisted coding
 
@@ -30,16 +56,18 @@ A comprehensive AI-powered standalone IDE with integrated CLI, chat interface, c
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/getwinharris/qwen3VL-Local-IDE.git
+   git clone https://github.com/getwinharris/bapXcoder.git
    # OR using SSH:
-   git clone git@github.com:getwinharris/qwen3VL-Local-IDE.git
-   cd qwen3VL-Local-IDE
+   git clone git@github.com:getwinharris/bapXcoder.git
+   cd bapXcoder
    ```
 
 2. Install the required dependencies:
    ```bash
    pip install -r requirements.txt
    ```
+
+   **Note**: bapX Coder is a web-based PWA application that runs in your browser. No native installers (.exe, .dmg, etc.) are required. Once installed, simply run the server and access the IDE through any modern web browser.
 
    For GPU acceleration:
    - **NVIDIA GPU (CUDA)**:
@@ -78,18 +106,21 @@ Unlike cloud-based AI services, this project automatically downloads the Qwen3VL
 - ✅ **No internet connection required during inference** (after setup)
 - ✅ **Complete privacy - all processing happens locally** (after setup)
 - ✅ **One-time download during installation, unlimited local usage**
+- ✅ **PWA functionality works offline after initial setup**
 
 The model file is downloaded from Hugging Face once during setup, eliminating the need for cloud APIs or ongoing compute charges during inference.
 
 ## Usage
 
-The IDE runs as a web application accessible through your browser:
+bapX Coder runs as a web-based PWA accessible through your browser on any platform:
 
 ```bash
-python qwen3VL_local_ide.py
+python qwen3VL_local_cli.py
 ```
 
 Then open your browser to `http://localhost:7860`
+
+After accessing the application in your browser, you can install it as a PWA on your device (Mac, Windows, Linux, or mobile) using your browser's install option for a native app-like experience.
 
 ### Features in the Web Interface:
 - **Chat Panel**: AI-powered conversation with the Qwen3VL model
@@ -101,7 +132,7 @@ Then open your browser to `http://localhost:7860`
 ### Command Line Options
 
 ```bash
-python qwen3VL_local_ide.py [options]
+python qwen3VL_local_cli.py [options]
 ```
 
 - `--model PATH`: Path to the GGUF model file (default: Qwen3VL-8B-Instruct-Q8_0.gguf)
@@ -118,20 +149,27 @@ python qwen3VL_local_ide.py [options]
 
 #### Start the IDE:
 ```bash
-python qwen3VL_local_ide.py
+python qwen3VL_local_cli.py
 ```
 
 #### Start the IDE on a custom port:
 ```bash
-python qwen3VL_local_ide.py --port 8080
+python qwen3VL_local_cli.py --port 8080
 ```
 
 #### Using GPU Acceleration:
 ```bash
-python qwen3VL_local_ide.py --gpu-layers 20
+python qwen3VL_local_cli.py --gpu-layers 20
 ```
 
+After starting, open your web browser to `http://localhost:7860` to access the bapX Coder interface.
+
 ## Interactive Features
+
+### bapX Coder AI Assistant
+- Advanced AI programming assistant with specialized coding expertise
+- Context-aware responses based on your project
+- Multi-modal capabilities (can analyze text, code, and attached images)
 
 ### Code Editing
 - Syntax-highlighted editor
@@ -148,11 +186,32 @@ python qwen3VL_local_ide.py --gpu-layers 20
 - Get code suggestions
 - Explain code functionality
 - Debug assistance
+- Image analysis and OCR when files are attached
 
 ### File Management
 - Browse project files
 - Create, edit and delete files
 - Navigate directory structure
+
+### Web Search Integration
+- Built-in web search functionality
+- Get up-to-date information within the chat interface
+- Search results integrated with AI responses
+
+### Git Integration
+- OAuth authentication for Git services
+- Repository cloning and management
+- Git operations (clone, pull, push) from the interface
+
+### Voice Features
+- Speech-to-Text (STT) for voice input
+- Text-to-Speech (TTS) with auto-play for responses
+- Voice command support
+
+### File Attachment
+- Attach images for OCR and analysis
+- Attach code files for review and suggestions
+- Support for multiple file types
 
 ## Configuration File
 
