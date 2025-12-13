@@ -96,19 +96,21 @@ def download_model_with_progress(model_path):
     # Define the model URL (using the canonical Hugging Face URL)
     model_url = "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct-GGUF/resolve/main/Qwen3VL-8B-Instruct-Q8_0.gguf?download=true"
 
-    print(f"Downloading {model_filename} from Hugging Face (~5.8GB)...")
+    print(f"Downloading {model_filename} from Hugging Face (~8.76GB)...")
 
     try:
         # Create temporary file for download
         temp_filename = model_path + ".tmp"
 
         # First, get the file size to show progress
+        print("Connecting to Hugging Face servers...")
         response = requests.head(model_url)
         total_size = int(response.headers.get("content-length", 0))
 
         print(f"Total size: {total_size / (1024**3):.2f} GB")
+        print("Starting download...")
 
-        # Start download with progress bar
+        # Start download with progress bar using proper 65536-byte chunks
         response = requests.get(model_url, stream=True)
         response.raise_for_status()
 
@@ -119,7 +121,7 @@ def download_model_with_progress(model_path):
             unit_scale=True,
             unit_divisor=1024,
         ) as progress_bar:
-            for chunk in response.iter_content(chunk_size=8192):
+            for chunk in response.iter_content(chunk_size=65536):  # 65536-byte chunks as requested
                 if chunk:  # Filter out keep-alive chunks
                     file.write(chunk)
                     progress_bar.update(len(chunk))
@@ -210,21 +212,6 @@ def encode_content(content, encoding_type='utf-8'):
 def decode_content(encoded_content, encoding_type='utf-8'):
 
 
-
-
-
-
-
-
-
-
-
-
-            
-
-
-
-
     """
     Encode content using various encoding schemes
     Supported encodings: utf-8, ascii, base64, hex, etc.
@@ -276,3 +263,36 @@ def decode_content(encoded_content, encoding_type='utf-8'):
                 return content
 
 
+def decode_content(encoded_content, encoding_type='utf-8'):
+    """
+    Decode content from various encoding schemes
+    Supported encodings: utf-8, ascii, base64, hex, etc.
+    """
+    if encoding_type.lower() == 'base64':
+        import base64
+        if isinstance(encoded_content, str):
+            encoded_bytes = encoded_content.encode('ascii')
+        else:
+            encoded_bytes = encoded_content
+        return base64.b64decode(encoded_bytes).decode('utf-8', errors='replace')
+    elif encoding_type.lower() == 'hex':
+        if isinstance(encoded_content, str):
+            return bytes.fromhex(encoded_content).decode('utf-8', errors='replace')
+        return encoded_content.decode('utf-8', errors='replace')
+    elif encoding_type.lower() in ['ascii', 'unicode', 'utf-8']:
+        # For these encodings, just return the content as-is if it's already decoded
+        if isinstance(encoded_content, bytes):
+            return encoded_content.decode('utf-8', errors='replace')
+        return encoded_content
+    else:
+        # For other encodings, try to decode
+        if isinstance(encoded_content, bytes):
+            try:
+                return encoded_content.decode(encoding_type)
+            except (UnicodeDecodeError, LookupError):
+                return encoded_content.decode('utf-8', errors='replace')
+        else:
+            return encoded_content
+
+if __name__ == "__main__":
+    main()

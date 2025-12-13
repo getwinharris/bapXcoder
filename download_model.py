@@ -8,7 +8,7 @@ import sys
 import requests
 from pathlib import Path
 
-def download_file(url, filename, chunk_size=8192):
+def download_file(url, filename, chunk_size=65536):  # Using 65536-byte chunks as requested
     """Download a file from URL with progress indicator"""
     print(f"Downloading {filename} from {url}...")
 
@@ -19,7 +19,7 @@ def download_file(url, filename, chunk_size=8192):
     downloaded_size = 0
 
     with open(filename, 'wb') as file:
-        for chunk in response.iter_content(chunk_size=chunk_size):
+        for chunk in response.iter_content(chunk_size=chunk_size):  # Using 65536-byte chunks
             if chunk:
                 file.write(chunk)
                 downloaded_size += len(chunk)
@@ -38,7 +38,7 @@ def main():
 
     print("bapXcoder Model Download")
     print("=" * 30)
-    print(f"This will download the Qwen3VL model (~5-6GB) to {model_filename}")
+    print(f"This will download the Qwen3VL model (~8.76GB) to {model_filename}")
     print("This is needed for the AI-powered IDE to work offline.")
 
     # Check if model already exists

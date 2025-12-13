@@ -1,6 +1,17 @@
 # bapX Coder - Advanced AI-Powered PWA IDE
 
-bapX Coder is an advanced, cross-platform PWA (Progressive Web App) Integrated Development Environment featuring the "bapX Coder" AI persona. This comprehensive web-based development environment includes chat interface, voice input/output, image analysis (OCR), web search, Git integration with OAuth, and all necessary tools for local AI development. The project automatically downloads the Qwen3VL model for completely offline usage after setup. Works on Mac, Windows, Linux and mobile devices through any modern web browser.
+bapX Coder is an advanced, cross-platform PWA (Progressive Web App) Integrated Development Environment featuring the "bapX Coder" AI persona. This comprehensive multimodal AI-powered development environment includes chat interface, voice input/output, image analysis (OCR), encoding-aware text processing (Base64, ASCII, Unicode, etc.), web search, Git integration with OAuth, and all necessary tools for local AI development. The project automatically downloads the Qwen3VL model for completely offline usage after setup. Works on Mac, Windows, Linux and mobile devices through any modern web browser.
+
+## Advanced Encoding & Internationalization Support
+
+bapX Coder includes comprehensive support for multiple text encodings and international character sets:
+
+- **UTF-8/Unicode Support**: Full support for international characters and symbols
+- **Base64 Encoding/Decoding**: For binary content and data transfer
+- **Hexadecimal Support**: For hex-encoded data processing
+- **ASCII Compatibility**: For legacy systems and safe text handling
+- **Automatic Encoding Detection**: Detects and handles various file encodings automatically
+- **International Character Sets**: Processes text in multiple languages without issues
 
 ## Why bapXcoder Exists
 
@@ -34,6 +45,11 @@ So bapXcoder is:
 - Integrated CLI/terminal emulator for command execution
 - File system access and project management
 - Single prompt execution
+- **Multimodal Processing**: Leverages Qwen3-VL's advanced vision-language capabilities for image analysis, OCR, and visual understanding
+- **Full Encoding Support**: Handles various text encodings (UTF-8, ASCII, Base64, Hex, etc.) for international and specialized text processing
+- **Project-Based Memory**: Each project gets its own dedicated memory space with `.bapXcoder` directory containing `todo.json` and `sessiontree.json`
+- **Web Research Integration**: Built-in web search capabilities with information retrieval and synthesis
+- **8.76GB Qwen3-VL Model**: Powerful multimodal model with 8.76GB size, providing advanced AI capabilities for coding, vision, and reasoning
 - Configurable parameters (temperature, max tokens, etc.)
 - Complete offline functionality - no cloud dependencies after setup
 - Auto-download of model from Hugging Face during initial setup
@@ -49,7 +65,7 @@ So bapXcoder is:
 2. A system capable of running large language models (sufficient RAM, and optionally GPU)
 3. Git (to clone the repository)
 4. Internet connection (for initial model download during setup)
-5. Sufficient disk space (~8.76GB for complete setup: model weights + configurations + tools)
+5. Sufficient disk space (~9GB for complete setup: model weights (~8.76GB) + configurations + tools)
 6. Web browser (for the GUI interface)
 
 ## Installation
@@ -368,6 +384,96 @@ Coimbatore, Tamil Nadu, India
 - 📺 [YouTube](https://www.youtube.com/@bapxmediahub)
 - 📷 [Instagram](https://www.instagram.com/bapxmediahub/)
 - 📘 [Facebook](https://www.facebook.com/bapxmediahub/)
+
+## Testing
+
+The bapX Coder project includes comprehensive testing tools:
+
+- **Agent Tests**: Automated tests in `tests/test_agent.py` that validate core IDE functionality
+- **User Tests**: Simulated user interactions in `tests/user_test.py` that verify user experience workflows
+- **Integration Tests**: Coming soon to validate the complete AI-assisted development workflow
+
+To run tests:
+```bash
+cd tests/
+python test_agent.py
+python user_test.py
+```
+
+## Standalone Installation with Automatic Setup
+
+The bapX Coder installation wizard will guide you through a complete setup process:
+
+1. **Environment Check**: Validates Python, dependencies, and system requirements
+2. **Model Download**: Automatically downloads the 8.76GB Qwen3VL model once
+3. **Configuration**: Sets up the project-based memory system with `.bapXcoder` directories
+4. **Verification**: Tests the complete AI pipeline before first use
+
+The installation only downloads the Qwen3-VL-8B-Instruct-Q8_0.gguf model (8.76GB) and no additional models beyond this.
+
+## Development Tools Comparison
+
+bapX Coder stands apart from other development environments:
+
+| Feature | bapX Coder | Continue.dev | Antigravity IDE |
+|---------|-------------|----------------|------------------|
+| **Operation** | Fully offline after setup | Hybrid (local LLMs) | Cloud-based |
+| **Cost** | Free forever | Subscription | Pay-per-use |
+| **Privacy** | All data stays local | Local processing | Data goes to cloud |
+| **Model** | Single 8.76GB Qwen3-VL model | Multiple configurable models | Various cloud models |
+| **AI Capability** | Vision, OCR, text, code | Text completion | Text completion |
+| **Connectivity** | Works completely offline | Needs cloud API keys | Requires internet |
+| **Customization** | Project-based memory system | VS Code extensions | Browser-based |
+
+## Capabilities via Qwen3-VL Model
+
+The Qwen3-VL model enables these unique capabilities in bapX Coder:
+
+- **Multimodal Understanding**: Process both text and images in the same context
+- **Advanced OCR**: Recognize text from images in 32+ languages
+- **Visual GUI Analysis**: Understand and interpret UI designs from screenshots
+- **Code Generation from Visuals**: Create code based on UI screenshots or Draw.io diagrams
+- **Document Understanding**: Process complex documents with embedded images
+- **Spatial Reasoning**: Understand positional relationships in images
+
+## Advanced CLI Integration
+
+The integrated command line interface provides:
+
+- **Project Context Awareness**: Commands execute within project-specific contexts
+- **AI-Enhanced Commands**: Use AI to formulate appropriate CLI commands
+- **File Operation Integration**: Direct file operations from the chat interface
+- **Git Integration**: Full Git operations with AI-powered commit messages
+- **System Integration**: Seamless integration with platform-specific tools
+
+## Project-Based Memory System
+
+Each project gets its own `.bapXcoder` directory with:
+
+- `todo.json`: Project-specific task management
+- `sessiontree.json`: Activity tracking and session management
+- Automatic organization of project-specific context
+
+## Web Research Integration
+
+- **Integrated Search**: Built-in web search within the IDE
+- **AI-Synthesized Results**: AI processes and summarizes search results
+- **Context-Aware Research**: Research stays within project context
+- **Source Attribution**: Automatic citation of information sources
+
+## Voice and Accessibility Features
+
+- **Speech-to-Text**: Voice input for hands-free coding
+- **Text-to-Speech**: Auto-playing responses for accessibility
+- **Voice Commands**: Natural language interface to IDE features
+
+## Encoding Support
+
+Full support for:
+- UTF-8, ASCII, Base64, Hex, and other encodings
+- International character sets
+- Automatic encoding detection
+- Binary file handling with proper encoding
 
 ## Disclaimer
 
