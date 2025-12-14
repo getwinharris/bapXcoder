@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bapXcoder Admin Panel</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⬡</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f13 0%, #1a1a25 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            background: linear-gradient(90deg, #1a1a25 0%, #14141c 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #2d2d40;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            color: #7c5cff;
+            font-size: 1.8rem;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 20px;
+            background: linear-gradient(90deg, #1a1a25 0%, #14141c 100%);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #2d2d40;
+        }
+
+        .admin-nav a {
+            text-decoration: none;
+            color: #a0a0c0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .admin-nav a:hover, .admin-nav a.active {
+            background: linear-gradient(90deg, #7c5cff 0%, #6a4fd6 100%);
+            color: white;
+        }
+
+        .admin-section {
+            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .admin-section h2 {
+            color: #7c5cff;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(180deg, #1a1a25 0%, #14141c 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #7c5cff;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #50fa7b;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user-table th, .user-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2d2d40;
+        }
+
+        .user-table th {
+            color: #7c5cff;
+            background: rgba(124, 92, 255, 0.1);
+        }
+
+        .credentials-form input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #2d2d40;
+            border-radius: 4px;
+            background: #252536;
+            color: white;
+        }
+
+        .credentials-form button {
+            background: linear-gradient(90deg, #7c5cff 0%, #6a4fd6 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .credentials-form button:hover {
+            opacity: 0.9;
+        }
+
+        .activity-log {
+            max-height: 400px;
+            overflow-y: auto;
+            background: #1a1a25;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #2d2d40;
+        }
+
+        .activity-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #2d2d40;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-cog"></i> bapXcoder Admin Panel</h1>
+            <div>Welcome, Administrator!</div>
+        </div>
+
+        <div class="admin-nav">
+            <a href="#dashboard" class="active">Dashboard</a>
+            <a href="#users">Users</a>
+            <a href="#downloads">Downloads</a>
+            <a href="#credentials">Credentials</a>
+            <a href="#activity">Activity Log</a>
+        </div>
+
+        <div id="dashboard" class="admin-section">
+            <h2><i class="fas fa-chart-bar"></i> Dashboard Overview</h2>
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <div class="number" id="totalUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Subscriptions</h3>
+                    <div class="number" id="activeSubs">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Monthly Downloads</h3>
+                    <div class="number" id="monthlyDownloads">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Downloads</h3>
+                    <div class="number" id="totalDownloads">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="users" class="admin-section" style="display:none;">
+            <h2><i class="fas fa-users"></i> User Management</h2>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Provider</th>
+                        <th>Subscription Plan</th>
+                        <th>Registration Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- User data will be loaded here dynamically -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="downloads" class="admin-section" style="display:none;">
+            <h2><i class="fas fa-download"></i> Download Statistics</h2>
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h3>Today's Downloads</h3>
+                    <div class="number" id="todayDownloads">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Weekly Downloads</h3>
+                    <div class="number" id="weeklyDownloads">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Monthly Downloads</h3>
+                    <div class="number" id="monthlyDownloadsStat">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Download History</h3>
+                    <div class="number" id="downloadHistory">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="credentials" class="admin-section" style="display:none;">
+            <h2><i class="fas fa-key"></i> API Credentials</h2>
+            <form class="credentials-form" id="credentialsForm">
+                <h3>GitHub OAuth</h3>
+                <label>Client ID:</label>
+                <input type="text" id="githubClientId" placeholder="Enter GitHub Client ID">
+                <label>Client Secret:</label>
+                <input type="password" id="githubClientSecret" placeholder="Enter GitHub Client Secret">
+                
+                <h3>Google OAuth</h3>
+                <label>Client ID:</label>
+                <input type="text" id="googleClientId" placeholder="Enter Google Client ID">
+                <label>Client Secret:</label>
+                <input type="password" id="googleClientSecret" placeholder="Enter Google Client Secret">
+                
+                <h3>Stripe API Key</h3>
+                <label>Secret Key:</label>
+                <input type="password" id="stripeSecretKey" placeholder="Enter Stripe Secret Key">
+                
+                <button type="submit">Save Credentials</button>
+            </form>
+        </div>
+
+        <div id="activity" class="admin-section" style="display:none;">
+            <h2><i class="fas fa-history"></i> Recent Activity</h2>
+            <div class="activity-log" id="activityLog">
+                <!-- Activity logs will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        const navLinks = document.querySelectorAll('.admin-nav a');
+        const sections = document.querySelectorAll('.admin-section');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                navLinks.forEach(l => l.classList.remove('active'));
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Hide all sections
+                sections.forEach(section => section.style.display = 'none');
+                
+                // Show the selected section
+                const targetId = this.getAttribute('href').substring(1);
+                document.getElementById(targetId).style.display = 'block';
+            });
+        });
+
+        // Initialize dashboard with sample data
+        document.getElementById('totalUsers').textContent = '1,245';
+        document.getElementById('activeSubs').textContent = '842';
+        document.getElementById('monthlyDownloads').textContent = '3,876';
+        document.getElementById('totalDownloads').textContent = '15,432';
+
+        // Sample user data loading
+        const userTableBody = document.getElementById('userTableBody');
+        const sampleUsers = [
+            { id: '1', email: 'user1@example.com', provider: 'GitHub', plan: 'monthly', date: '2024-11-15', status: 'active' },
+            { id: '2', email: 'user2@example.com', provider: 'Google', plan: 'annual', date: '2024-11-16', status: 'active' },
+            { id: '3', email: 'user3@example.com', provider: 'GitHub', plan: 'free_trial', date: '2024-11-17', status: 'trial' },
+            { id: '4', email: 'user4@example.com', provider: 'Google', plan: 'lifetime', date: '2024-11-18', status: 'active' }
+        ];
+
+        sampleUsers.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.id}</td>
+                <td>${user.email}</td>
+                <td>${user.provider}</td>
+                <td>${user.plan}</td>
+                <td>${user.date}</td>
+                <td><span class="status-${user.status}">${user.status.charAt(0).toUpperCase() + user.status.slice(1)}</span></td>
+            `;
+            userTableBody.appendChild(row);
+        });
+
+        // Form submission handling
+        document.getElementById('credentialsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // In a real implementation, this would save credentials securely
+            alert('Credentials saved successfully!');
+        });
+
+        // Load activity logs
+        const activityLog = document.getElementById('activityLog');
+        const sampleActivities = [
+            'User john.doe registered via GitHub',
+            'Download initiated for user jane.smith',
+            'Payment processed for annual plan',
+            'User mike.test updated subscription',
+            'GitHub OAuth credentials updated',
+            'Stripe webhook received: payment succeeded',
+            'Model download completed for user sarah.dev',
+            'User logout: alex.contributor'
+        ];
+        
+        sampleActivities.forEach(activity => {
+            const activityItem = document.createElement('div');
+            activityItem.className = 'activity-item';
+            activityItem.textContent = new Date().toLocaleDateString() + ' - ' + activity;
+            activityLog.appendChild(activityItem);
+        });
+    </script>
+</body>
+</html>

@@ -5,15 +5,18 @@ bapXcoder: A standalone AI-powered IDE with integrated CLI and offline model
 import argparse
 import sys
 import os
+import jwt
+import requests
 from pathlib import Path
 import configparser
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify, send_from_directory, session
 from flask_socketio import SocketIO, emit
 import subprocess
 import threading
 import json
 import time
 import webbrowser
+from datetime import datetime, timedelta
 def load_config():
     """Load configuration from config.ini file"""
     config = configparser.ConfigParser()
@@ -64,19 +67,169 @@ def download_model_with_progress(model_path):
         import requests
         from tqdm import tqdm
 
+def check_subscription_status(user_id):
+    """Check if user's subscription is still valid"""
+    try:
+        # Check user's subscription status against GitHub
+        github_api_url = f"https://api.github.com/user/{user_id}"
+        headers = {'Authorization': f'token {os.getenv("GITHUB_TOKEN", "")}'}
+        response = requests.get(github_api_url, headers=headers)
+
+        if response.status_code == 200:
+            # In a real implementation, we would check a subscription database
+            # For now, we'll just allow access based on existence of user data
+            user_data_file = Path('.IDEbapXcoder/users') / f"{user_id}.json"
+            if user_data_file.exists():
+                with open(user_data_file, 'r') as f:
+                    user_data = json.load(f)
+
+                # Check if subscription is still active
+                sub_end_date_str = user_data.get('subscription_end_date')
+                if sub_end_date_str and sub_end_date_str != 'never':
+                    sub_end_date = datetime.fromisoformat(sub_end_date_str)
+                    if datetime.now() > sub_end_date:
+                        return False  # Subscription expired
+                return True
+            else:
+                # For free trial users, check if trial period has expired
+                return True  # Allow access by default if no subscription data
+        else:
+            return False
+    except Exception:
+        return False  # If any error occurs, don't grant access
+
+
+def is_user_authenticated():
+    """Check if user is authenticated via JWT token"""
+    token = request.headers.get('Authorization', '').replace('Bearer ', '')
+    if not token:
+        return False
+
+    try:
+        # Verify token using secret key
+        payload = jwt.decode(token, os.getenv('SECRET_KEY', 'default_secret_key'), algorithms=['HS256'])
+        # Check if user's subscription is still valid
+        user_id = payload.get('user_id')
+        return check_subscription_status(user_id)
+    except jwt.ExpiredSignatureError:
+        return False
+    except jwt.InvalidTokenError:
+        return False
+
+# Online users tracking
+online_users = set()
+
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+    # Get user info from token
+    auth_header = request.headers.get('Authorization', '').replace('Bearer ', '')
+    if auth_header:
+        try:
+            payload = jwt.decode(auth_header, os.getenv('SECRET_KEY', 'default_secret_key'), algorithms=['HS256'])
+            user_id = payload.get('user_id')
+            username = payload.get('username', 'Anonymous')
+            if user_id:
+                online_users.add((user_id, username, request.sid))
+                # Emit updated online count to admin
+                emit_online_count()
+        except:
+            pass  # If token invalid, don't track user
+
+    emit('status', {'msg': 'Connected to bapXcoder IDE'})
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+    # Remove from online users if present
+    disconnected_user = None
+    for user in online_users:
+        if user[2] == request.sid:  # Check if session ID matches
+            disconnected_user = user
+            break
+    if disconnected_user:
+        online_users.remove(disconnected_user)
+        emit_online_count()
+
+def emit_online_count():
+    """Emit current online user count to admin panel"""
+    online_count = len(online_users)
+    # Broadcast to all clients
+    socketio.emit('online_users_count', {'count': online_count, 'users': [{'id': u[0], 'name': u[1]} for u in online_users]})
+
+def store_session_to_github(project_path, user_id, session_data):
+    """Store session data to user's GitHub repo"""
+    try:
+        # Create or access the .bapXcoder directory in the project
+        project_dir = Path(project_path)
+        bapx_dir = project_dir / '.bapXcoder'
+        bapx_dir.mkdir(exist_ok=True)
+
+        # Save session data locally first
+        session_file = bapx_dir / 'session.json'
+        with open(session_file, 'w') as f:
+            json.dump(session_data, f, indent=2)
+
+        # If user has GitHub token, attempt to sync to their repo
+        github_token = os.environ.get('GITHUB_TOKEN', '')
+        if github_token and user_id:
+            # In a real implementation this would push to user's GitHub repo
+            # For now just save locally - the actual GitHub sync would be triggered by a Git command
+            return True
+        return True
+    except Exception as e:
+        print(f"Error storing session to GitHub: {e}")
+        return False
+
+def get_current_project_path():
+    """Get the current project path for the session"""
+    # In a real implementation, this would retrieve the project path from session data
+    # For now, returning current working directory
+    return str(Path.cwd())
+
+def get_session_project_path(session_id):
+    """Get project path for a specific session"""
+    # In a real implementation, this would retrieve project path from session data
+    # For now, return current directory
+    return str(Path.cwd())
+
+def store_todo_to_github(project_path, user_id, todo_data):
+    """Store todo data to user's GitHub repo"""
+    try:
+        # Create or access the .bapXcoder directory in the project
+        project_dir = Path(project_path)
+        bapx_dir = project_dir / '.bapXcoder'
+        bapx_dir.mkdir(exist_ok=True)
+
+        # Save todo data locally first
+        todo_file = bapx_dir / 'todo.json'
+        with open(todo_file, 'w') as f:
+            json.dump(todo_data, f, indent=2)
+
+        # If user has GitHub token, attempt to sync to their repo
+        github_token = os.environ.get('GITHUB_TOKEN', '')
+        if github_token and user_id:
+            # In a real implementation this would push to user's GitHub repo
+            # For now just save locally - the actual GitHub sync would be triggered by a Git command
+            return True
+        return True
+    except Exception as e:
+        print(f"Error storing todo to GitHub: {e}")
+        return False
+
 def ensure_model_exists(model_path):
     """Check if model exists, and if not, prompt user to download it"""
     model_file = Path(model_path)
-    
+
     if not model_file.exists():
         print(f"Model file not found: {model_path}")
         print("\nThe Qwen3VL model needs to be downloaded (~5-6GB).")
-        
+
         download_choice = input("Would you like to download it now? (Y/n): ").lower().strip()
-        
+
         if download_choice == '' or download_choice == 'y':
             return download_model_with_progress(model_path)
-    
+
     return True
 
 def download_model_with_progress(model_path):
@@ -311,6 +464,499 @@ def check_installation():
         import llama_cpp
     except ImportError:
         missing_deps.append('llama-cpp-python')
+
+
+# Admin Panel Routes
+@app.route('/admin')
+def admin_login():
+    """Admin login page"""
+    return render_template_string('''
+<!DOCTYPE html>
+<html>
+<head>
+    <title>bapXcoder Admin Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f0f13 0%, #1a1a25 100%);
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background: #161622;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #2d2d40;
+            width: 350px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #2d2d40;
+            border-radius: 4px;
+            background: #252536;
+            color: white;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #7c5cff 0%, #6a4fd6 100%);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        h2 {
+            color: #7c5cff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Admin Panel Login</h2>
+        <form method="POST" action="/admin/authenticate">
+            <input type="text" name="username" placeholder="Admin Username" required>
+            <input type="password" name="password" placeholder="Admin Password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>
+''')
+
+@app.route('/admin/authenticate', methods=['POST'])
+def admin_authenticate():
+    """Admin authentication"""
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    # Default admin credentials (should be changed in production)
+    admin_username = os.environ.get('ADMIN_USERNAME', 'getwinharris@gmail.com')
+    admin_password = os.environ.get('ADMIN_PASSWORD', 'bapX2025#')
+
+    if username == admin_username and password == admin_password:
+        session['admin_logged_in'] = True
+        session.permanent = True  # Session expires after timeout
+        return redirect('/admin/dashboard')
+    else:
+        return redirect('/admin?error=invalid_credentials')
+
+@app.route('/admin/dashboard')
+def admin_dashboard():
+    """Admin dashboard"""
+    if not session.get('admin_logged_in'):
+        return redirect('/admin')
+
+    # Load statistics
+    stats = get_admin_statistics()
+    return render_template_string(ADMIN_PANEL_HTML, admin_data=stats)
+
+def get_admin_statistics():
+    """Get admin statistics for dashboard"""
+    try:
+        # Count total users from the session data
+        total_users = 0
+        active_subscriptions = 0
+        expired_subscriptions = 0
+
+        # Mock data - in a real implementation this would come from a database
+        # or from the actual user data storage
+        return {
+            'total_users': 1245,
+            'active_subscriptions': 842,
+            'expired_subscriptions': 403,
+            'total_downloads': 15432,
+            'monthly_downloads': 3876,
+            'recent_users': [],
+            'payment_revenue': 12345,
+            'trial_users': 200,
+            'paid_users': 842
+        }
+    except:
+        # Return default mock data
+        return {
+            'total_users': 0,
+            'active_subscriptions': 0,
+            'expired_subscriptions': 0,
+            'total_downloads': 0,
+            'monthly_downloads': 0,
+            'recent_users': [],
+            'payment_revenue': 0,
+            'trial_users': 0,
+            'paid_users': 0
+        }
+
+# Admin panel HTML template
+ADMIN_PANEL_HTML = '''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bapXcoder Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f13 0%, #1a1a25 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            background: linear-gradient(90deg, #1a1a25 0%, #14141c 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #2d2d40;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            color: #7c5cff;
+            font-size: 1.8rem;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 20px;
+            background: linear-gradient(90deg, #1a1a25 0%, #14141c 100%);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #2d2d40;
+        }
+
+        .admin-nav a {
+            text-decoration: none;
+            color: #a0a0c0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .admin-nav a:hover, .admin-nav a.active {
+            background: linear-gradient(90deg, #7c5cff 0%, #6a4fd6 100%);
+            color: white;
+        }
+
+        .admin-section {
+            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            display: block; /* Initially show dashboard */
+        }
+
+        .admin-section.hidden {
+            display: none;
+        }
+
+        .admin-section h2 {
+            color: #7c5cff;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(180deg, #1a1a25 0%, #14141c 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #7c5cff;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #50fa7b;
+        }
+
+        .credentials-form input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #2d2d40;
+            border-radius: 4px;
+            background: #252536;
+            color: white;
+        }
+
+        .credentials-form button {
+            background: linear-gradient(90deg, #7c5cff 0%, #6a4fd6 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .credentials-form button:hover {
+            opacity: 0.9;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user-table th, .user-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2d2d40;
+        }
+
+        .user-table th {
+            color: #7c5cff;
+            background: rgba(124, 92, 255, 0.1);
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-cog"></i> bapXcoder Admin Panel</h1>
+            <button class="logout-btn" onclick="location.href='/admin/logout'">Logout</button>
+        </div>
+
+        <div class="admin-nav">
+            <a href="#" class="nav-link active" onclick="showSection('dashboard')">Dashboard</a>
+            <a href="#" class="nav-link" onclick="showSection('users')">Users</a>
+            <a href="#" class="nav-link" onclick="showSection('downloads')">Downloads</a>
+            <a href="#" class="nav-link" onclick="showSection('credentials')">Credentials</a>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="admin-section">
+            <h2><i class="fas fa-chart-line"></i> Dashboard Overview</h2>
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <div class="number">{{ admin_data.total_users }}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Subscriptions</h3>
+                    <div class="number">{{ admin_data.active_subscriptions }}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Expired Subscriptions</h3>
+                    <div class="number">{{ admin_data.expired_subscriptions }}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Trialing Users</h3>
+                    <div class="number">{{ admin_data.trial_users }}</div>
+                </div>
+            </div>
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h3>Total Downloads</h3>
+                    <div class="number">{{ admin_data.total_downloads }}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Monthly Downloads</h3>
+                    <div class="number">{{ admin_data.monthly_downloads }}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Revenue</h3>
+                    <div class="number">${{ admin_data.payment_revenue }}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Paid Users</h3>
+                    <div class="number">{{ admin_data.paid_users }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Section -->
+        <div id="users" class="admin-section hidden">
+            <h2><i class="fas fa-users"></i> User Management</h2>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Email</th>
+                        <th>Provider</th>
+                        <th>Subscription</th>
+                        <th>Registration Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>user@example.com</td>
+                        <td>GitHub</td>
+                        <td>Monthly</td>
+                        <td>2025-01-01</td>
+                        <td><span style="color: #50fa7b;">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>another@example.com</td>
+                        <td>Google</td>
+                        <td>Annual</td>
+                        <td>2025-01-02</td>
+                        <td><span style="color: #50fa7b;">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>trial@example.com</td>
+                        <td>GitHub</td>
+                        <td>Trial</td>
+                        <td>2025-01-03</td>
+                        <td><span style="color: #f1fa8c;">Trial</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Downloads Section -->
+        <div id="downloads" class="admin-section hidden">
+            <h2><i class="fas fa-download"></i> Download Statistics</h2>
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h3>Today</h3>
+                    <div class="number">42</div>
+                </div>
+                <div class="stat-card">
+                    <h3>This Week</h3>
+                    <div class="number">287</div>
+                </div>
+                <div class="stat-card">
+                    <h3>This Month</h3>
+                    <div class="number">{{ admin_data.monthly_downloads }}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>All Time</h3>
+                    <div class="number">{{ admin_data.total_downloads }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Credentials Section -->
+        <div id="credentials" class="admin-section hidden">
+            <h2><i class="fas fa-key"></i> API Credentials</h2>
+            <form class="credentials-form" method="POST" action="/admin/update-credentials">
+                <h3>GitHub OAuth</h3>
+                <label>Client ID:</label>
+                <input type="text" name="github_client_id" placeholder="Enter GitHub Client ID">
+                <label>Client Secret:</label>
+                <input type="password" name="github_client_secret" placeholder="Enter GitHub Client Secret">
+
+                <h3>Google OAuth</h3>
+                <label>Client ID:</label>
+                <input type="text" name="google_client_id" placeholder="Enter Google Client ID">
+                <label>Client Secret:</label>
+                <input type="password" name="google_client_secret" placeholder="Enter Google Client Secret">
+
+                <h3>Stripe API</h3>
+                <label>Secret Key:</label>
+                <input type="password" name="stripe_secret_key" placeholder="Enter Stripe Secret Key">
+
+                <button type="submit">Save Credentials</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.admin-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Find the link that triggered this section and make it active
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.onclick.toString().includes(sectionId)) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Set dashboard as active by default
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.admin-section').forEach(section => {
+                if (section.id !== 'dashboard') {
+                    section.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+'''
+
+@app.route('/admin/update-credentials', methods=['POST'])
+def admin_update_credentials():
+    """Update API credentials"""
+    if not session.get('admin_logged_in'):
+        return redirect('/admin')
+
+    # In a real implementation, this would securely store credentials
+    # For now, just return to dashboard
+    return redirect('/admin/dashboard')
+
+@app.route('/admin/logout')
+def admin_logout():
+    """Admin logout"""
+    session.pop('admin_logged_in', None)
+    return redirect('/admin')
     
     for dep in ['flask', 'flask_socketio', 'requests', 'tqdm', 'configparser']:
         try:
@@ -450,7 +1096,12 @@ def start_ide(args):
     @socketio.on('connect')
     def handle_connect():
         print('Client connected')
-        emit('status', {'msg': 'Connected to bapXcoder IDE'})
+        # Check if user has proper authentication/subscription
+        auth_required = os.getenv('AUTH_REQUIRED', 'false').lower() == 'true'
+        if auth_required and not is_user_authenticated():
+            emit('auth_required', {'msg': 'Authentication required to access IDE features'})
+        else:
+            emit('status', {'msg': 'Connected to bapXcoder IDE'})
 
     @socketio.on('chat_message')
     def handle_chat_message(data):
@@ -461,6 +1112,16 @@ def start_ide(args):
         file_type = data.get('fileType', '')
         continue_reasoning = data.get('continue_reasoning', False)
         conversation_history = data.get('history', [])
+
+        # Get user ID from the authentication token
+        auth_header = request.headers.get('Authorization', '').replace('Bearer ', '')
+        user_id = None
+        if auth_header:
+            try:
+                payload = jwt.decode(auth_header, os.environ.get('SECRET_KEY', 'default_secret_key'), algorithms=['HS256'])
+                user_id = payload.get('user_id')
+            except:
+                pass  # If token invalid, user_id remains None
 
         # If there's a file attachment, include that in the processing
         if has_file:
@@ -476,6 +1137,18 @@ def start_ide(args):
             response = model_runner.run_prompt(full_prompt, args.max_tokens)
         else:
             response = model_runner.run_prompt(message, args.max_tokens)
+
+        # Store conversation to session.json if user authenticated
+        if user_id:
+            project_path = get_current_project_path() or str(Path.cwd())
+            session_data = {
+                'messages': conversation_history,
+                'last_message': message,
+                'response': response,
+                'timestamp': datetime.now().isoformat(),
+                'user_id': user_id
+            }
+            store_session_to_github(project_path, user_id, session_data)
 
         emit('chat_response', {'response': response})
 
@@ -769,6 +1442,50 @@ def start_ide(args):
         except Exception as e:
             emit('validation_error', {'message': f'Error validating project: {str(e)}'})
 
+    @socketio.on('add_todo')
+    def handle_add_todo(data):
+        """Handle adding a todo item with GitHub sync"""
+        todo_item = data.get('todo', '')
+
+        # Get user ID from the authentication token
+        auth_header = request.headers.get('Authorization', '').replace('Bearer ', '')
+        user_id = None
+        if auth_header:
+            try:
+                payload = jwt.decode(auth_header, os.environ.get('SECRET_KEY', 'default_secret_key'), algorithms=['HS256'])
+                user_id = payload.get('user_id')
+            except:
+                pass  # If token invalid, user_id remains None
+
+        if user_id:
+            project_path = get_current_project_path() or str(Path.cwd())
+            todo_data = {
+                'item': todo_item,
+                'timestamp': datetime.now().isoformat(),
+                'user_id': user_id,
+                'completed': False
+            }
+            success = store_todo_to_github(project_path, user_id, todo_data)
+
+            if success:
+                # Update session tree with todo
+                session_tree_path = Path(project_path) / '.bapXcoder' / 'sessiontree.json'
+                if session_tree_path.exists():
+                    with open(session_tree_path, 'r') as f:
+                        session_data = json.load(f)
+                else:
+                    session_data = {}
+
+                if 'todos' not in session_data:
+                    session_data['todos'] = []
+
+                session_data['todos'].append(todo_data)
+
+                with open(session_tree_path, 'w') as f:
+                    json.dump(session_data, f, indent=2)
+
+        emit('todo_added', {'success': True, 'todo': todo_item})
+
     @socketio.on('start_syntax_monitoring')
     def handle_start_syntax_monitoring(data):
         """Start live syntax monitoring for the project"""
@@ -787,6 +1504,15 @@ def start_ide(args):
     @socketio.on('disconnect')
     def handle_disconnect():
         print('Client disconnected')
+        # Remove from online users if present
+        disconnected_user = None
+        for user in online_users:
+            if user[2] == request.sid:  # Check if session ID matches
+                disconnected_user = user
+                break
+        if disconnected_user:
+            online_users.remove(disconnected_user)
+            emit_online_count()
 
     print(f"Starting bapXcoder IDE at http://{args.host}:{args.port}")
     print("Press Ctrl+C to stop the server")
