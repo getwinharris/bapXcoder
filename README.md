@@ -410,7 +410,6 @@ Coimbatore, Tamil Nadu, India
 ### Connect With Me
 - 📘 [Facebook](https://www.facebook.com/getwinharris/)
 - 🐦 [Twitter/X](https://twitter.com/getwinharris)
-- 💼 [LinkedIn](https://www.linkedin.com/in/getwinharris/)
 - 🐙 [GitHub](https://github.com/getwinharris)
 - 📷 [Instagram](https://www.instagram.com/getwinharris/)
 
