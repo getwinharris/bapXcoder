@@ -110,8 +110,20 @@ The bapXcoder IDE leverages the power of the Qwen3-VL model and provides a compr
 5. Sufficient disk space (~9GB for complete setup: model weights (~8.76GB) + configurations + tools)
 6. Web browser (for the GUI interface)
 
-## Installation
+## Quick Installation
 
+The fastest way to start using bapXcoder:
+
+### Option 1: Download from Landing Page (Recommended)
+1. Visit our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/)
+2. Click the **Download** button
+3. Run the installer that guides you through:
+   - Setting installation path (with system default suggestion)
+   - Downloading the Qwen3VL model (with progress indicator)
+   - Granting required permissions
+   - Configuring startup options and icon locations
+
+### Option 2: Manual Installation (Developer Mode)
 1. Clone this repository:
    ```bash
    git clone https://github.com/getwinharris/bapXcoder.git
@@ -124,8 +136,6 @@ The bapXcoder IDE leverages the power of the Qwen3-VL model and provides a compr
    ```bash
    pip install -r requirements.txt
    ```
-
-   **Note**: bapX Coder is a web-based PWA application that runs in your browser. No native installers (.exe, .dmg, etc.) are required. Once installed, simply run the server and access the IDE through any modern web browser.
 
    For GPU acceleration:
    - **NVIDIA GPU (CUDA)**:
@@ -141,13 +151,13 @@ The bapXcoder IDE leverages the power of the Qwen3-VL model and provides a compr
      CMAKE_ARGS="-DLLAMA_HIPBLAS=on" pip install llama-cpp-python
      ```
 
-3. Download the Qwen3VL model (this will download about 5-6GB):
+3. Download the Qwen3VL model (8.76GB):
    ```bash
    python download_model.py
    ```
-   OR you can run the IDE directly and it will prompt to download if the model is missing:
+   OR run the IDE directly and it will prompt to download if the model is missing:
    ```bash
-   python qwen3VL_local_ide.py
+   python qwen3VL_local_cli.py
    ```
 
 4. Install this package in development mode:
@@ -545,36 +555,40 @@ This project welcomes contributors! If you'd like to help enhance bapX Coder:
 Join our community to make bapX Coder even better!
 
 
-## PWA (Progressive Web App) Installation
+## Desktop Application Installation
 
-bapXcoder can be installed as a desktop application using the PWA functionality. This provides an app-like experience with offline capabilities while avoiding mobile platform restrictions.
+bapXcoder can be installed as a desktop application using one of two approaches:
 
-### How to Install
+### Recommended: Download from Landing Page
+The easiest way is to visit our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/) and click the **Download** button. This provides a native installer that guides you through:
+- Setting system default installation path
+- Downloading the model with progress indication
+- Granting necessary permissions
+- Configuring auto-start and desktop shortcuts
 
-1. Visit the bapXcoder application in your browser (e.g., `http://localhost:7860` or your deployed URL)
+### Alternative: PWA Installation
+For the PWA approach without downloading:
+
+1. After starting the application locally (`python qwen3VL_local_cli.py`) and visiting it in your browser (e.g., `http://localhost:7860`)
 2. Look for the **Install** button (in the top-right header section) - it will appear when the browser detects the app can be installed
 3. Click the button to trigger the browser's native install prompt
 4. Confirm the installation in the dialog that appears
 
 ### Technical Implementation
 
-The PWA functionality is implemented with:
+The installation functionality is implemented with:
 
-- **Manifest File** (`templates/manifest.json`): Provides application metadata, icons, and display settings
-- **Service Worker** (`templates/sw.js`): Handles offline caching and background operations
+- **Native Installer**: Packaged using PyInstaller with auto-model download and setup wizard
+- **PWA Support**: Manifest file (`templates/manifest.json`) and service worker (`templates/sw.js`) for web-based installation
 - **Install Button**: Added to `templates/index.html` with JavaScript handling for the `beforeinstallprompt` event
 
 ### Desktop-Only Focus
 
-bapXcoder is designed as a desktop-focused PWA, specifically avoiding mobile platforms to ensure:
+bapXcoder is designed specifically for desktop environments, avoiding mobile platforms to ensure:
 - Full access to system resources (no JIT restrictions)
 - Native development environment capabilities
 - Direct file system access
 - GPU/CPU intensive operations (like AI model processing)
-
-### URL Access
-
-The application is accessible at its base URL and all PWA functionality works through the standard web interface, with the install functionality providing a native app experience when desired.
 
 ## AI-Driven Testing & Validation System
 
