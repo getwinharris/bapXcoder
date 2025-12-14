@@ -555,9 +555,9 @@ This project welcomes contributors! If you'd like to help enhance bapX Coder:
 Join our community to make bapX Coder even better!
 
 
-## Desktop Application Installation
+## Application Installation
 
-bapXcoder can be installed as a desktop application using one of two approaches:
+bapXcoder can be installed using one of two approaches:
 
 ### Recommended: Download from Landing Page
 The easiest way is to visit our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/) and click the **Download** button. This provides a native installer that guides you through:
@@ -566,23 +566,23 @@ The easiest way is to visit our landing page at [https://getwinharris.github.io/
 - Granting necessary permissions
 - Configuring auto-start and desktop shortcuts
 
-### Alternative: PWA Installation
-For the PWA approach without downloading:
+### Alternative: Web Application
+For the web application approach without installation:
 
-1. After starting the application locally (`python qwen3VL_local_cli.py`) and visiting it in your browser (e.g., `http://localhost:7860`)
-2. Look for the **Install** button (in the top-right header section) - it will appear when the browser detects the app can be installed
+1. Run the application locally (`python qwen3VL_local_cli.py`) and access it in your browser (e.g., `http://localhost:7860`)
+2. Optionally, look for the **Install** button (in the top-right header section) - it will appear when the browser detects the app can be installed as a desktop application
 3. Click the button to trigger the browser's native install prompt
 4. Confirm the installation in the dialog that appears
 
 ### Technical Implementation
 
-The installation functionality is implemented with:
+The application is built as a web-based IDE with optional desktop installation:
 
 - **Native Installer**: Packaged using PyInstaller with auto-model download and setup wizard
-- **PWA Support**: Manifest file (`templates/manifest.json`) and service worker (`templates/sw.js`) for web-based installation
+- **Web Application**: Built with Flask/SocketIO for cross-platform web access
 - **Install Button**: Added to `templates/index.html` with JavaScript handling for the `beforeinstallprompt` event
 
-### Desktop-Only Focus
+### Desktop-First Design
 
 bapXcoder is designed specifically for desktop environments, avoiding mobile platforms to ensure:
 - Full access to system resources (no JIT restrictions)
