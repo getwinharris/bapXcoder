@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# bapXvector Installation Script
-# Single executable file that handles everything
+# bapXcoder Installation Script
+# Single executable file with our logo that handles everything
+# Logo: ⬡ (Hexagon symbol to represent our brand)
 
 set -e  # Exit on any error
 
