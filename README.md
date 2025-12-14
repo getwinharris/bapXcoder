@@ -54,6 +54,14 @@ The bapXcoder IDE leverages the power of the Qwen3-VL model and provides a compr
 - **Git Integration**: Full Git operations with OAuth support
 - **File Operations**: Direct file manipulation through CLI within IDE
 
+### Live Syntax Checking & Validation:
+- **Real-time Syntax Validation**: Checks syntax as you type without LSP overhead
+- **Multi-language Support**: Python, JavaScript, TypeScript, HTML, CSS, JSON, and more
+- **File Monitoring**: Automatically detects file changes and validates syntax
+- **Error Reporting**: Provides line/column specific error messages
+- **Deterministic Validation**: Uses language-specific parsers and compilers for accurate checking
+- **No Silent Failures**: Explicit syntax feedback prevents hidden issues
+
 ### Research & Analysis:
 - **Web Retrieval**: RAG (Retrieval Augmented Generation) for online research
 - **Document Analysis**: Process multi-page documents, tables, and complex content
@@ -410,6 +418,7 @@ Coimbatore, Tamil Nadu, India
 ### Connect With Me
 - 📘 [Facebook](https://www.facebook.com/getwinharris/)
 - 🐦 [Twitter/X](https://twitter.com/getwinharris)
+- 💼 [LinkedIn](https://www.linkedin.com/in/getwinharris/)
 - 🐙 [GitHub](https://github.com/getwinharris)
 - 📷 [Instagram](https://www.instagram.com/getwinharris/)
 

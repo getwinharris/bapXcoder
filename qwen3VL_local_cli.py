@@ -405,8 +405,327 @@ def main():
         print(f"Error initializing model: {e}")
         sys.exit(1)
     
+    # Initialize project explorer for file management
+    try:
+        from project_explorer import ProjectExplorer
+        global project_explorer
+        project_explorer = ProjectExplorer(Path.cwd())
+        print("Project explorer initialized for file management")
+    except ImportError:
+        print("Project explorer not available - install requirements: pip install -e .")
+        project_explorer = None
+
+    # Initialize syntax checker for live syntax validation
+    try:
+        from syntax_checker import initialize_syntax_checker, start_syntax_monitoring
+        global syntax_checker
+        syntax_checker = initialize_syntax_checker(Path.cwd())
+        if syntax_checker:
+            start_syntax_monitoring(Path.cwd())
+            print("Live syntax checking initialized")
+        else:
+            print("Syntax checker could not be initialized")
+    except ImportError:
+        print("Syntax checker not available - install requirements: pip install watchdog")
+        syntax_checker = None
+
     # Start the web-based IDE
     start_ide(args)
+
+def start_ide(args):
+    """Start the web-based IDE with Flask"""
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'bapxcoder-secret-key'
+    socketio = SocketIO(app, cors_allowed_origins="*")
+
+    # Global reference to model runner and project explorer
+    global model_runner, project_explorer
+
+    @app.route('/')
+    def index():
+        return render_template('index.html')
+
+    @app.route('/<path:path>')
+    def static_files(path):
+        return send_from_directory('.', path)
+
+    @socketio.on('connect')
+    def handle_connect():
+        print('Client connected')
+        emit('status', {'msg': 'Connected to bapXcoder IDE'})
+
+    @socketio.on('chat_message')
+    def handle_chat_message(data):
+        """Handle chat messages from the frontend"""
+        message = data.get('message', '')
+        has_file = data.get('hasFile', False)
+        file_name = data.get('fileName', '')
+        file_type = data.get('fileType', '')
+        continue_reasoning = data.get('continue_reasoning', False)
+        conversation_history = data.get('history', [])
+
+        # If there's a file attachment, include that in the processing
+        if has_file:
+            if file_type.startswith('image/'):
+                message = f"[Image Analysis Request] The user has attached an image: {file_name}. {message}"
+            else:
+                message = f"[File Analysis Request] The user has attached a file: {file_name}. {message}"
+
+        # If continue_reasoning is enabled, provide context from conversation
+        if continue_reasoning and conversation_history:
+            context = build_context_from_history(conversation_history)
+            full_prompt = f"{context}\n\nUser: {message}\nAssistant:"
+            response = model_runner.run_prompt(full_prompt, args.max_tokens)
+        else:
+            response = model_runner.run_prompt(message, args.max_tokens)
+
+        emit('chat_response', {'response': response})
+
+    def build_context_from_history(history):
+        """Build context from conversation history"""
+        context_parts = []
+        # Use only the last few exchanges to avoid exceeding context limits
+        recent_exchanges = history[-5:]  # Use last 5 exchanges
+
+        for exchange in recent_exchanges:
+            role = exchange.get('role', '')
+            content = exchange.get('content', '')
+            if role and content:
+                if role == 'user':
+                    context_parts.append(f"User: {content}")
+                elif role == 'assistant':
+                    context_parts.append(f"Assistant: {content}")
+
+        return "\n".join(context_parts)
+
+    @socketio.on('execute_command')
+    def handle_execute_command(data):
+        """Handle terminal commands from the frontend"""
+        command = data.get('command', '')
+        # Get the project path for this session
+        project_path = get_session_project_path(request.sid) or get_current_project_path()
+
+        # Update session tree with command execution
+        update_session_tree(project_path, {
+            'last_command': command,
+            'last_command_time': time.time()
+        })
+
+        try:
+            result = subprocess.run(
+                command,
+                shell=True,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                cwd=project_path  # Execute in the project directory
+            )
+            output = result.stdout if result.returncode == 0 else result.stderr
+            emit('command_output', {
+                'command': command,
+                'output': output,
+                'returncode': result.returncode
+            })
+        except subprocess.TimeoutExpired:
+            emit('command_output', {
+                'command': command,
+                'output': 'Command timed out after 30 seconds',
+                'returncode': -1
+            })
+        except Exception as e:
+            emit('command_output', {
+                'command': command,
+                'output': f'Error: {str(e)}',
+                'returncode': -1
+            })
+
+    @socketio.on('initialize_project')
+    def handle_initialize_project(data):
+        """Initialize project explorer with file tree"""
+        project_path = data.get('project_path', os.getcwd())
+
+        try:
+            from project_explorer import ProjectExplorer
+            global project_explorer
+            project_explorer = ProjectExplorer(project_path)
+
+            project_tree = project_explorer.get_project_tree(max_depth=3)
+            recent_files = project_explorer.get_recent_files()
+            project_stats = project_explorer.get_project_stats()
+
+            emit('project_initialized', {
+                'project_path': project_path,
+                'tree': project_tree,
+                'recent_files': recent_files,
+                'stats': project_stats
+            })
+        except ImportError:
+            emit('status', {
+                'msg': 'Project explorer not available - install dependencies: pip install -e .'
+            })
+        except Exception as e:
+            emit('status', {'msg': f'Error initializing project: {str(e)}'})
+
+    @socketio.on('open_file')
+    def handle_open_file(data):
+        """Open a file in the editor"""
+        file_path = data.get('file_path', '')
+
+        if not project_explorer:
+            emit('file_error', {'message': 'Project explorer not initialized'})
+            return
+
+        try:
+            content, error = project_explorer.get_file_content(file_path)
+            if content is not None:
+                emit('file_opened', {
+                    'file_path': file_path,
+                    'content': content,
+                    'success': True
+                })
+            else:
+                emit('file_error', {'message': error or 'Could not read file'})
+        except Exception as e:
+            emit('file_error', {'message': f'Error opening file: {str(e)}'})
+
+    @socketio.on('save_file')
+    def handle_save_file(data):
+        """Save a file from the editor"""
+        file_path = data.get('filename', '')
+        content = data.get('content', '')
+
+        if not project_explorer:
+            emit('file_error', {'message': 'Project explorer not initialized'})
+            return
+
+        try:
+            success, error = project_explorer.save_file_content(file_path, content)
+            if success:
+                emit('file_saved', {
+                    'file_path': file_path,
+                    'success': True
+                })
+            else:
+                emit('file_error', {'message': error})
+        except Exception as e:
+            emit('file_error', {'message': f'Error saving file: {str(e)}'})
+
+    @socketio.on('create_file')
+    def handle_create_file(data):
+        """Create a new file in the project"""
+        file_path = data.get('file_path', '')
+        content = data.get('content', '')
+
+        if not project_explorer:
+            emit('file_error', {'message': 'Project explorer not initialized'})
+            return
+
+        try:
+            success, error = project_explorer.create_file(file_path, content)
+            if success:
+                emit('file_created', {
+                    'file_path': file_path,
+                    'success': True
+                })
+            else:
+                emit('file_error', {'message': error})
+        except Exception as e:
+            emit('file_error', {'message': f'Error creating file: {str(e)}'})
+
+    @socketio.on('create_directory')
+    def handle_create_directory(data):
+        """Create a new directory in the project"""
+        dir_path = data.get('dir_path', '')
+
+        if not project_explorer:
+            emit('directory_error', {'message': 'Project explorer not initialized'})
+            return
+
+        try:
+            success, error = project_explorer.create_directory(dir_path)
+            if success:
+                emit('directory_created', {
+                    'dir_path': dir_path,
+                    'success': True
+                })
+            else:
+                emit('directory_error', {'message': error})
+        except Exception as e:
+            emit('directory_error', {'message': f'Error creating directory: {str(e)}'})
+
+    @socketio.on('search_files')
+    def handle_search_files(data):
+        """Search for content in project files"""
+        query = data.get('query', '')
+        extensions = data.get('extensions', None)
+
+        if not project_explorer:
+            emit('search_error', {'message': 'Project explorer not initialized'})
+            return
+
+        try:
+            results = project_explorer.search_in_project(query, extensions)
+            emit('search_results', {
+                'query': query,
+                'results': results
+            })
+        except Exception as e:
+            emit('search_error', {'message': f'Error searching files: {str(e)}'})
+
+    @socketio.on('check_syntax')
+    def handle_check_syntax(data):
+        """Check syntax of a specific file"""
+        file_path = data.get('file_path', '')
+
+        if not project_explorer:
+            emit('syntax_error', {'message': 'Project explorer not initialized'})
+            return
+
+        try:
+            # Create full path relative to project
+            full_path = project_explorer.project_path / file_path
+
+            # Check if file exists
+            if not full_path.exists():
+                emit('syntax_error', {'message': f'File does not exist: {file_path}'})
+                return
+
+            # Import syntax checker
+            from syntax_checker import LiveSyntaxChecker
+            syntax_checker_instance = LiveSyntaxChecker(project_explorer.project_path)
+
+            is_valid, errors = syntax_checker_instance.check_file_syntax(str(full_path))
+
+            emit('syntax_check_result', {
+                'file_path': file_path,
+                'is_valid': is_valid,
+                'errors': errors
+            })
+        except Exception as e:
+            emit('syntax_error', {'message': f'Error checking syntax: {str(e)}'})
+
+    @socketio.on('start_syntax_monitoring')
+    def handle_start_syntax_monitoring(data):
+        """Start live syntax monitoring for the project"""
+        try:
+            from syntax_checker import start_syntax_monitoring
+            project_path = data.get('project_path', str(project_explorer.project_path if project_explorer else '.'))
+
+            success = start_syntax_monitoring(project_path)
+            if success:
+                emit('status', {'msg': f'Live syntax monitoring started for: {project_path}'})
+            else:
+                emit('status', {'msg': 'Failed to start live syntax monitoring'})
+        except Exception as e:
+            emit('status', {'msg': f'Error starting syntax monitoring: {str(e)}'})
+
+    @socketio.on('disconnect')
+    def handle_disconnect():
+        print('Client disconnected')
+
+    print(f"Starting bapXcoder IDE at http://{args.host}:{args.port}")
+    print("Press Ctrl+C to stop the server")
+    socketio.run(app, host=args.host, port=args.port, debug=False)
 
 if __name__ == "__main__":
     main()
