@@ -562,22 +562,37 @@ bapXcoder has a unified, simple installation process:
 ### Single ZIP Download
 The recommended approach is to visit our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/) and click the **Download bapXcoder.zip** button.
 
-This downloads a single ZIP file named `bapXcoder.zip` that contains only one file with the application logo. When you extract this ZIP, you'll see just one executable file. Running this file launches a CLI installation wizard that:
+This downloads a single ZIP file named `bapXcoder.zip` that contains only one executable file with the application logo. When you extract this ZIP, you'll see just one executable file. Running this file launches a GUI installation wizard that:
 
 1. Clones the bapXcoder repository directly to your system
 2. Sets up the project in your chosen installation directory
-3. Downloads the required AI model
+3. Downloads the required AI model (~5-6GB)
 4. Configures all dependencies
-5. Completes the setup with your project ready to use
+5. Creates desktop shortcuts
+6. Completes the setup with your project ready to use
 
 ### Technical Implementation
 
-The installation process is unified across all platforms:
+The installation process is unified across all platforms using a Python-based GUI installer:
 
 - **Single Distribution**: One ZIP file (`bapXcoder.zip`) for all platforms
 - **Logo-Branded Executable**: Single file with your application logo after extraction
-- **CLI Installation Wizard**: Cross-platform installation script that handles all setup steps
+- **GUI Installation Wizard**: Visual installer with progress indicators that runs CLI commands in the background
 - **Git-Based Setup**: Automatically clones the repository and configures for your system
+- **Model Download**: Handles the large AI model download with progress tracking
+- **Cross-Platform**: Works identically on Mac, Windows, and Linux
+
+### Installation Steps
+
+The wizard guides users through these steps:
+1. **System Verification**: Checks for Python 3.8+ and other requirements
+2. **Repository Clone**: Downloads the complete bapXcoder codebase
+3. **Environment Setup**: Configures Python virtual environment
+4. **Dependency Installation**: Installs all required packages
+5. **AI Model Download**: Downloads the Qwen3VL model (~5-6GB)
+6. **Application Configuration**: Sets up project memory system
+7. **Shortcut Creation**: Creates desktop and start menu shortcuts
+8. **Completion**: Ready to launch and start coding
 
 ### Platform Compatibility
 
@@ -586,7 +601,7 @@ This unified approach works across all desktop platforms:
 - **Windows**: 64-bit supported with full system access
 - **Linux**: All major distributions supported (Ubuntu, Debian, Fedora, etc.)
 
-After installation, the application runs as a local web application accessible through your browser, with full offline capabilities.
+After installation, the application runs as a local web application accessible through your browser, with full offline capabilities and AI model processing.
 
 ## AI-Driven Testing & Validation System
 
