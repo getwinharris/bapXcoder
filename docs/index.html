@@ -358,6 +358,56 @@
             display: block;
         }
 
+        /* Comparison Table Styles */
+        .comparison {
+            padding: 100px 0;
+            background: linear-gradient(180deg, #0f0f13 0%, #1a1a25 100%);
+        }
+
+        .comparison-table-container {
+            margin: 50px auto;
+            max-width: 1200px;
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #161622;
+            min-width: 800px;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(90deg, #7c5cff 0%, #6a4fd6 100%);
+            color: white;
+            font-weight: 600;
+            padding: 15px 12px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .comparison-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #2d2d40;
+            vertical-align: top;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(124, 92, 255, 0.1);
+        }
+
+        .comparison-table strong {
+            color: #7c5cff;
+        }
+
         /* Features Section */
         .features {
             padding: 100px 0;
@@ -681,6 +731,98 @@
 
             <div class="hero-image">
                 <img src="image.png" alt="bapXcoder IDE Interface">
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison" id="comparison">
+        <div class="container">
+            <h2 class="section-title">How bapX Coder Compares</h2>
+            <div class="comparison-table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Cloud CLI</th>
+                            <th>Cursor IDE</th>
+                            <th>Continue.dev</th>
+                            <th>bapX Coder</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Deployment</strong></td>
+                            <td>Cloud-based IDE</td>
+                            <td>Mixed (Local AI + Cloud)</td>
+                            <td>CLI tool with local LLMs</td>
+                            <td>Completely local web-based IDE</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cost Model</strong></td>
+                            <td>Subscription/quota-walls</td>
+                            <td>Paid service</td>
+                            <td>Free with optional paid features</td>
+                            <td>Free forever after initial setup</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Privacy</strong></td>
+                            <td>Data stays on cloud servers</td>
+                            <td>Local processing with cloud LLMs</td>
+                            <td>Local processing with cloud LLMs</td>
+                            <td>All data stays local, no cloud dependencies</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Connectivity</strong></td>
+                            <td>Requires internet constantly</td>
+                            <td>Some features require internet</td>
+                            <td>Mostly requires internet</td>
+                            <td>Works completely offline after setup</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Model Access</strong></td>
+                            <td>Cloud APIs</td>
+                            <td>Configurable LLMs</td>
+                            <td>Configurable LLMs</td>
+                            <td>Auto-download of local model during setup</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Customization</strong></td>
+                            <td>Limited by platform</td>
+                            <td>High customization</td>
+                            <td>High customization</td>
+                            <td>Full local control with project-based memory</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Integrated CLI</strong></td>
+                            <td>Basic terminal access</td>
+                            <td>VS Code integrated terminal</td>
+                            <td>VS Code integrated terminal</td>
+                            <td>Built-in terminal in web interface</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Project Memory</strong></td>
+                            <td>Session loses context</td>
+                            <td>Standard IDE context</td>
+                            <td>Context per-file basis</td>
+                            <td>Persistent project-specific memory with .bapXcoder dirs</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Offline Capability</strong></td>
+                            <td>No offline functionality</td>
+                            <td>Limited offline (code only)</td>
+                            <td>Requires internet for most AI ops</td>
+                            <td>Full offline after initial model download</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Installation</strong></td>
+                            <td>Browser-based only</td>
+                            <td>Desktop app with extensions</td>
+                            <td>VS Code extension required</td>
+                            <td>Single executable with auto-setup</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
