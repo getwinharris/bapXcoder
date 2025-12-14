@@ -114,18 +114,22 @@ The bapXcoder IDE leverages the power of the Qwen3-VL model and provides a compr
 
 Choose your preferred installation method:
 
-### Method 1: GUI Installation (Easy Primary - Recommended)
-The simplest approach using our GUI installer:
+### Method 1: Single Executable Installation (Easy Primary - Recommended)
+The simplest approach using our unified installer:
 
-1. Visit our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/)
-2. Click the **Download** button to get the unified installer
-3. Run the single executable file that guides you through:
-   - Setting installation path (with system default suggestion)
-   - Downloading the Qwen3VL model (with progress indicator)
-   - Granting required permissions
-   - Configuring startup options and icon locations
+1. Download the single executable file `bapXvector.sh` from our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/)
+2. Make it executable: `chmod +x bapXvector.sh`
+3. Run the installer: `./bapXvector.sh`
+4. The script will automatically handle:
+   - Detecting your operating system
+   - Checking for required dependencies
+   - Cloning the repository
+   - Installing Python dependencies
+   - Downloading the Qwen3VL model
+   - Setting up the application
+   - Starting the web interface
 
-This is a single file with our logo that automatically handles everything for you.
+This single file with our logo automatically handles everything for you.
 
 ### Method 2: Direct Terminal Installation (For Developers)
 Manual installation via command line:
