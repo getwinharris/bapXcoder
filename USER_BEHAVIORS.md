@@ -1,7 +1,7 @@
 # bapX Coder - User-Facing Behaviors TODO List
 
 ## 1. Installation & Setup Pipeline
-- [ ] Single File Installation: Download and run `bapXcoder.sh` with our logo to install the entire system
+- [ ] Single File Installation: Download and run `install.sh` with our logo to install the entire system
 - [ ] Automatic Dependency Check: System checks for Python 3.8+, Git, and other required tools
 - [ ] Model Download: Automatically downloads the Qwen3VL model (~8.76GB) in the background
 - [ ] System Integration: Creates shortcuts and sets up auto-start options
@@ -97,7 +97,7 @@
 ## 3. Document Workflows
 
 ### New Project Setup Workflow
-- [ ] Download and run `bapXcoder.sh` with our logo
+- [ ] Download and run `install.sh` with our logo
 - [ ] Set project directory in the IDE
 - [ ] Begin coding with AI assistance
 - [ ] All context preserved across sessions
