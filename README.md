@@ -110,20 +110,26 @@ The bapXcoder IDE leverages the power of the Qwen3-VL model and provides a compr
 5. Sufficient disk space (~9GB for complete setup: model weights (~8.76GB) + configurations + tools)
 6. Web browser (for the GUI interface)
 
-## Quick Installation
+## Installation
 
-The fastest way to start using bapXcoder:
+Choose your preferred installation method:
 
-### Option 1: Download from Landing Page (Recommended)
+### Method 1: GUI Installation (Easy Primary - Recommended)
+The simplest approach using our GUI installer:
+
 1. Visit our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/)
-2. Click the **Download** button
-3. Run the installer that guides you through:
+2. Click the **Download** button to get the unified installer
+3. Run the single executable file that guides you through:
    - Setting installation path (with system default suggestion)
    - Downloading the Qwen3VL model (with progress indicator)
    - Granting required permissions
    - Configuring startup options and icon locations
 
-### Option 2: Manual Installation (Developer Mode)
+This is a single file with our logo that automatically handles everything for you.
+
+### Method 2: Direct Terminal Installation (For Developers)
+Manual installation via command line:
+
 1. Clone this repository:
    ```bash
    git clone https://github.com/getwinharris/bapXcoder.git
