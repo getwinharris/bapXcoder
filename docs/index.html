@@ -424,33 +424,44 @@
 
         .comparison-col {
             flex: 1;
-            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
             border: 1px solid #2d2d40;
             border-radius: 12px;
             padding: 25px;
+            min-height: 400px;
         }
 
         .primary-col {
-            flex: 1.2; /* Make bapX Coder column slightly wider */
+            flex: 1.4; /* Make bapXcoder column wider */
+            background: linear-gradient(180deg, #2a1d5c 0%, #1f1540 100%); /* Purple background */
+            color: white;
+        }
+
+        .comparison-col:not(.primary-col) {
+            background: linear-gradient(180deg, #252536 0%, #1f1f2d 100%); /* Grey background */
+            color: white;
         }
 
         .product-title {
-            color: #7c5cff;
             text-align: center;
             margin: 0 0 25px 0;
-            font-size: 1.4rem;
+            font-size: 1.2rem; /* Reduced font size */
             padding-bottom: 15px;
             border-bottom: 2px solid #7c5cff;
         }
 
         .primary-col .product-title {
-            font-size: 1.6rem; /* Larger font for bapX Coder title */
+            color: white;
+            font-size: 1.4rem; /* Slightly larger for bapXcoder */
+        }
+
+        .comparison-col:not(.primary-col) .product-title {
+            color: #7c5cff;
         }
 
         .feature-item {
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #2d2d40;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .feature-item:last-child {
@@ -459,18 +470,18 @@
             padding-bottom: 0;
         }
 
-        .feature-item h4 {
-            color: #7c5cff;
-            margin: 0 0 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
         .feature-item p {
-            color: #a0a0c0;
+            color: white;
             margin: 0;
             line-height: 1.5;
+        }
+
+        .primary-col .feature-item p {
+            color: #e0e0ff; /* Lighter white for better contrast on purple */
+        }
+
+        .comparison-col:not(.primary-col) .feature-item p {
+            color: #c0c0e0; /* Lighter grey for other columns */
         }
 
         /* Features Section */
@@ -909,51 +920,42 @@
         <div class="container">
             <h2 class="section-title">How bapX Coder Compares</h2>
             <div class="comparison-header">
-                <h2 class="section-title">How bapX Coder Compares</h2>
+                <h2 class="section-title">How bapXcoder Compares</h2>
                 <div class="comparison-cols">
                     <div class="comparison-col primary-col">
-                        <h3 class="product-title">bapX Coder</h3>
+                        <h3 class="product-title">bapXcoder</h3>
                         <div class="feature-item">
-                            <h4><i class="fas fa-server"></i> Deployment</h4>
-                            <p>Completely local web-based IDE with privacy: All data stays local, no cloud dependencies</p>
+                            <p>Completely local web-based IDE with: All data stays local, no cloud dependencies</p>
                         </div>
                         <div class="feature-item">
-                            <h4><i class="fas fa-money-bill-wave"></i> Cost Model</h4>
-                            <p>Free forever after initial setup with privacy: All data stays local, no cloud dependencies</p>
+                            <p>Free forever after initial setup with: All data stays local, no cloud dependencies</p>
                         </div>
                         <div class="feature-item">
-                            <h4><i class="fas fa-plug"></i> Connectivity</h4>
-                            <p>Works completely offline after setup with privacy: All data stays local, no cloud dependencies</p>
+                            <p>Works completely offline after setup with: All data stays local, no cloud dependencies</p>
                         </div>
                     </div>
                     <div class="comparison-col">
                         <h3 class="product-title">API & Local AI IDE</h3>
                         <div class="feature-item">
-                            <h4><i class="fas fa-server"></i> Deployment</h4>
-                            <p>Desktop IDE with remote/local LLMs with privacy: Local processing with cloud LLMs</p>
+                            <p>Desktop IDE with remote/local LLMs with: Local processing with cloud LLMs</p>
                         </div>
                         <div class="feature-item">
-                            <h4><i class="fas fa-money-bill-wave"></i> Cost Model</h4>
-                            <p>Paid service or local model costs with privacy: Local processing with cloud LLMs</p>
+                            <p>Paid service or local model costs with: Local processing with cloud LLMs</p>
                         </div>
                         <div class="feature-item">
-                            <h4><i class="fas fa-plug"></i> Connectivity</h4>
-                            <p>Some features require internet with privacy: Local processing with cloud LLMs</p>
+                            <p>Some features require internet with: Local processing with cloud LLMs</p>
                         </div>
                     </div>
                     <div class="comparison-col">
                         <h3 class="product-title">Cloud CLI</h3>
                         <div class="feature-item">
-                            <h4><i class="fas fa-server"></i> Deployment</h4>
-                            <p>Cloud-based IDE with privacy: Data stays on cloud servers</p>
+                            <p>Cloud-based IDE with: Data stays on cloud servers</p>
                         </div>
                         <div class="feature-item">
-                            <h4><i class="fas fa-money-bill-wave"></i> Cost Model</h4>
-                            <p>Subscription/quota-walls with privacy: Data stays on cloud servers</p>
+                            <p>Subscription/quota-walls with: Data stays on cloud servers</p>
                         </div>
                         <div class="feature-item">
-                            <h4><i class="fas fa-plug"></i> Connectivity</h4>
-                            <p>Requires internet constantly with privacy: Data stays on cloud servers</p>
+                            <p>Requires internet constantly with: Data stays on cloud servers</p>
                         </div>
                     </div>
                 </div>
