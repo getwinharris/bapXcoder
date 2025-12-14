@@ -177,6 +177,83 @@
             box-shadow: 0 18px 45px rgba(80, 250, 123, 0.6);
         }
 
+        /* OS-Specific Download Buttons */
+        .download-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #7c5cff 0%, #6a4fd6 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 8px 20px rgba(124, 92, 255, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(124, 92, 255, 0.4);
+        }
+
+        .download-btn.mac-btn {
+            background: linear-gradient(135deg, #8e8e93 0%, #5c5c5c 100%);
+        }
+
+        .download-btn.windows-btn {
+            background: linear-gradient(135deg, #0078d7 0%, #005a9e 100%);
+        }
+
+        .download-btn.linux-btn {
+            background: linear-gradient(135deg, #f05541 0%, #c04433 100%);
+        }
+
+        .download-btn.mac-btn:hover {
+            box-shadow: 0 12px 30px rgba(142, 142, 147, 0.4);
+        }
+
+        .download-btn.windows-btn:hover {
+            box-shadow: 0 12px 30px rgba(0, 120, 215, 0.4);
+        }
+
+        .download-btn.linux-btn:hover {
+            box-shadow: 0 12px 30px rgba(240, 85, 65, 0.4);
+        }
+
+        .arch-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .arch-btn {
+            background: linear-gradient(135deg, #7c5cff 0%, #6a4fd6 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .arch-btn:hover {
+            transform: translateY(-2px);
+        }
+
         .hero-image {
             max-width: 900px;
             margin: 4rem auto 0;
@@ -607,9 +684,24 @@
         <div class="container">
             <h2>Start Coding with Project Memory Today</h2>
             <p>No signup required. No account needed. Just download and start coding with continuous project context.</p>
-            <a href="https://github.com/getwinharris/bapXcoder/releases" class="primary-download-button">
-                <i class="fas fa-download"></i> Download Free Now
-            </a>
+            <div class="download-options">
+                <a href="https://github.com/getwinharris/bapXcoder/releases/download/v1.0/bapXcoder-mac-intel.zip" class="download-btn mac-btn" id="macDownloadBtn">
+                    <i class="fab fa-apple"></i> Mac (Intel)
+                </a>
+                <a href="https://github.com/getwinharris/bapXcoder/releases/download/v1.0/bapXcoder-mac-arm.zip" class="download-btn mac-btn" id="macArmDownloadBtn" style="display: none;">
+                    <i class="fab fa-apple"></i> Mac (ARM)
+                </a>
+                <a href="https://github.com/getwinharris/bapXcoder/releases/download/v1.0/bapXcoder-windows.zip" class="download-btn windows-btn">
+                    <i class="fab fa-windows"></i> Windows
+                </a>
+                <a href="https://github.com/getwinharris/bapXcoder/releases/download/v1.0/bapXcoder-linux.zip" class="download-btn linux-btn">
+                    <i class="fab fa-linux"></i> Linux
+                </a>
+            </div>
+            <div id="macArchSelector" class="arch-selector" style="display: none; margin-top: 15px;">
+                <button id="macIntelBtn" class="arch-btn">Intel Chip</button>
+                <button id="macArmBtn" class="arch-btn">Apple Silicon</button>
+            </div>
         </div>
     </section>
 
@@ -630,5 +722,27 @@
 
     <!-- Font Awesome for icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <script>
+        // Handle Mac architecture selection
+        document.getElementById('macDownloadBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Show the architecture selector
+            document.getElementById('macArchSelector').style.display = 'block';
+
+            // Hide the generic mac button
+            document.getElementById('macDownloadBtn').style.display = 'none';
+
+            // Show specific buttons when option is selected
+            document.getElementById('macIntelBtn').onclick = function() {
+                window.location.href = 'https://github.com/getwinharris/bapXcoder/releases/download/v1.0/bapXcoder-mac-intel.zip';
+            };
+
+            document.getElementById('macArmBtn').onclick = function() {
+                window.location.href = 'https://github.com/getwinharris/bapXcoder/releases/download/v1.0/bapXcoder-mac-arm.zip';
+            };
+        });
+    </script>
 </body>
 </html>
