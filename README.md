@@ -140,9 +140,9 @@ bapX Coder is fundamentally designed as a CLI-first development environment with
 Choose your preferred installation method:
 
 ### Method 1: Single Executable Installation (Easy Primary - Recommended)
-The simplest approach using our unified installer with our cube logo:
+The simplest approach using our unified installer with our fa-square-binary logo:
 
-1. Download the single executable file `bapXcoder.sh` with our cube logo from our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/)
+1. Download the single executable file `bapXcoder.sh` with our fa-square-binary logo from our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/)
 2. Make it executable: `chmod +x bapXcoder.sh`
 3. Run the installer: `./bapXcoder.sh`
 4. The script will automatically handle:
@@ -154,7 +154,7 @@ The simplest approach using our unified installer with our cube logo:
    - Setting up the application
    - Starting the web interface
 
-This single file with our cube logo automatically handles everything for you.
+This single file with our fa-square-binary logo automatically handles everything for you.
 
 ### Method 2: Direct Terminal Installation (For Developers)
 Manual installation via command line:
@@ -651,7 +651,7 @@ bapXcoder has a unified, simple installation process:
 ### Single ZIP Download
 The recommended approach is to visit our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/) and click the **Download bapXcoder.zip** button.
 
-This downloads a single ZIP file named `bapXcoder.zip` that contains only one executable file with the cube application logo. When you extract this ZIP, you'll see just one executable file. Running this file launches a GUI installation wizard that:
+This downloads a single ZIP file named `bapXcoder.zip` that contains only one executable file with the fa-square-binary application logo. When you extract this ZIP, you'll see just one executable file. Running this file launches a GUI installation wizard that:
 
 1. Clones the bapXcoder repository directly to your system
 2. Sets up the project in your chosen installation directory
@@ -665,7 +665,7 @@ This downloads a single ZIP file named `bapXcoder.zip` that contains only one ex
 The installation process is unified across all platforms using a Python-based GUI installer:
 
 - **Single Distribution**: One ZIP file (`bapXcoder.zip`) for all platforms
-- **Logo-Branded Executable**: Single file with your cube application logo after extraction
+- **Logo-Branded Executable**: Single file with your fa-square-binary application logo after extraction
 - **GUI Installation Wizard**: Visual installer with progress indicators that runs CLI commands in the background
 - **Git-Based Setup**: Automatically clones the repository and configures for your system
 - **Model Download**: Handles the large AI model download with progress tracking
