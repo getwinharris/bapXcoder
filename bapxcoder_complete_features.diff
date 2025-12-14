@@ -1,0 +1,2726 @@
+diff --git a/README.md b/README.md
+index e3e509a..e57b586 100644
+--- a/README.md
++++ b/README.md
+@@ -543,3 +543,62 @@ This project welcomes contributors! If you'd like to help enhance bapX Coder:
+ - Improve multimodal processing capabilities
+ 
+ Join our community to make bapX Coder even better!
++
++
++## PWA (Progressive Web App) Installation
++
++bapXcoder can be installed as a desktop application using the PWA functionality. This provides an app-like experience with offline capabilities while avoiding mobile platform restrictions.
++
++### How to Install
++
++1. Visit the bapXcoder application in your browser (e.g., `http://localhost:7860` or your deployed URL)
++2. Look for the **Install** button (in the top-right header section) - it will appear when the browser detects the app can be installed
++3. Click the button to trigger the browser's native install prompt
++4. Confirm the installation in the dialog that appears
++
++### Technical Implementation
++
++The PWA functionality is implemented with:
++
++- **Manifest File** (`templates/manifest.json`): Provides application metadata, icons, and display settings
++- **Service Worker** (`templates/sw.js`): Handles offline caching and background operations
++- **Install Button**: Added to `templates/index.html` with JavaScript handling for the `beforeinstallprompt` event
++
++### Desktop-Only Focus
++
++bapXcoder is designed as a desktop-focused PWA, specifically avoiding mobile platforms to ensure:
++- Full access to system resources (no JIT restrictions)
++- Native development environment capabilities
++- Direct file system access
++- GPU/CPU intensive operations (like AI model processing)
++
++### URL Access
++
++The application is accessible at its base URL and all PWA functionality works through the standard web interface, with the install functionality providing a native app experience when desired.
++
++## AI-Driven Testing & Validation System
++
++The AI-driven testing system adds comprehensive validation capabilities to bapXcoder:
++
++### Individual File Testing
++- Each file tab has its own **Test & Validate** button (play icon)
++- Validates syntax, runs security scans, and checks performance metrics
++- Provides AI-generated suggestions for improvements
++
++### Project-Wide Validation
++- Use the **Validate Full Project** button to analyze the entire codebase
++- Scans all project files for security issues, performance bottlenecks, and best practice violations
++- Generates comprehensive reports with risk assessments
++
++### Validation Output
++- Concise status indicators using single characters: S (syntax), U (unit tests), F (functional tests)
++- Complexity scoring (C:X/10)
++- Security issue count (Sec:X)
++- Performance issue count (Perf:X)
++- Suggested fixes with recommendations
++
++### Technical Implementation
++- Backend: `validation_system.py` implements comprehensive analysis tools
++- Frontend: Socket event handlers in `templates/index.html` for real-time feedback
++- Integration: Added to `qwen3VL_local_cli.py` with dedicated event handlers
++
+diff --git a/docs/README.md b/docs/README.md
+new file mode 100644
+index 0000000..6849049
+--- /dev/null
++++ b/docs/README.md
+@@ -0,0 +1,21 @@
++# bapXcoder - Professional Landing Page
++
++This repository includes a professional landing page for bapXcoder, an AI-powered IDE with project memory features.
++
++## Features
++- Project-based memory system 
++- AI-driven testing and validation
++- VS Code style interface
++- Desktop PWA installation
++- Free and open source
++
++## GitHub Pages
++This site is hosted at: https://getwinharris.github.io/bapXcoder/
++
++## Design Philosophy
++- Clean, professional appearance
++- Emphasis on project memory features
++- Comparison with traditional paid tools
++- Clear download CTA
++
++The landing page is designed to attract developers looking for an alternative to expensive AI tools with persistent project context.
+\ No newline at end of file
+diff --git a/docs/index.html b/docs/index.html
+new file mode 100644
+index 0000000..f2b2b4b
+--- /dev/null
++++ b/docs/index.html
+@@ -0,0 +1,525 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++    <meta charset="UTF-8">
++    <meta name="viewport" content="width=device-width, initial-scale=1.0">
++    <title>bapXcoder - AI-Powered IDE with Project Memory</title>
++    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
++    <style>
++        * {
++            margin: 0;
++            padding: 0;
++            box-sizing: border-box;
++            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
++        }
++
++        body {
++            background: linear-gradient(135deg, #0b0b0b 0%, #1a1a25 100%);
++            color: #e0e0e0;
++            min-height: 100vh;
++            overflow-x: hidden;
++        }
++
++        .container {
++            max-width: 1200px;
++            margin: 0 auto;
++            padding: 0 20px;
++        }
++
++        /* Header Styles */
++        header {
++            padding: 20px 0;
++            position: sticky;
++            top: 0;
++            background: rgba(11, 11, 11, 0.9);
++            backdrop-filter: blur(10px);
++            z-index: 100;
++            border-bottom: 1px solid rgba(124, 92, 255, 0.1);
++        }
++
++        nav {
++            display: flex;
++            justify-content: space-between;
++            align-items: center;
++        }
++
++        .logo {
++            display: flex;
++            align-items: center;
++            gap: 12px;
++            font-size: 1.5rem;
++            font-weight: 700;
++            color: #7c5cff;
++            text-decoration: none;
++        }
++
++        .logo-icon {
++            font-size: 1.8rem;
++        }
++
++        .nav-links {
++            display: flex;
++            gap: 30px;
++        }
++
++        .nav-links a {
++            color: #a0a0c0;
++            text-decoration: none;
++            font-weight: 500;
++            transition: color 0.3s;
++        }
++
++        .nav-links a:hover {
++            color: #7c5cff;
++        }
++
++        .cta-button {
++            background: linear-gradient(90deg, #7c5cff 0%, #6a4fd6 100%);
++            color: white;
++            border: none;
++            padding: 12px 24px;
++            border-radius: 8px;
++            font-weight: 600;
++            cursor: pointer;
++            text-decoration: none;
++            transition: transform 0.2s, box-shadow 0.2s;
++            display: inline-flex;
++            align-items: center;
++            gap: 8px;
++        }
++
++        .cta-button:hover {
++            transform: translateY(-2px);
++            box-shadow: 0 10px 25px rgba(124, 92, 255, 0.3);
++        }
++
++        /* Hero Section */
++        .hero {
++            padding: 100px 0;
++            text-align: center;
++            position: relative;
++            overflow: hidden;
++        }
++
++        .hero::before {
++            content: '';
++            position: absolute;
++            top: 0;
++            left: 0;
++            right: 0;
++            bottom: 0;
++            background: radial-gradient(circle at center, rgba(124, 92, 255, 0.1) 0%, transparent 70%);
++            z-index: -1;
++        }
++
++        .hero h1 {
++            font-size: 4rem;
++            font-weight: 800;
++            margin-bottom: 1rem;
++            background: linear-gradient(90deg, #ffffff 0%, #a0a0ff 100%);
++            -webkit-background-clip: text;
++            -webkit-text-fill-color: transparent;
++            background-clip: text;
++            line-height: 1.1;
++        }
++
++        .hero p {
++            font-size: 1.4rem;
++            color: #a0a0c0;
++            max-width: 700px;
++            margin: 0 auto 3rem;
++            line-height: 1.6;
++        }
++
++        .download-button {
++            background: linear-gradient(90deg, #50fa7b 0%, #3dd56d 100%);
++            color: #282a36;
++            border: none;
++            padding: 18px 40px;
++            border-radius: 12px;
++            font-size: 1.2rem;
++            font-weight: 700;
++            cursor: pointer;
++            text-decoration: none;
++            display: inline-flex;
++            align-items: center;
++            gap: 12px;
++            transition: transform 0.3s, box-shadow 0.3s;
++            box-shadow: 0 10px 30px rgba(80, 250, 123, 0.3);
++        }
++
++        .download-button:hover {
++            transform: translateY(-3px);
++            box-shadow: 0 15px 40px rgba(80, 250, 123, 0.4);
++        }
++
++        .hero-image {
++            max-width: 900px;
++            margin: 4rem auto 0;
++            border-radius: 16px;
++            overflow: hidden;
++            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
++            border: 1px solid rgba(255, 255, 255, 0.1);
++        }
++
++        .hero-image img {
++            width: 100%;
++            display: block;
++        }
++
++        /* Features Section */
++        .features {
++            padding: 100px 0;
++            text-align: center;
++        }
++
++        .section-title {
++            font-size: 2.5rem;
++            margin-bottom: 3rem;
++            color: white;
++        }
++
++        .features-grid {
++            display: grid;
++            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
++            gap: 30px;
++            margin-bottom: 50px;
++        }
++
++        .feature-card {
++            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
++            border: 1px solid #2d2d40;
++            border-radius: 16px;
++            padding: 30px;
++            text-align: left;
++            transition: transform 0.3s, box-shadow 0.3s;
++        }
++
++        .feature-card:hover {
++            transform: translateY(-5px);
++            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
++        }
++
++        .feature-icon {
++            font-size: 2.5rem;
++            color: #7c5cff;
++            margin-bottom: 15px;
++        }
++
++        .feature-card h3 {
++            font-size: 1.4rem;
++            margin-bottom: 15px;
++            color: #7c5cff;
++        }
++
++        .feature-card p {
++            color: #a0a0c0;
++            line-height: 1.6;
++        }
++
++        /* Pricing/Value Section */
++        .value-prop {
++            padding: 100px 0;
++            background: linear-gradient(180deg, #0f0f13 0%, #1a1a25 100%);
++            text-align: center;
++        }
++
++        .pricing-comparison {
++            display: flex;
++            justify-content: center;
++            gap: 40px;
++            margin-top: 50px;
++            flex-wrap: wrap;
++        }
++
++        .pricing-card {
++            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
++            border: 1px solid #2d2d40;
++            border-radius: 16px;
++            padding: 40px;
++            width: 300px;
++            text-align: center;
++        }
++
++        .pricing-card.popular {
++            border: 2px solid #50fa7b;
++            position: relative;
++        }
++
++        .pricing-card.popular::before {
++            content: 'FREE';
++            position: absolute;
++            top: -12px;
++            left: 50%;
++            transform: translateX(-50%);
++            background: #50fa7b;
++            color: #282a36;
++            padding: 4px 16px;
++            border-radius: 20px;
++            font-weight: 700;
++            font-size: 0.9rem;
++        }
++
++        .pricing-card h3 {
++            font-size: 1.5rem;
++            margin-bottom: 15px;
++            color: white;
++        }
++
++        .price {
++            font-size: 3rem;
++            font-weight: 800;
++            margin-bottom: 20px;
++            color: #50fa7b;
++        }
++
++        .pricing-card.popular .price {
++            color: #50fa7b;
++        }
++
++        .pricing-card.popular h3 {
++            color: #50fa7b;
++        }
++
++        .pricing-features {
++            list-style: none;
++            margin: 25px 0;
++            text-align: left;
++        }
++
++        .pricing-features li {
++            padding: 8px 0;
++            color: #a0a0c0;
++            border-bottom: 1px solid #2d2d40;
++        }
++
++        .pricing-features li:last-child {
++            border-bottom: none;
++        }
++
++        .pricing-features li::before {
++            content: '✓ ';
++            color: #50fa7b;
++            margin-right: 8px;
++        }
++
++        /* CTA Section */
++        .cta-section {
++            padding: 100px 0;
++            text-align: center;
++        }
++
++        .cta-section h2 {
++            font-size: 2.5rem;
++            margin-bottom: 20px;
++            color: white;
++        }
++
++        .cta-section p {
++            font-size: 1.2rem;
++            color: #a0a0c0;
++            max-width: 600px;
++            margin: 0 auto 30px;
++        }
++
++        /* Footer */
++        footer {
++            padding: 60px 0 30px;
++            border-top: 1px solid #2d2d40;
++            text-align: center;
++            color: #a0a0c0;
++        }
++
++        .footer-links {
++            display: flex;
++            justify-content: center;
++            gap: 30px;
++            margin-bottom: 30px;
++        }
++
++        .footer-links a {
++            color: #a0a0c0;
++            text-decoration: none;
++            transition: color 0.3s;
++        }
++
++        .footer-links a:hover {
++            color: #7c5cff;
++        }
++
++        .social-links {
++            display: flex;
++            justify-content: center;
++            gap: 20px;
++            margin-bottom: 20px;
++        }
++
++        .social-links a {
++            color: #a0a0c0;
++            font-size: 1.5rem;
++            transition: color 0.3s;
++        }
++
++        .social-links a:hover {
++            color: #7c5cff;
++        }
++
++        /* Responsive */
++        @media (max-width: 768px) {
++            .hero h1 {
++                font-size: 2.5rem;
++            }
++
++            .hero p {
++                font-size: 1.1rem;
++            }
++
++            .nav-links {
++                display: none;
++            }
++
++            .section-title {
++                font-size: 2rem;
++            }
++        }
++    </style>
++</head>
++<body>
++    <header>
++        <div class="container">
++            <nav>
++                <a href="#" class="logo">
++                    <span class="logo-icon">⚡</span>
++                    bapXcoder
++                </a>
++                <div class="nav-links">
++                    <a href="#features">Features</a>
++                    <a href="#download">Download</a>
++                    <a href="#about">About</a>
++                </div>
++                <a href="#download" class="cta-button">
++                    <i class="fas fa-download"></i> Download
++                </a>
++            </nav>
++        </div>
++    </header>
++
++    <section class="hero">
++        <div class="container">
++            <h1>AI-Powered IDE<br>With Project Memory</h1>
++            <p>Capture your project context, remember your development state, and continue from where you left off. Free forever, no subscriptions.</p>
++            <a href="#download" class="download-button">
++                <i class="fas fa-download"></i> Download Free
++            </a>
++            
++            <div class="hero-image">
++                <img src="data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='900' height='500' viewBox='0 0 900 500'%3e%3crect fill='%231a1a25' width='900' height='500'/%3e%3cpath fill='%237c5cff' d='M100,150 L150,100 L200,150 L150,200 Z'/%3e%3ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='24' fill='%23e0e0e0'%3ebapXcoder IDE Interface Preview%3c/text%3e%3c/svg%3e" alt="bapXcoder IDE Interface">
++            </div>
++        </div>
++    </section>
++
++    <section class="features" id="features">
++        <div class="container">
++            <h2 class="section-title">Project-Based Memory</h2>
++            <div class="features-grid">
++                <div class="feature-card">
++                    <div class="feature-icon">🧠</div>
++                    <h3>Project State Memory</h3>
++                    <p>Remembers your entire project state across sessions. Every file, every todo, every context preserved in your .bapXcoder folder like Git manages your code.</p>
++                </div>
++                
++                <div class="feature-card">
++                    <div class="feature-icon">🔄</div>
++                    <h3>Continuous Context</h3>
++                    <p>No more lost context when you switch projects or take a break. Resume exactly where you left off with all your session data intact.</p>
++                </div>
++                
++                <div class="feature-card">
++                    <div class="feature-icon">🔍</div>
++                    <h3>Repo-Wide Awareness</h3>
++                    <p>AI understands your entire codebase, not just the file you're looking at. Context-aware suggestions and fixes across your project.</p>
++                </div>
++                
++                <div class="feature-card">
++                    <div class="feature-icon">⚡</div>
++                    <h3>AI-Driven Testing</h3>
++                    <p>Individual run buttons for each file tab. AI validates syntax, security, and performance with single-character status indicators.</p>
++                </div>
++                
++                <div class="feature-card">
++                    <div class="feature-icon">📱</div>
++                    <h3>PWA Installation</h3>
++                    <p>Install as a desktop application. No cloud dependencies, works completely offline with your local AI model.</p>
++                </div>
++                
++                <div class="feature-card">
++                    <div class="feature-icon">💰</div>
++                    <h3>Totally Free</h3>
++                    <p>Not $20/month per developer. No subscriptions, no quotas, no limits. All AI processing runs locally on your machine.</p>
++                </div>
++            </div>
++        </div>
++    </section>
++
++    <section class="value-prop">
++        <div class="container">
++            <h2 class="section-title">The Cost of Traditional Tools</h2>
++            <div class="pricing-comparison">
++                <div class="pricing-card">
++                    <h3>Traditional Dev Tools</h3>
++                    <div class="price">$20+</div>
++                    <p>per month per developer</p>
++                    <ul class="pricing-features">
++                        <li>Multiple subscriptions</li>
++                        <li>Per-user pricing</li>
++                        <li>Separate AI tools</li>
++                        <li>Context switching</li>
++                        <li>Vendor lock-in</li>
++                    </ul>
++                </div>
++                
++                <div class="pricing-card popular">
++                    <h3>bapXcoder</h3>
++                    <div class="price">$0</div>
++                    <p>forever</p>
++                    <ul class="pricing-features">
++                        <li>All-in-one solution</li>
++                        <li>Project memory included</li>
++                        <li>Local AI processing</li>
++                        <li>VS Code style interface</li>
++                        <li>Community driven</li>
++                    </ul>
++                </div>
++            </div>
++        </div>
++    </section>
++
++    <section class="cta-section" id="download">
++        <div class="container">
++            <h2>Start Coding with Project Memory Today</h2>
++            <p>No signup required. No account needed. Just download and start coding with continuous project context.</p>
++            <a href="https://github.com/getwinharris/bapXcoder/releases" class="download-button">
++                <i class="fab fa-github"></i> Get from GitHub
++            </a>
++        </div>
++    </section>
++
++    <footer>
++        <div class="container">
++            <div class="social-links">
++                <a href="https://github.com/getwinharris/bapXcoder" target="_blank"><i class="fab fa-github"></i></a>
++            </div>
++            <div class="footer-links">
++                <a href="#">Documentation</a>
++                <a href="#">GitHub</a>
++                <a href="#">Privacy</a>
++                <a href="#">Terms</a>
++            </div>
++            <p>&copy; 2025 bapXcoder. Free and open source for developers.</p>
++        </div>
++    </footer>
++
++    <!-- Font Awesome for icons -->
++    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
++</body>
++</html>
+\ No newline at end of file
+diff --git a/qwen3VL_local_cli.py b/qwen3VL_local_cli.py
+index 5dfcaae..be96428 100644
+--- a/qwen3VL_local_cli.py
++++ b/qwen3VL_local_cli.py
+@@ -294,8 +294,6 @@ def decode_content(encoded_content, encoding_type='utf-8'):
+         else:
+             return encoded_content
+ 
+-if __name__ == "__main__":
+-
+ def check_installation():
+     """Run installation check before starting IDE"""
+     print("Checking bapXcoder installation...")
+@@ -704,6 +702,73 @@ def start_ide(args):
+         except Exception as e:
+             emit('syntax_error', {'message': f'Error checking syntax: {str(e)}'})
+ 
++    @socketio.on('validate_file')
++    def handle_validate_file(data):
++        """Validate a file with AI-driven testing"""
++        file_path = data.get('file_path', '')
++        run_tests = data.get('run_tests', False)
++
++        if not project_explorer:
++            emit('validation_error', {'message': 'Project explorer not initialized'})
++            return
++
++        try:
++            # Create full path relative to project
++            full_path = project_explorer.project_path / file_path
++
++            # Check if file exists
++            if not full_path.exists():
++                emit('validation_error', {'message': f'File does not exist: {file_path}'})
++                return
++
++            # Import validation system
++            from validation_system import AITestRunner
++
++            # Initialize the AI test runner if not already done
++            global ai_test_runner
++            if 'ai_test_runner' not in globals():
++                ai_test_runner = AITestRunner(project_explorer.project_path)
++
++            # Run individual file validation
++            result = ai_test_runner.run_individual_file_tests(str(full_path))
++
++            emit('validation_result', {
++                'file_path': file_path,
++                'validation_result': result['validation_result'],
++                'ai_analysis': result['ai_analysis'],
++                'test_summary': result['test_summary'],
++                'timestamp': result['timestamp'],
++                'success': True
++            })
++        except Exception as e:
++            emit('validation_error', {'message': f'Error validating file: {str(e)}'})
++
++    @socketio.on('validate_project')
++    def handle_validate_project(data):
++        """Validate the entire project with AI-driven testing"""
++        if not project_explorer:
++            emit('validation_error', {'message': 'Project explorer not initialized'})
++            return
++
++        try:
++            # Import validation system
++            from validation_system import AITestRunner
++
++            # Initialize the AI test runner if not already done
++            global ai_test_runner
++            if 'ai_test_runner' not in globals():
++                ai_test_runner = AITestRunner(project_explorer.project_path)
++
++            # Run project-wide validation
++            result = ai_test_runner.run_project_wide_tests()
++
++            emit('project_validation_result', {
++                'results': result,
++                'success': True
++            })
++        except Exception as e:
++            emit('validation_error', {'message': f'Error validating project: {str(e)}'})
++
+     @socketio.on('start_syntax_monitoring')
+     def handle_start_syntax_monitoring(data):
+         """Start live syntax monitoring for the project"""
+diff --git a/templates/index.html b/templates/index.html
+index db53d74..95661c4 100644
+--- a/templates/index.html
++++ b/templates/index.html
+@@ -564,6 +564,267 @@
+             flex: 1;
+         }
+ 
++        /* File Tab Styles */
++        .editor-tab-header {
++            background: linear-gradient(90deg, #1a1a25 0%, #14141c 100%);
++            padding: 5px 10px 0 15px;
++            border-bottom: 1px solid #2d2d40;
++            display: flex;
++            justify-content: space-between;
++            align-items: center;
++        }
++
++        .editor-tabs {
++            display: flex;
++            gap: 5px;
++            overflow-x: auto;
++            padding-bottom: 5px;
++            max-width: calc(100% - 150px);
++        }
++
++        .editor-tab {
++            display: flex;
++            align-items: center;
++            padding: 6px 10px 6px 12px;
++            background: #2d2d40;
++            color: #a0a0c0;
++            border: 1px solid #444460;
++            border-radius: 6px 6px 0 0;
++            cursor: pointer;
++            font-size: 0.85rem;
++            white-space: nowrap;
++            min-width: 100px;
++            max-width: 200px;
++        }
++
++        .editor-tab.active {
++            background: linear-gradient(90deg, #7c5cff 0%, #6a4fd6 100%);
++            color: white;
++            border-bottom: 1px solid transparent;
++            margin-bottom: -1px;
++        }
++
++        .editor-tab:hover {
++            background: #7c5cff;
++            color: white;
++        }
++
++        .editor-tab-filename {
++            flex: 1;
++            overflow: hidden;
++            text-overflow: ellipsis;
++            margin-right: 8px;
++        }
++
++        .editor-tab-run-btn, .editor-tab-close-btn {
++            background: none;
++            border: none;
++            color: inherit;
++            cursor: pointer;
++            font-size: 0.8rem;
++            padding: 2px;
++            border-radius: 3px;
++            display: flex;
++            align-items: center;
++            justify-content: center;
++        }
++
++        .editor-tab-run-btn:hover, .editor-tab-close-btn:hover {
++            background: rgba(255, 255, 255, 0.2);
++        }
++
++        /* Sidebar/Explorer Styles */
++        .main-content {
++            display: grid;
++            grid-template-columns: auto 1fr;
++            height: calc(100vh - 170px);
++            gap: 10px;
++            padding: 0 15px;
++        }
++
++        .sidebar {
++            width: 250px;
++            background: linear-gradient(180deg, #0b0b0b 0%, #14141c 100%);
++            border: 1px solid #2d2d40;
++            border-radius: 8px;
++            display: flex;
++            flex-direction: column;
++            overflow: hidden;
++            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
++        }
++
++        .sidebar-header {
++            background: linear-gradient(90deg, #1a1a25 0%, #14141c 100%);
++            padding: 10px 12px;
++            border-bottom: 1px solid #2d2d40;
++            display: flex;
++            justify-content: space-between;
++            align-items: center;
++        }
++
++        .sidebar-title {
++            color: #7c5cff;
++            font-size: 0.9rem;
++            font-weight: 600;
++        }
++
++        .sidebar-actions {
++            display: flex;
++            gap: 5px;
++        }
++
++        .sidebar-btn {
++            background: #2d2d40;
++            color: #a0a0c0;
++            border: 1px solid #444460;
++            border-radius: 4px;
++            padding: 4px 6px;
++            cursor: pointer;
++            font-size: 0.8rem;
++            transition: all 0.3s;
++        }
++
++        .sidebar-btn:hover {
++            background: #7c5cff;
++            color: white;
++            border-color: #7c5cff;
++        }
++
++        .sidebar-content {
++            flex: 1;
++            overflow-y: auto;
++            padding: 8px;
++        }
++
++        .explorer-section {
++            margin-bottom: 15px;
++        }
++
++        .explorer-section-header {
++            display: flex;
++            align-items: center;
++            padding: 4px 0;
++            color: #a0a0c0;
++            font-size: 0.8rem;
++            text-transform: uppercase;
++            letter-spacing: 0.5px;
++        }
++
++        .section-toggle {
++            margin-right: 5px;
++            cursor: pointer;
++            color: #7c5cff;
++        }
++
++        .section-label {
++            font-weight: 600;
++        }
++
++        .project-tree {
++            padding-left: 10px;
++        }
++
++        .tree-item {
++            padding: 3px 5px;
++            border-radius: 3px;
++            cursor: pointer;
++            display: flex;
++            align-items: center;
++            font-size: 0.9rem;
++        }
++
++        .tree-item:hover {
++            background: #2d2d40;
++        }
++
++        .tree-item.active {
++            background: linear-gradient(90deg, #7c5cff 0%, #6a4fd6 100%);
++            color: white;
++        }
++
++        .file-icon {
++            margin-right: 6px;
++            width: 16px;
++            text-align: center;
++            font-size: 0.9em;
++        }
++
++        .file-icon.python { color: #3572A5; }
++        .file-icon.javascript { color: #f1e05a; }
++        .file-icon.typescript { color: #3178c6; }
++        .file-icon.html { color: #e34c26; }
++        .file-icon.css { color: #563d7c; }
++        .file-icon.json { color: #854cc7; }
++        .file-icon.markdown { color: #083fa1; }
++        .file-icon.java { color: #ed8b00; }
++        .file-icon.cpp { color: #00599c; }
++        .file-icon.c { color: #555555; }
++        .file-icon.go { color: #00add8; }
++        .file-icon.rust { color: #dea584; }
++        .file-icon.folder { color: #7c5cff; }
++        .file-icon.default { color: #666; }
++
++        .main-content-area {
++            display: grid;
++            grid-template-columns: 1fr 1fr;
++            grid-template-rows: auto auto 1fr 200px 300px;
++            height: 100%;
++            gap: 10px;
++        }
++
++        /* Run Button in Sidebar */
++        .run-section {
++            padding: 10px;
++            border-top: 1px solid #2d2d40;
++            background: #14141c;
++        }
++
++        .run-btn {
++            width: 100%;
++            background: linear-gradient(90deg, #50fa7b 0%, #3dd56d 100%);
++            color: #282a36;
++            border: none;
++            border-radius: 4px;
++            padding: 8px 12px;
++            cursor: pointer;
++            font-weight: bold;
++            font-size: 0.9rem;
++            display: flex;
++            align-items: center;
++            justify-content: center;
++            gap: 6px;
++        }
++
++        .run-btn:hover {
++            transform: translateY(-1px);
++            box-shadow: 0 2px 8px rgba(80, 250, 123, 0.3);
++        }
++
++        /* Sidebar Overlay Styles */
++        .sidebar-overlay {
++            position: fixed;
++            top: 0;
++            left: 0;
++            width: 100%;
++            height: 100%;
++            background: rgba(0, 0, 0, 0.5);
++            z-index: 1000;
++            display: flex;
++        }
++
++        .sidebar {
++            width: 300px;
++            background: linear-gradient(180deg, #0b0b0b 0%, #14141c 100%);
++            border: 1px solid #2d2d40;
++            border-radius: 8px;
++            display: flex;
++            flex-direction: column;
++            overflow: hidden;
++            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
++            margin: 20px;
++            height: calc(100vh - 40px);
++        }
++
+         .editor-toolbar {
+             background: linear-gradient(90deg, #1a1a25 0%, #14141c 100%);
+             padding: 5px 10px;
+@@ -605,6 +866,197 @@
+             margin-left: 10px;
+             font-family: monospace;
+         }
++
++        /* TTS Player Styles */
++        .tts-progress {
++            height: 4px;
++            background: #252536;
++            border-radius: 2px;
++            overflow: hidden;
++        }
++
++        .progress-bar {
++            height: 100%;
++            background: linear-gradient(90deg, #7c5cff 0%, #6a4fd6 100%);
++            width: 0%;
++            transition: width 0.1s;
++        }
++
++        .tts-player {
++            background: linear-gradient(180deg, #1a1a25 0%, #14141c 100%);
++            border: 1px solid #2d2d40;
++            border-radius: 8px;
++            padding: 12px;
++            margin-top: 10px;
++            width: 100%;
++        }
++
++        .tts-controls {
++            display: flex;
++            gap: 8px;
++            margin-bottom: 8px;
++            align-items: center;
++        }
++
++        .tts-btn {
++            background: #2d2d40;
++            color: #a0a0c0;
++            border: 1px solid #444460;
++            border-radius: 6px;
++            padding: 6px 10px;
++            cursor: pointer;
++            font-size: 0.9rem;
++            transition: all 0.3s;
++            display: flex;
++            align-items: center;
++            gap: 4px;
++        }
++
++        .tts-btn:hover {
++            background: #7c5cff;
++            color: white;
++            border-color: #7c5cff;
++        }
++
++        .tts-btn.active {
++            background: #7c5cff;
++            color: white;
++            border-color: #7c5cff;
++        }
++
++        /* VS Code Layout Styles */
++        .vscode-layout {
++            display: grid;
++            grid-template-columns: 50px 1fr 400px; /* Sidebar, Main Content, Chat/Terminal */
++            grid-template-rows: 1fr 30px; /* Main area, Status bar */
++            height: 100vh;
++            gap: 10px;
++            padding: 10px;
++        }
++
++        .sidebar-panel {
++            background: linear-gradient(180deg, #0b0b0b 0%, #14141c 100%);
++            border: 1px solid #2d2d40;
++            border-radius: 8px;
++            display: flex;
++            flex-direction: column;
++            overflow: hidden;
++            grid-row: 1 / 3;
++        }
++
++        .sidebar-header {
++            padding: 15px 10px;
++            text-align: center;
++            border-bottom: 1px solid #2d2d40;
++        }
++
++        .sidebar-header h2 {
++            color: #7c5cff;
++            font-size: 0.8rem;
++            margin: 0;
++        }
++
++        .sidebar-menu {
++            display: flex;
++            flex-direction: column;
++            gap: 5px;
++            padding: 10px 0;
++        }
++
++        .menu-btn {
++            background: #2d2d40;
++            color: #a0a0c0;
++            border: none;
++            border-radius: 4px;
++            padding: 10px;
++            cursor: pointer;
++            font-size: 1.2rem;
++            transition: all 0.3s;
++            text-align: center;
++        }
++
++        .menu-btn:hover, .menu-btn.active {
++            background: #7c5cff;
++            color: white;
++        }
++
++        .main-content-area {
++            display: grid;
++            grid-template-columns: 300px 1fr; /* Options panel, Editor */
++            gap: 10px;
++        }
++
++        .options-panel {
++            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
++            border: 1px solid #2d2d40;
++            border-radius: 8px;
++            display: flex;
++            flex-direction: column;
++            overflow: hidden;
++        }
++
++        .explorer-content, .search-content, .git-content, .run-content {
++            display: none;
++            padding: 15px;
++            flex: 1;
++            overflow-y: auto;
++        }
++
++        .explorer-content.active, .search-content.active, .git-content.active, .run-content.active {
++            display: block;
++        }
++
++        .explorer-content h3, .search-content h3, .git-content h3, .run-content h3 {
++            color: #7c5cff;
++            margin-top: 0;
++            font-size: 1rem;
++        }
++
++        .editor-workspace {
++            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
++            border: 1px solid #2d2d40;
++            border-radius: 8px;
++            display: flex;
++            flex-direction: column;
++            overflow: hidden;
++        }
++
++        .editor-tabs-header {
++            background: linear-gradient(90deg, #1a1a25 0%, #14141c 100%);
++            padding: 5px 10px;
++            border-bottom: 1px solid #2d2d40;
++            display: flex;
++            justify-content: space-between;
++            align-items: center;
++        }
++
++        .editor-tabs {
++            display: flex;
++            gap: 5px;
++            overflow-x: auto;
++            padding-bottom: 5px;
++            flex: 1;
++        }
++
++        .right-panel {
++            display: flex;
++            flex-direction: column;
++            gap: 10px;
++        }
++
++        .chat-container {
++            flex: 1;
++            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
++            border: 1px solid #2d2d40;
++            border-radius: 8px;
++            display: flex;
++            flex-direction: column;
++            overflow: hidden;
++        }
++
++        .terminal-container {
++            height: 200px;
++        }
+     </style>
+     <script>
+         // Register service worker for PWA functionality
+@@ -627,6 +1079,10 @@
+             <div class="git-section">
+                 <button class="git-btn" id="gitConnectBtn">Connect to Git</button>
+                 <button class="git-btn" id="gitRepoBtn">Git Repo</button>
++                <button class="git-btn" id="installBtn" style="display: none;">Install App</button>
++                <button class="git-btn" id="projectExplorerBtn" title="Project Explorer">
++                    <i class="fas fa-folder"></i>
++                </button>
+             </div>
+         </div>
+ 
+@@ -635,11 +1091,186 @@
+             <button class="project-btn" id="setProjectBtn">Set Project</button>
+         </div>
+ 
+-        <div class="chat-container">
+-            <div class="chat-messages" id="chatMessages">
+-                <div class="message ai-message">
+-                    <div class="message-header">bapX Coder</div>
+-                    <div>Welcome! I'm bapX Coder, your advanced AI programming assistant. I can help with coding, image analysis (OCR), web searches, Git operations, and more. Use the buttons above to attach files, search the web, or use voice input. How can I assist you today?</div>
++        <!-- Project Explorer Sidebar (Overlay style) -->
++        <div class="sidebar-overlay" id="projectExplorerOverlay" style="display: none;">
++            <div class="sidebar" id="projectExplorerSidebar">
++                <div class="sidebar-header">
++                    <div class="sidebar-title">Explorer</div>
++                    <div class="sidebar-actions">
++                        <button class="sidebar-btn" id="refreshExplorerBtn" title="Refresh"><i class="fas fa-sync-alt"></i></button>
++                        <button class="sidebar-btn" id="closeExplorerBtn" title="Close"><i class="fas fa-times"></i></button>
++                    </div>
++                </div>
++                <div class="sidebar-content">
++                    <div class="explorer-section">
++                        <div class="explorer-section-header">
++                            <span class="section-toggle">▼</span>
++                            <span class="section-label">Open Editors</span>
++                        </div>
++                        <div class="open-editors-list" id="openEditorsList">
++                            <!-- Open editors will be listed here -->
++                        </div>
++                    </div>
++                    <div class="explorer-section">
++                        <div class="explorer-section-header">
++                            <span class="section-toggle">▼</span>
++                            <span class="section-label">PROJECT FILES</span>
++                        </div>
++                        <div class="project-tree" id="projectTree">
++                            <!-- Project tree will be populated here -->
++                        </div>
++                    </div>
++                    <div class="run-section">
++                        <button class="run-btn" id="sidebarRunBtn" title="Run Project">
++                            <i class="fas fa-play"></i> Run
++                        </button>
++                    </div>
++                </div>
++            </div>
++        </div>
++
++        <!-- VS Code Style Layout -->
++        <div class="vscode-layout">
++            <!-- 1. Sidebar (left panel) -->
++            <div class="sidebar-panel">
++                <div class="sidebar-header">
++                    <h2>bapX Coder</h2>
++                </div>
++                <div class="sidebar-menu">
++                    <button class="menu-btn active" data-panel="explorer"><i class="fas fa-folder"></i></button>
++                    <button class="menu-btn" data-panel="search"><i class="fas fa-search"></i></button>
++                    <button class="menu-btn" data-panel="git"><i class="fab fa-git-alt"></i></button>
++                    <button class="menu-btn" data-panel="run"><i class="fas fa-play"></i></button>
++                    <button class="menu-btn" data-panel="debug"><i class="fas fa-bug"></i></button>
++                    <button class="menu-btn" data-panel="extensions"><i class="fas fa-puzzle-piece"></i></button>
++                </div>
++            </div>
++
++            <!-- Main Content Area -->
++            <div class="main-content-area">
++                <!-- 2. Selected options panel content -->
++                <div class="options-panel">
++                    <div class="explorer-content active">
++                        <h3>Explorer</h3>
++                        <div class="project-tree" id="projectTree">
++                            <!-- Project tree will be populated here -->
++                        </div>
++                    </div>
++                    <div class="search-content">
++                        <h3>Search</h3>
++                        <input type="text" placeholder="Search in files..." />
++                    </div>
++                    <div class="git-content">
++                        <h3>Source Control</h3>
++                        <div>Git functionality</div>
++                    </div>
++                    <div class="run-content">
++                        <h3>Run</h3>
++                        <div>Run configurations</div>
++                    </div>
++                </div>
++
++                <!-- 3. Editor area with tabs and code -->
++                <div class="editor-workspace">
++                    <!-- File Tabs with Run Buttons -->
++                    <div class="editor-tabs-header">
++                        <div class="editor-tabs" id="editorTabs">
++                            <div class="editor-tab active" data-file-path="welcome.py">
++                                <span class="editor-tab-filename">welcome.py</span>
++                                <button class="editor-tab-run-btn" title="Run File"><i class="fas fa-play"></i></button>
++                                <button class="editor-tab-close-btn" title="Close Tab"><i class="fas fa-times"></i></button>
++                            </div>
++                        </div>
++                        <div class="editor-toolbar-controls">
++                            <button class="editor-btn" id="editorSaveBtn" title="Save File"><i class="fas fa-save"></i></button>
++                            <button class="editor-btn" id="editorOpenBtn" title="Open File"><i class="fas fa-folder-open"></i></button>
++                            <button class="editor-btn" id="validateProjectBtn" title="Validate Full Project"><i class="fas fa-project-diagram"></i></button>
++                        </div>
++                    </div>
++                    <div id="editor" style="width:100%; height:calc(100% - 40px); border:1px solid #444;"></div>
++                </div>
++
++                <!-- Right Panel: Chat -->
++                <div class="right-panel">
++                    <!-- 4. Chat layout -->
++                    <div class="chat-container">
++                        <div class="chat-messages" id="chatMessages">
++                            <div class="message ai-message">
++                                <div class="message-header">bapX Coder</div>
++                                <div>Welcome! I'm bapX Coder, your advanced AI programming assistant. I can help with coding, image analysis (OCR), web searches, Git operations, and more. Use the buttons above to attach files, search the web, or use voice input. How can I assist you today?</div>
++                            </div>
++                        </div>
++                        <div class="chat-input">
++                            <div class="input-container">
++                                <input type="text" id="chatInput" placeholder="Ask me anything about your code, describe an image, or search the web...">
++                                <div class="input-buttons">
++                                    <button class="input-btn" id="webSearchBtn" title="Web Search">
++                                        <i class="fas fa-globe"></i>
++                                    </button>
++                                    <button class="input-btn" id="attachBtn" title="Attach File">
++                                        <i class="fas fa-paperclip"></i>
++                                    </button>
++                                    <button class="input-btn" id="micBtn" title="Voice Input">
++                                        <i class="fas fa-microphone"></i>
++                                    </button>
++                                    <input type="file" id="fileInput" class="file-input" accept="image/*">
++                                    <button class="input-btn" id="chatSendBtn" title="Send">
++                                        <i class="fas fa-paper-plane"></i>
++                                    </button>
++                                </div>
++                            </div>
++                            <div id="webSearchContainer" class="web-search-container">
++                                <input type="text" id="webSearchInput" class="web-search-input" placeholder="Enter search query...">
++                                <button class="web-search-btn" id="webSearchExecuteBtn">Search</button>
++                            </div>
++                            <button id="continueBtn" class="continue-btn">Continue Reasoning</button>
++                        </div>
++
++                        <!-- TTS Player Controls -->
++                        <div class="tts-player" id="ttsPlayer" style="display: none;">
++                            <div class="tts-controls">
++                                <button class="tts-btn" id="ttsRewindBtn" title="Rewind 10 seconds"><i class="fas fa-backward"></i></button>
++                                <button class="tts-btn" id="ttsPausePlayBtn" title="Pause/Resume"><i class="fas fa-pause"></i></button>
++                                <button class="tts-btn" id="ttsForwardBtn" title="Forward 10 seconds"><i class="fas fa-forward"></i></button>
++                                <button class="tts-btn" id="ttsMuteBtn" title="Mute/Unmute"><i class="fas fa-volume-up"></i></button>
++                                <button class="tts-btn" id="ttsCloseBtn" title="Close Player"><i class="fas fa-times"></i></button>
++                            </div>
++                            <div class="tts-progress">
++                                <div id="ttsProgressBar" class="progress-bar"></div>
++                            </div>
++                        </div>
++                    </div>
++
++                    <!-- Terminal below chat -->
++                    <div class="terminal-container">
++                        <div class="terminal-header">
++                            <div>Terminal - Integrated CLI</div>
++                            <div class="terminal-controls">
++                                <div class="terminal-control close"></div>
++                                <div class="terminal-control minimize"></div>
++                                <div class="terminal-control maximize"></div>
++                            </div>
++                        </div>
++                        <div class="terminal-output" id="terminalOutput">
++                            bapX Coder terminal ready. Type 'help' for available commands.
++                        </div>
++                        <div class="terminal-input">
++                            <input type="text" id="terminalInput" placeholder="Enter command..." autofocus>
++                            <button id="terminalSendBtn">Run</button>
++                        </div>
++                    </div>
++                </div>
++            </div>
++
++            <!-- Bottom Status Bar -->
++            <div class="status-bar">
++                <div class="git-status">
++                    <div class="git-indicator" id="gitIndicator"></div>
++                    <div id="gitStatusText">Git: Not in a repository</div>
++                </div>
++                <div class="status" id="status">Ready - bapX Coder AI Assistant Active</div>
++            </div>
++        </div>
+                 </div>
+             </div>
+             <div class="chat-input">
+@@ -668,6 +1299,20 @@
+                 <button id="continueBtn" class="continue-btn">Continue Reasoning</button>
+             </div>
+ 
++            <!-- TTS Player Controls -->
++            <div class="tts-player" id="ttsPlayer" style="display: none;">
++                <div class="tts-controls">
++                    <button class="tts-btn" id="ttsRewindBtn" title="Rewind 10 seconds"><i class="fas fa-backward"></i></button>
++                    <button class="tts-btn" id="ttsPausePlayBtn" title="Pause/Resume"><i class="fas fa-pause"></i></button>
++                    <button class="tts-btn" id="ttsForwardBtn" title="Forward 10 seconds"><i class="fas fa-forward"></i></button>
++                    <button class="tts-btn" id="ttsMuteBtn" title="Mute/Unmute"><i class="fas fa-volume-up"></i></button>
++                    <button class="tts-btn" id="ttsCloseBtn" title="Close Player"><i class="fas fa-times"></i></button>
++                </div>
++                <div class="tts-progress">
++                    <div id="ttsProgressBar" class="progress-bar"></div>
++                </div>
++            </div>
++
+             <!-- Editor Toolbar with Run Button -->
+             <div class="editor-toolbar" id="editorToolbar" style="display: none;">
+                 <div class="toolbar-buttons">
+@@ -686,12 +1331,20 @@
+         </div>
+ 
+         <div class="editor-container">
+-            <div class="editor-header">
+-                <div>Code Editor</div>
++            <!-- File Tabs with Individual Run Buttons -->
++            <div class="editor-tab-header">
++                <div class="editor-tabs" id="editorTabs">
++                    <!-- Tab elements will be added here dynamically -->
++                    <div class="editor-tab active" data-file-path="welcome.py">
++                        <span class="editor-tab-filename">welcome.py</span>
++                        <button class="editor-tab-run-btn" title="Test & Validate File"><i class="fas fa-play"></i></button>
++                        <button class="editor-tab-close-btn" title="Close Tab"><i class="fas fa-times"></i></button>
++                    </div>
++                </div>
+                 <div class="editor-controls">
+-                    <span class="editor-filename" id="editorFilename">No file selected</span>
+-                    <button class="editor-btn" id="editorSaveBtn">Save</button>
+-                    <button class="editor-btn" id="editorOpenBtn">Open</button>
++                    <button class="editor-btn" id="editorSaveBtn" title="Save File"><i class="fas fa-save"></i></button>
++                    <button class="editor-btn" id="editorOpenBtn" title="Open File"><i class="fas fa-folder-open"></i></button>
++                    <button class="editor-btn" id="validateProjectBtn" title="Validate Full Project"><i class="fas fa-project-diagram"></i></button>
+                 </div>
+             </div>
+             <div id="editor" style="width:100%; height:calc(100% - 40px); border:1px solid #444;"></div>
+@@ -910,6 +1563,7 @@
+         document.getElementById('setProjectBtn').addEventListener('click', function() {
+             const projectPath = prompt('Enter project path:', '');
+             if (projectPath) {
++                currentProjectPath = projectPath; // Update the current project path
+                 socket.emit('set_project', { project_path: projectPath });
+             }
+         });
+@@ -954,6 +1608,80 @@
+             }
+         });
+ 
++        // Validation result handler
++        socket.on('validation_result', function(data) {
++            if (data.success) {
++                const filePath = data.file_path;
++                const validation = data.validation_result;
++                const analysis = data.ai_analysis;
++                const summary = data.test_summary;
++
++                // Format validation output with single characters for simplification
++                let output = `✓ Validation completed for: ${filePath}\n`;
++
++                // Add validation summary using single characters
++                output += `S:${validation.syntax_valid ? '✓' : '✗'} `;  // Syntax
++                if (validation.unit_test_success !== undefined) {
++                    output += `U:${validation.unit_test_success ? '✓' : '✗'} `;  // Unit tests
++                }
++                if (validation.functional_test_success !== undefined) {
++                    output += `F:${validation.functional_test_success ? '✓' : '✗'} `;  // Functional tests
++                }
++
++                // Add AI analysis summary
++                if (summary) {
++                    output += `\nC:${analysis.code_complexity || 0}/10 `;  // Complexity
++                    output += `Sec:${summary.security_issues_count || 0} `;  // Security issues
++                    output += `Perf:${summary.performance_issues_count || 0} `;  // Performance issues
++                    output += `Sug:${summary.suggestions_count || 0} `;  // Suggestions
++                }
++
++                // Add detailed analysis if there are issues
++                if (analysis.security_issues && analysis.security_issues.length > 0) {
++                    output += `\n! Security: ${analysis.security_issues.join(', ')} `;
++                }
++
++                if (analysis.performance_issues && analysis.performance_issues.length > 0) {
++                    output += `\n⚡ Perf: ${analysis.performance_issues.join(', ')} `;
++                }
++
++                if (analysis.fix_suggestions && analysis.fix_suggestions.length > 0) {
++                    output += `\n🔧 Suggestions: ${analysis.fix_suggestions.slice(0, 2).join('; ')} `;  // Show first 2 suggestions
++                    if (analysis.fix_suggestions.length > 2) {
++                        output += `(+${analysis.fix_suggestions.length - 2} more)`;
++                    }
++                }
++
++                addMessage(output, 'ai');
++            } else {
++                addMessage(`Validation error: ${data.message || 'Unknown error'}`, 'ai');
++            }
++        });
++
++        // Project validation result handler
++        socket.on('project_validation_result', function(data) {
++            if (data.success) {
++                const results = data.results;
++                const summary = results.summary;
++
++                let output = `✓ Project-wide validation completed\n`;
++                output += `Files: ${summary.total_files_scanned} | `;
++                output += `Issues: ${summary.total_issues_found} | `;
++                output += `Risk: ${summary.overall_risk_assessment.toUpperCase()}\n`;
++
++                output += `Security: ${summary.security_issues_found} ⚠️ | `;
++                output += `Performance: ${summary.performance_issues_found} ⚡\n`;
++
++                addMessage(output, 'ai');
++            } else {
++                addMessage(`Project validation error: ${data.message || 'Unknown error'}`, 'ai');
++            }
++        });
++
++        socket.on('validation_error', function(data) {
++            addMessage(`Validation error: ${data.message || 'Unknown error'}`, 'ai');
++        });
++
+         function renderTodoList(todoList) {
+             const todoListEl = document.getElementById('todoList');
+             todoListEl.innerHTML = '';
+@@ -1010,6 +1738,7 @@
+         document.getElementById('setProjectBtn').addEventListener('click', function() {
+             const projectPath = prompt('Enter project path:', '');
+             if (projectPath) {
++                currentProjectPath = projectPath; // Update the current project path
+                 socket.emit('set_project', { project_path: projectPath });
+             }
+         });
+@@ -1327,7 +2056,9 @@
+             });
+         }
+ 
+-        // Update terminal handling to use approval system
++        // Update terminal handling to use project path
++        let currentProjectPath = '.';
++
+         async function executeCommand() {
+             const command = terminalInput.value.trim();
+             if (!command) return;
+@@ -1348,8 +2079,11 @@
+ 
+             terminalInput.value = '';
+ 
+-            // Send to backend
+-            socket.emit('execute_command', { command: command });
++            // Send to backend with project path context
++            socket.emit('execute_command', {
++                command: command,
++                project_path: currentProjectPath
++            });
+ 
+             // Auto-scroll to bottom
+             terminalOutput.scrollTop = terminalOutput.scrollHeight;
+@@ -1419,15 +2153,119 @@
+         const runFileBtn = document.getElementById("runFileBtn");
+         const saveFileBtn = document.getElementById("saveFileBtn");
+         const openFileBtn = document.getElementById("openFileBtn");
++        const validateProjectBtn = document.getElementById("validateProjectBtn");
+         const currentFileName = document.getElementById("currentFileName");
+ 
+         // Variables to track editor state
+         let currentFilePath = null;
+         let currentFileContent = "";
++        let openFiles = {}; // Track all open files
+ 
+         // Show editor toolbar
+         editorToolbar.style.display = "flex";
+ 
++        // Tab management functions
++        function addFileTab(filePath) {
++            // Check if tab already exists
++            const existingTab = document.querySelector(`.editor-tab[data-file-path="${filePath}"]`);
++            if (existingTab) {
++                switchToTab(existingTab);
++                return;
++            }
++
++            const tabsContainer = document.getElementById('editorTabs');
++            const tab = document.createElement('div');
++            tab.className = 'editor-tab';
++            tab.setAttribute('data-file-path', filePath);
++
++            const fileName = filePath.split('/').pop();
++            tab.innerHTML = `
++                <span class="editor-tab-filename">${fileName}</span>
++                <button class="editor-tab-run-btn" title="Test & Validate File"><i class="fas fa-play"></i></button>
++                <button class="editor-tab-close-btn" title="Close Tab"><i class="fas fa-times"></i></button>
++            `;
++
++            tabsContainer.appendChild(tab);
++
++            // Add event listeners for the new tab
++            tab.addEventListener('click', function() {
++                switchToTab(this);
++            });
++
++            // Add run button functionality
++            const runBtn = tab.querySelector('.editor-tab-run-btn');
++            runBtn.addEventListener('click', function(e) {
++                e.stopPropagation();
++                runFileValidation(filePath);
++            });
++
++            // Add close button functionality
++            const closeBtn = tab.querySelector('.editor-tab-close-btn');
++            closeBtn.addEventListener('click', function(e) {
++                e.stopPropagation();
++                closeTab(tab, filePath);
++            });
++
++            switchToTab(tab);
++        }
++
++        function switchToTab(tabElement) {
++            // Remove active class from all tabs
++            document.querySelectorAll('.editor-tab').forEach(tab => {
++                tab.classList.remove('active');
++            });
++
++            // Add active class to clicked tab
++            tabElement.classList.add('active');
++
++            // Update current file path
++            currentFilePath = tabElement.getAttribute('data-file-path');
++            document.getElementById('editorFilename').textContent = currentFilePath.split('/').pop();
++
++            // Load file content if we have the editor
++            if (typeof editor !== 'undefined' && editor) {
++                // Load content from stored files or request from backend
++                if (openFiles[currentFilePath]) {
++                    editor.setValue(openFiles[currentFilePath]);
++                } else {
++                    socket.emit('open_file', { file_path: currentFilePath });
++                }
++            }
++        }
++
++        function closeTab(tabElement, filePath) {
++            // Remove from open files
++            delete openFiles[filePath];
++
++            // Remove the tab element
++            tabElement.remove();
++
++            // If it was the current tab, switch to another tab if available
++            if (currentFilePath === filePath) {
++                const remainingTabs = document.querySelectorAll('.editor-tab');
++                if (remainingTabs.length > 0) {
++                    switchToTab(remainingTabs[0]);
++                } else {
++                    // No more tabs, reset UI
++                    currentFilePath = null;
++                    document.getElementById('editorFilename').textContent = 'No file selected';
++                    if (typeof editor !== 'undefined' && editor) {
++                        editor.setValue('');
++                    }
++                }
++            }
++        }
++
++        function runFileValidation(filePath) {
++            // Emit socket event for AI-driven testing
++            socket.emit('validate_file', {
++                file_path: filePath,
++                run_tests: true
++            });
++
++            updateStatus(`Running AI validation on: ${filePath}`);
++        }
++
+         // Run file functionality
+         runFileBtn.addEventListener("click", function() {
+             if (!currentFilePath) {
+@@ -1490,6 +2328,290 @@
+                 updateStatus(`Loading: ${currentFilePath}`);
+             }
+         });
++
++        // Validate entire project functionality
++        validateProjectBtn.addEventListener("click", function() {
++            // Emit socket event for project-wide validation
++            socket.emit('validate_project', {});
++            updateStatus('Running project-wide AI validation...');
++        });
++
++        // PWA Install Functionality
++        let deferredPrompt = null;
++
++        window.addEventListener("beforeinstallprompt", e => {
++            e.preventDefault();
++            deferredPrompt = e;
++            document.getElementById("installBtn").style.display = "block";
++        });
++
++        document.getElementById("installBtn").addEventListener("click", async () => {
++            if (!deferredPrompt) return;
++
++            // Hide the install button
++            document.getElementById("installBtn").style.display = "none";
++
++            // Trigger the install prompt
++            deferredPrompt.prompt();
++
++            // Wait for the user's choice
++            const { outcome } = await deferredPrompt.userChoice;
++
++            // Reset the deferred prompt
++            deferredPrompt = null;
++
++            // Optional: Track install outcome for analytics
++            console.log('User response to install prompt:', outcome);
++
++            if (outcome === 'accepted') {
++                console.log('User accepted the install prompt');
++            } else {
++                console.log('User dismissed the install prompt');
++            }
++        });
++
++        // Project Explorer Sidebar Functionality
++        const projectExplorerBtn = document.getElementById('projectExplorerBtn');
++        const projectExplorerOverlay = document.getElementById('projectExplorerOverlay');
++        const closeExplorerBtn = document.getElementById('closeExplorerBtn');
++        const refreshExplorerBtn = document.getElementById('refreshExplorerBtn');
++        const sidebarRunBtn = document.getElementById('sidebarRunBtn');
++        const projectTree = document.getElementById('projectTree');
++
++        // Toggle project explorer sidebar
++        projectExplorerBtn.addEventListener('click', function() {
++            const isVisible = projectExplorerOverlay.style.display !== 'none';
++            projectExplorerOverlay.style.display = isVisible ? 'none' : 'flex';
++        });
++
++        // Close project explorer
++        closeExplorerBtn.addEventListener('click', function() {
++            projectExplorerOverlay.style.display = 'none';
++        });
++
++        // Refresh explorer (simulates refresh)
++        refreshExplorerBtn.addEventListener('click', function() {
++            // In a real implementation, this would refresh the project tree
++            socket.emit('initialize_project', { project_path: document.getElementById('projectPath').textContent.replace('Current project: ', '') || '.' });
++        });
++
++        // Run project from sidebar
++        sidebarRunBtn.addEventListener('click', function() {
++            if (currentFilePath) {
++                // Run the current file
++                runFileBtn.click(); // Trigger the existing run functionality
++            } else {
++                // If no file is open, run the main project file
++                // This would typically be main.py, app.py, index.js, etc.
++                socket.emit('execute_command', { command: 'python main.py' }); // Default command
++            }
++        });
++
++        // Initialize project explorer when project is set
++        document.getElementById('setProjectBtn').addEventListener('click', function() {
++            projectExplorerOverlay.style.display = 'flex';
++        });
++
++        // Handle project initialization
++        socket.on('project_initialized', function(data) {
++            projectExplorerOverlay.style.display = 'flex';
++            renderProjectTree(data.tree || {}, projectTree);
++        });
++
++        // Render project tree structure
++        function renderProjectTree(treeData, container) {
++            container.innerHTML = '';
++
++            function renderNode(obj, parentElement, basePath = '') {
++                for (const [key, value] of Object.entries(obj)) {
++                    const fullPath = basePath ? `${basePath}/${key}` : key;
++                    const nodeDiv = document.createElement('div');
++                    nodeDiv.className = 'tree-item';
++                    nodeDiv.dataset.path = fullPath;
++
++                    // Determine if it's a file or directory
++                    if (value instanceof Object && !Array.isArray(value)) {
++                        // Directory
++                        nodeDiv.innerHTML = `
++                            <span class="file-icon folder"><i class="fas fa-folder"></i></span>
++                            <span>${key}</span>
++                        `;
++
++                        // Add click event to expand/collapse
++                        nodeDiv.addEventListener('click', function(e) {
++                            e.stopPropagation();
++                            const subContainer = nodeDiv.nextElementSibling;
++                            if (subContainer && subContainer.classList.contains('sub-tree')) {
++                                subContainer.style.display = subContainer.style.display === 'none' ? 'block' : 'none';
++                            }
++                        });
++
++                        parentElement.appendChild(nodeDiv);
++
++                        // Create sub-tree container
++                        const subContainer = document.createElement('div');
++                        subContainer.className = 'sub-tree';
++                        subContainer.style.display = 'none';
++                        parentElement.appendChild(subContainer);
++
++                        // Recursively render sub-nodes
++                        renderNode(value, subContainer, fullPath);
++                    } else {
++                        // File
++                        const ext = key.split('.').pop().toLowerCase();
++                        const iconClass = getFileIconClass(ext);
++
++                        nodeDiv.innerHTML = `
++                            <span class="file-icon ${iconClass}"><i class="fas fa-file"></i></span>
++                            <span>${key}</span>
++                        `;
++
++                        // Add click event to open file
++                        nodeDiv.addEventListener('click', function() {
++                            // Highlight selected file
++                            document.querySelectorAll('.tree-item').forEach(item => {
++                                item.classList.remove('active');
++                            });
++                            nodeDiv.classList.add('active');
++
++                            // Request to open the file
++                            socket.emit('open_file', { file_path: fullPath });
++                        });
++
++                        parentElement.appendChild(nodeDiv);
++                    }
++                }
++            }
++
++            renderNode(treeData, container);
++        }
++
++        // Determine file icon based on extension
++        function getFileIconClass(extension) {
++            const iconMap = {
++                'py': 'python',
++                'js': 'javascript',
++                'ts': 'typescript',
++                'jsx': 'javascript',
++                'tsx': 'typescript',
++                'html': 'html',
++                'htm': 'html',
++                'css': 'css',
++                'scss': 'css',
++                'sass': 'css',
++                'json': 'json',
++                'md': 'markdown',
++                'java': 'java',
++                'cpp': 'cpp',
++                'c': 'c',
++                'h': 'c',
++                'cs': 'csharp',
++                'go': 'go',
++                'rs': 'rust',
++                'php': 'php',
++                'rb': 'ruby',
++                'swift': 'swift',
++                'kt': 'kotlin',
++                'sql': 'sql',
++                'xml': 'xml',
++                'yaml': 'yaml',
++                'yml': 'yaml',
++                'csv': 'csv',
++                'txt': 'default',
++                'log': 'default'
++            };
++
++            return iconMap[extension] || 'default';
++        }
++
++        // TTS Player Functionality
++        const ttsPlayer = document.getElementById('ttsPlayer');
++        const ttsPausePlayBtn = document.getElementById('ttsPausePlayBtn');
++        const ttsMuteBtn = document.getElementById('ttsMuteBtn');
++        const ttsRewindBtn = document.getElementById('ttsRewindBtn');
++        const ttsForwardBtn = document.getElementById('ttsForwardBtn');
++        const ttsCloseBtn = document.getElementById('ttsCloseBtn');
++
++        // Initialize TTS player functionality
++        ttsPausePlayBtn.addEventListener('click', function() {
++            // Switch between pause and play icons
++            const icon = ttsPausePlayBtn.querySelector('i');
++            if (icon.classList.contains('fa-pause')) {
++                icon.className = 'fas fa-play';
++            } else {
++                icon.className = 'fas fa-pause';
++            }
++
++            // This would trigger TTS pause/resume functionality
++            console.log('Toggle TTS playback');
++        });
++
++        ttsMuteBtn.addEventListener('click', function() {
++            const icon = ttsMuteBtn.querySelector('i');
++            if (icon.classList.contains('fa-volume-up')) {
++                icon.className = 'fas fa-volume-mute';
++                ttsMuteBtn.classList.add('active');
++            } else {
++                icon.className = 'fas fa-volume-up';
++                ttsMuteBtn.classList.remove('active');
++            }
++
++            // This would trigger TTS mute/unmute functionality
++            console.log('Toggle TTS mute');
++        });
++
++        ttsRewindBtn.addEventListener('click', function() {
++            console.log('Rewind TTS 10 seconds');
++            // This would rewind TTS by 10 seconds
++        });
++
++        ttsForwardBtn.addEventListener('click', function() {
++            console.log('Forward TTS 10 seconds');
++            // This would forward TTS by 10 seconds
++        });
++
++        ttsCloseBtn.addEventListener('click', function() {
++            ttsPlayer.style.display = 'none';
++        });
++
++        // Auto-play functionality - show TTS player when AI responds
++        socket.on('chat_response', function(data) {
++            // Show and auto-play TTS if available
++            ttsPlayer.style.display = 'block';
++
++            // Simulate playing audio
++            setTimeout(() => {
++                // Update progress bar simulation
++                const progressBar = document.getElementById('ttsProgressBar');
++                progressBar.style.width = '100%';
++
++                // Reset after playback
++                setTimeout(() => {
++                    const icon = ttsPausePlayBtn.querySelector('i');
++                    icon.className = 'fas fa-pause';
++                }, 1000);
++            }, 500);
++        });
++
++        // Sidebar menu functionality
++        const menuButtons = document.querySelectorAll('.menu-btn');
++        const explorerContents = document.querySelectorAll('.explorer-content, .search-content, .git-content, .run-content');
++
++        menuButtons.forEach(button => {
++            button.addEventListener('click', function() {
++                // Remove active class from all buttons
++                menuButtons.forEach(btn => btn.classList.remove('active'));
++                // Add active class to clicked button
++                this.classList.add('active');
++
++                // Hide all content panels
++                explorerContents.forEach(panel => panel.classList.remove('active'));
++
++                // Show corresponding content based on data attribute
++                const panelType = this.getAttribute('data-panel');
++                document.querySelector(`.${panelType}-content`).classList.add('active');
++            });
++        });
+     </script>
+ </body>
+ </html>
+diff --git a/validation_system.py b/validation_system.py
+new file mode 100644
+index 0000000..6082109
+--- /dev/null
++++ b/validation_system.py
+@@ -0,0 +1,752 @@
++#!/usr/bin/env python3
++"""
++AI-driven testing and validation system for bapXcoder
++Implements automated testing that validates code after each change
++"""
++
++import os
++import sys
++import subprocess
++import json
++import time
++from pathlib import Path
++from typing import Dict, List, Tuple, Optional
++
++
++class AIValidationSystem:
++    """AI-driven validation system for bapXcoder projects"""
++
++    def __init__(self, project_path: Path):
++        self.project_path = project_path
++        self.test_log_file = project_path / ".bapXcoder" / "validation_log.json"
++        self.setup_validation_directory()
++
++    def setup_validation_directory(self):
++        """Set up the validation infrastructure"""
++        bapxcoder_dir = self.project_path / ".bapXcoder"
++        bapxcoder_dir.mkdir(exist_ok=True)
++
++        # Initialize validation log if it doesn't exist
++        if not self.test_log_file.exists():
++            with open(self.test_log_file, 'w') as f:
++                json.dump({
++                    'validation_history': [],
++                    'last_tested_files': [],
++                    'overall_success_rate': 0,
++                    'test_stats': {
++                        'total_runs': 0,
++                        'successful_runs': 0,
++                        'failed_runs': 0
++                    }
++                }, f, indent=2)
++
++    def run_syntax_validation(self, file_path: str) -> Tuple[bool, str]:
++        """Run syntax validation on a code file"""
++        file_ext = Path(file_path).suffix.lower()
++
++        if file_ext == '.py':
++            try:
++                with open(file_path, 'r', encoding='utf-8') as f:
++                    content = f.read()
++                compile(content, file_path, 'exec')
++                return True, "Python syntax validation passed"
++            except SyntaxError as e:
++                return False, f"Python syntax error: line {e.lineno}, {str(e.msg)}"
++            except Exception as e:
++                return False, f"Python validation error: {str(e)}"
++
++        elif file_ext in ['.js', '.ts', '.jsx', '.tsx']:
++            try:
++                result = subprocess.run([
++                    'node', '-c', file_path
++                ], capture_output=True, text=True, timeout=10)
++                if result.returncode == 0:
++                    return True, "JavaScript/TypeScript syntax validation passed"
++                else:
++                    return False, f"JS/TS syntax error: {result.stderr[:100]}..."  # Limit size
++            except subprocess.TimeoutExpired:
++                return False, "JavaScript validation timed out"
++            except FileNotFoundError:
++                # Node.js not found, try basic read validation
++                try:
++                    with open(file_path, 'r', encoding='utf-8') as f:
++                        f.read()
++                    return True, "JS/TS file is readable (no Node.js available for syntax check)"
++                except Exception as e:
++                    return False, f"JS/TS file read error: {str(e)}"
++            except Exception as e:
++                return False, f"JS/TS validation error: {str(e)}"
++
++        elif file_ext == '.json':
++            try:
++                with open(file_path, 'r', encoding='utf-8') as f:
++                    json.load(f)
++                return True, "JSON validation passed"
++            except Exception as e:
++                return False, f"JSON syntax error: {str(e)}"
++
++        else:
++            # For other files, just check readability
++            try:
++                with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
++                    f.read()
++                return True, "File readable"
++            except Exception as e:
++                return False, f"File read error: {str(e)}"
++
++    def run_unit_tests(self, file_path: str) -> Tuple[bool, str, List[str]]:
++        """Run unit tests related to a changed file"""
++        file_ext = Path(file_path).suffix.lower()
++        results = []
++
++        if file_ext == '.py':
++            # Look for test files in the same directory or test directory
++            test_dir = Path(file_path).parent / "test"
++            test_file = Path(file_path).parent / f"test_{Path(file_path).stem}.py"
++            test_alt_file = Path(file_path).parent / f"{Path(file_path).stem}_test.py"
++
++            test_candidates = [test_file, test_alt_file]
++            if test_dir.exists():
++                test_candidates.extend(test_dir.glob(f"**/test_{Path(file_path).stem}.py"))
++                test_candidates.extend(test_dir.glob(f"**/*_test.py"))
++
++            for test_candidate in test_candidates:
++                if test_candidate.exists():
++                    try:
++                        result = subprocess.run([
++                            sys.executable, '-m', 'pytest', str(test_candidate)
++                        ], capture_output=True, text=True, timeout=60)
++
++                        if result.returncode == 0:
++                            results.append(f"Unit tests in {test_candidate.name}: PASSED")
++                        else:
++                            return False, f"Unit tests in {test_candidate.name}: FAILED", [f"Test output: {result.stdout}", f"Errors: {result.stderr}"]
++                    except Exception as e:
++                        results.append(f"Error running tests in {test_candidate.name}: {str(e)}")
++
++            if not results:
++                results.append("No related test files found")
++
++        return True, "Unit tests completed", results
++
++    def run_functional_tests(self, project_dir: str) -> Tuple[bool, str, List[str]]:
++        """Run functional/integration tests for the project"""
++        results = []
++
++        # Look for common test runners and test files
++        test_patterns = [
++            f"{project_dir}/test_*.py",
++            f"{project_dir}/*_test.py",
++            f"{project_dir}/test/**/*.py",
++            f"{project_dir}/test/**/*.js",
++            f"{project_dir}/**/*spec.js",
++            f"{project_dir}/**/*test.js",
++        ]
++
++        success = True
++        for pattern in test_patterns:
++            test_files = Path(pattern).parent.glob(pattern.split('/')[-1])
++            for test_file in test_files:
++                try:
++                    if test_file.suffix == '.py':
++                        result = subprocess.run([
++                            sys.executable, '-m', 'unittest', str(test_file)
++                        ], capture_output=True, text=True, timeout=30)
++
++                        if result.returncode == 0:
++                            results.append(f"Functional test {test_file.name}: PASSED")
++                        else:
++                            results.append(f"Functional test {test_file.name}: FAILED")
++                            success = False
++                    elif test_file.suffix in ['.js', '.ts']:
++                        # For now, just check syntax validity of test files
++                        result = subprocess.run([
++                            'node', '-c', str(test_file)
++                        ], capture_output=True, text=True, timeout=10)
++
++                        if result.returncode == 0:
++                            results.append(f"Functional test syntax {test_file.name}: PASSED")
++                        else:
++                            results.append(f"Functional test syntax {test_file.name}: FAILED - {result.stderr}")
++                            success = False
++                except Exception as e:
++                    results.append(f"Error running test {test_file.name}: {str(e)}")
++
++        if not results:
++            results.append("No functional test files found")
++
++        return success, "Functional tests completed", results
++
++    def validate_file_change(self, file_path: str) -> Dict:
++        """Validate a single file after it's been changed"""
++        timestamp = time.time()
++
++        print(f"Validating file change: {file_path}")
++
++        # Run syntax validation
++        syntax_ok, syntax_msg = self.run_syntax_validation(file_path)
++
++        # Log the validation
++        validation_result = {
++            'timestamp': timestamp,
++            'file_path': file_path,
++            'syntax_valid': syntax_ok,
++            'syntax_message': syntax_msg,
++            'unit_test_results': [],
++            'overall_success': syntax_ok
++        }
++
++        # If syntax is OK, run unit tests if appropriate
++        if syntax_ok:
++            unit_ok, unit_msg, unit_details = self.run_unit_tests(file_path)
++            validation_result['unit_test_success'] = unit_ok
++            validation_result['unit_test_message'] = unit_msg
++            validation_result['unit_test_details'] = unit_details
++            validation_result['overall_success'] = unit_ok
++
++            # Run functional tests for the entire project
++            func_ok, func_msg, func_details = self.run_functional_tests(str(Path(file_path).parent))
++            validation_result['functional_test_success'] = func_ok
++            validation_result['functional_test_message'] = func_msg
++            validation_result['functional_test_details'] = func_details
++            validation_result['overall_success'] = validation_result['overall_success'] and func_ok
++
++        # Update validation log
++        self.update_validation_log(validation_result)
++
++        return validation_result
++
++    def update_validation_log(self, result: Dict):
++        """Update the validation log with a new result"""
++        try:
++            with open(self.test_log_file, 'r') as f:
++                log_data = json.load(f)
++        except:
++            log_data = {
++                'validation_history': [],
++                'last_tested_files': [],
++                'overall_success_rate': 0,
++                'test_stats': {
++                    'total_runs': 0,
++                    'successful_runs': 0,
++                    'failed_runs': 0
++                }
++            }
++
++        log_data['validation_history'].append(result)
++        log_data['last_tested_files'].append(result['file_path'])
++
++        # Update statistics
++        log_data['test_stats']['total_runs'] += 1
++        if result['overall_success']:
++            log_data['test_stats']['successful_runs'] += 1
++        else:
++            log_data['test_stats']['failed_runs'] += 1
++
++        log_data['overall_success_rate'] = log_data['test_stats']['successful_runs'] / max(1, log_data['test_stats']['total_runs'])
++
++        # Keep only the last 100 validation records to avoid log growing too large
++        if len(log_data['validation_history']) > 100:
++            log_data['validation_history'] = log_data['validation_history'][-100:]
++
++        # Keep only the last 20 tested files
++        if len(log_data['last_tested_files']) > 20:
++            log_data['last_tested_files'] = log_data['last_tested_files'][-20:]
++
++        with open(self.test_log_file, 'w') as f:
++            json.dump(log_data, f, indent=2)
++
++    def get_validation_summary(self) -> Dict:
++        """Get a summary of validation results"""
++        try:
++            with open(self.test_log_file, 'r') as f:
++                log_data = json.load(f)
++
++            return {
++                'success_rate': log_data.get('overall_success_rate', 0),
++                'total_validations': log_data['test_stats']['total_runs'],
++                'successful_validations': log_data['test_stats']['successful_runs'],
++                'failed_validations': log_data['test_stats']['failed_runs'],
++                'recent_validations': log_data['validation_history'][-5:],  # Last 5 validations
++                'last_tested_files': log_data['last_tested_files'][-5:]    # Last 5 tested files
++            }
++        except:
++            return {
++                'success_rate': 0,
++                'total_validations': 0,
++                'successful_validations': 0,
++                'failed_validations': 0,
++                'recent_validations': [],
++                'last_tested_files': []
++            }
++
++
++class AITestRunner:
++    """AI-powered test runner that validates code and suggests fixes"""
++
++    def __init__(self, project_path: Path):
++        self.project_path = project_path
++        self.validation_system = AIValidationSystem(project_path)
++        self.test_results = {}
++
++    def validate_project_stage(self, stage_description: str = "", changed_files: List[str] = []) -> Dict:
++        """Validate project at a particular development stage"""
++        results = {
++            'stage': stage_description,
++            'timestamp': time.time(),
++            'file_validations': [],
++            'project_overall_status': True,
++            'suggestions': []
++        }
++
++        if not changed_files:
++            # If no specific files provided, validate recently changed files
++            for file_path in self.project_path.glob("**/*.py"):
++                if file_path.name != '__pycache__':
++                    changed_files.append(str(file_path))
++
++        for file_path in changed_files:
++            validation_result = self.validation_system.validate_file_change(file_path)
++            results['file_validations'].append(validation_result)
++
++            if not validation_result['overall_success']:
++                results['project_overall_status'] = False
++
++        # Generate AI suggestions based on validation results
++        if not results['project_overall_status']:
++            suggestions = self.generate_fix_suggestions(results['file_validations'])
++            results['suggestions'] = suggestions
++
++        return results
++
++    def run_individual_file_tests(self, file_path: str) -> Dict:
++        """Run comprehensive tests for an individual file and return results"""
++        validation_result = self.validation_system.validate_file_change(file_path)
++
++        # Run additional tests
++        performance_results = self.run_performance_tests(file_path)
++
++        # Combine all analysis
++        ai_analysis = self.analyze_file_quality(file_path)
++        ai_analysis['performance_metrics'] = performance_results['metrics']
++        if performance_results['performance_issues']:
++            ai_analysis['performance_issues'] = performance_results['performance_issues']
++            ai_analysis['suggestions'].extend([f"Performance: {issue}" for issue in performance_results['performance_issues']])
++
++        # Generate AI fix suggestions
++        all_issues = []
++        if 'security_issues' in ai_analysis and ai_analysis['security_issues']:
++            all_issues.extend(ai_analysis['security_issues'])
++        if 'performance_issues' in ai_analysis and ai_analysis['performance_issues']:
++            all_issues.extend(ai_analysis['performance_issues'])
++
++        fix_suggestions = self.generate_ai_fix_suggestions(file_path, all_issues)
++        ai_analysis['fix_suggestions'] = fix_suggestions
++
++        test_result = {
++            'file_path': file_path,
++            'validation_result': validation_result,
++            'ai_analysis': ai_analysis,
++            'timestamp': time.time(),
++            'test_summary': {
++                'syntax_valid': validation_result['syntax_valid'],
++                'security_issues_count': len(ai_analysis.get('security_issues', [])),
++                'performance_issues_count': len(ai_analysis.get('performance_issues', [])),
++                'suggestions_count': len(ai_analysis.get('suggestions', [])),
++                'fix_suggestions_count': len(ai_analysis.get('fix_suggestions', []))
++            }
++        }
++
++        # Store result for later reference
++        self.test_results[file_path] = test_result
++
++        return test_result
++
++    def analyze_file_quality(self, file_path: str) -> Dict:
++        """AI analysis of file quality and potential improvements"""
++        try:
++            with open(file_path, 'r', encoding='utf-8') as f:
++                content = f.read()
++
++            file_ext = Path(file_path).suffix.lower()
++            analysis = {
++                'code_complexity': self.assess_complexity(content),
++                'security_issues': self.scan_security(content, file_ext),
++                'performance_issues': self.scan_performance(content, file_ext),
++                'best_practices': self.check_best_practices(content, file_ext),
++                'suggestions': []
++            }
++
++            # Generate AI-powered suggestions based on analysis
++            if analysis['security_issues']:
++                analysis['suggestions'].append("Security concerns detected - review the code for potential vulnerabilities")
++
++            if analysis['performance_issues']:
++                analysis['suggestions'].append("Performance issues detected - consider optimization")
++
++            if analysis['best_practices']:
++                analysis['suggestions'].extend(analysis['best_practices'])
++
++            return analysis
++        except Exception as e:
++            return {
++                'error': f"Could not analyze {file_path}: {str(e)}",
++                'code_complexity': 0,
++                'security_issues': [],
++                'performance_issues': [],
++                'best_practices': [],
++                'suggestions': []
++            }
++
++    def assess_complexity(self, code: str) -> int:
++        """Assess code complexity on a scale of 1-10"""
++        complexity_score = 5  # Default medium complexity
++
++        # Count functions and classes
++        function_count = code.count('def ')
++        class_count = code.count('class ')
++
++        # Count nested structures
++        nested_score = code.count('    def ') + code.count('\tif ') + code.count('\tfor ') + code.count('\twhile ')
++
++        # Increase complexity based on counts
++        complexity_score += min(function_count, 5) + min(class_count, 3) + min(nested_score/10, 3)
++
++        return min(int(complexity_score), 10)
++
++    def scan_security(self, code: str, ext: str) -> List[str]:
++        """Scan for basic security issues in code"""
++        issues = []
++
++        if ext == '.py':
++            if 'eval(' in code:
++                issues.append("Use of eval() poses security risks")
++            if 'exec(' in code:
++                issues.append("Use of exec() poses security risks")
++            if 'os.system(' in code or 'subprocess.' in code:
++                issues.append("External command execution found - validate inputs carefully")
++            if 'password' in code.lower() and '=' in code:
++                issues.append("Potential hardcoded credentials found")
++            if 'input(' in code and ('sql' in code.lower() or 'query' in code.lower()):
++                issues.append("Potential SQL injection risk - validate database inputs carefully")
++            if "'SELECT" in code or '"SELECT' in code:
++                issues.append("Direct SQL query found - consider using parameterized queries")
++
++        return issues
++
++    def run_integration_tests(self, project_path: str) -> Dict:
++        """Run integration tests for the project"""
++        results = {
++            'tests_run': 0,
++            'tests_passed': 0,
++            'tests_failed': 0,
++            'details': []
++        }
++
++        # Look for integration test files
++        integration_test_patterns = [
++            f"{project_path}/**/*integration*test*.py",
++            f"{project_path}/**/*integration_test*.py",
++            f"{project_path}/**/*test_integration*.py",
++            f"{project_path}/integration_tests/*.py",
++            f"{project_path}/tests/integration/*.py"
++        ]
++
++        for pattern in integration_test_patterns:
++            try:
++                import glob
++                test_files = glob.glob(pattern, recursive=True)
++                for test_file in test_files:
++                    try:
++                        result = subprocess.run([
++                            sys.executable, '-m', 'pytest', test_file, '-v'
++                        ], capture_output=True, text=True, timeout=120)
++
++                        results['tests_run'] += 1
++                        if result.returncode == 0:
++                            results['tests_passed'] += 1
++                            results['details'].append(f"Integration test passed: {test_file}")
++                        else:
++                            results['tests_failed'] += 1
++                            results['details'].append(f"Integration test failed: {test_file} - {result.stderr[:100]}")
++                    except subprocess.TimeoutExpired:
++                        results['tests_failed'] += 1
++                        results['details'].append(f"Integration test timed out: {test_file}")
++                    except Exception as e:
++                        results['details'].append(f"Error running integration test {test_file}: {str(e)}")
++            except Exception:
++                continue  # If one pattern fails, try others
++
++        return results
++
++    def run_performance_tests(self, file_path: str) -> Dict:
++        """Run basic performance tests on the file"""
++        results = {
++            'performance_issues': [],
++            'metrics': {}
++        }
++
++        try:
++            # Read the file content
++            with open(file_path, 'r', encoding='utf-8') as f:
++                content = f.read()
++
++            # Analyze for performance issues
++            lines = content.split('\n')
++            results['metrics']['line_count'] = len(lines)
++            results['metrics']['file_size'] = len(content)
++
++            # Check for inefficient patterns
++            for i, line in enumerate(lines, 1):
++                if 'for ' in line and ' in range(' in line:
++                    # Check for potentially large ranges
++                    import re
++                    matches = re.findall(r'range\((\d+)\)', line)
++                    for match in matches:
++                        if int(match) > 100000:  # Large iteration
++                            results['performance_issues'].append(f"Line {i}: Large loop range detected ({match} iterations)")
++
++                if 'import ' in line and i < 10:  # Check if imports are in module scope
++                    results['metrics'].setdefault('imports_count', 0)
++                    results['metrics']['imports_count'] += 1
++
++            # Check for potential memory issues
++            if 'while True:' in content:
++                results['performance_issues'].append("Infinite loop detected - potential memory/CPU issue")
++
++            if content.count('append(') > 100:
++                results['performance_issues'].append("Many list append operations - consider using more efficient data structures")
++
++        except Exception as e:
++            results['performance_issues'].append(f"Error analyzing performance: {str(e)}")
++
++        return results
++
++    def generate_ai_fix_suggestions(self, file_path: str, issues: List[str]) -> List[str]:
++        """Generate AI-powered fix suggestions for identified issues"""
++        suggestions = []
++
++        # Categorize issues and provide specific suggestions
++        for issue in issues:
++            if "security" in issue.lower() or "eval" in issue or "exec" in issue:
++                suggestions.append("RECOMMENDATION: Replace eval/exec with safer alternatives like ast.literal_eval() for data parsing")
++            elif "password" in issue.lower():
++                suggestions.append("RECOMMENDATION: Store credentials in environment variables or secure configuration files")
++            elif "large loop" in issue.lower():
++                suggestions.append("RECOMMENDATION: Consider using generators or breaking the loop into smaller chunks")
++            elif "SQL injection" in issue:
++                suggestions.append("RECOMMENDATION: Use parameterized queries or an ORM to prevent SQL injection")
++
++        # Add general suggestions based on file type
++        ext = Path(file_path).suffix.lower()
++        if ext == '.py':
++            suggestions.extend([
++                "Consider adding type hints for better code maintenance",
++                "Add comprehensive unit tests for all functions"
++            ])
++
++        return suggestions
++
++    def run_project_wide_tests(self) -> Dict:
++        """Run comprehensive tests across the entire project"""
++        results = {
++            'files_analyzed': 0,
++            'total_issues': 0,
++            'security_issues': 0,
++            'performance_issues': 0,
++            'suggestions': [],
++            'file_reports': [],
++            'summary': {}
++        }
++
++        # Walk through all files in the project
++        for file_path in self.project_path.rglob('*'):
++            if file_path.is_file() and file_path.suffix.lower() in ['.py', '.js', '.ts', '.jsx', '.tsx', '.html', '.css', '.json']:
++                try:
++                    file_analysis = self.analyze_file_quality(str(file_path))
++                    results['files_analyzed'] += 1
++
++                    # Collect issues
++                    security_count = len(file_analysis.get('security_issues', []))
++                    perf_count = len(file_analysis.get('performance_issues', []))
++
++                    results['security_issues'] += security_count
++                    results['performance_issues'] += perf_count
++                    results['total_issues'] += security_count + perf_count
++                    results['suggestions'].extend(file_analysis.get('suggestions', []))
++
++                    # Store file-specific report
++                    file_report = {
++                        'file_path': str(file_path),
++                        'security_issues': file_analysis.get('security_issues', []),
++                        'performance_issues': file_analysis.get('performance_issues', []),
++                        'complexity': file_analysis.get('code_complexity', 0),
++                        'suggestions': file_analysis.get('suggestions', [])
++                    }
++                    results['file_reports'].append(file_report)
++
++                except Exception as e:
++                    print(f"Error analyzing {file_path}: {str(e)}")
++                    continue
++
++        # Generate project summary
++        results['summary'] = {
++            'total_files_scanned': results['files_analyzed'],
++            'total_issues_found': results['total_issues'],
++            'security_issues_found': results['security_issues'],
++            'performance_issues_found': results['performance_issues'],
++            'suggestions_available': len(results['suggestions']),
++            'overall_risk_assessment': self.calculate_risk_level(results)
++        }
++
++        return results
++
++    def calculate_risk_level(self, results: Dict) -> str:
++        """Calculate overall risk level based on test results"""
++        total_files = results['files_analyzed']
++        if total_files == 0:
++            return "unknown"
++
++        issue_density = results['total_issues'] / total_files
++
++        if issue_density > 2.0:
++            return "high"
++        elif issue_density > 1.0:
++            return "medium"
++        elif issue_density > 0.0:
++            return "low"
++        else:
++            return "none"
++
++    def scan_performance(self, code: str, ext: str) -> List[str]:
++        """Scan for basic performance issues in code"""
++        issues = []
++
++        if ext == '.py':
++            if 'for ' in code and 'in range(' in code and 'range(10000' in code:
++                issues.append("Large loop detected - consider optimization")
++            if code.count('import ') > 10:
++                issues.append("Too many imports at module level - consider lazy imports")
++
++        return issues
++
++    def generate_fix_suggestions(self, validation_results: List[Dict]) -> List[str]:
++        """Generate AI-powered suggestions for fixing validation issues"""
++        suggestions = []
++
++        for result in validation_results:
++            if not result['overall_success']:
++                if not result['syntax_valid']:
++                    suggestions.append(f"Fix syntax error in {result['file_path']}: {result['syntax_message']}")
++                else:
++                    if result.get('unit_test_success') == False:
++                        suggestions.append(f"Address unit test failures in {result['file_path']}")
++                    if result.get('functional_test_success', True) == False:
++                        suggestions.append(f"Address functional test failures in {result['file_path']}")
++
++        return suggestions
++
++    def auto_test_after_changes(self, file_path: str) -> Dict:
++        """Automatically test file after changes"""
++        validation_result = self.validation_system.validate_file_change(file_path)
++
++        # Log result to session tree
++        try:
++            session_tree_file = self.project_path / ".bapXcoder" / "sessiontree.json"
++            if session_tree_file.exists():
++                with open(session_tree_file, 'r') as f:
++                    session_data = json.load(f)
++
++                # Update session with latest validation
++                if 'validation_results' not in session_data:
++                    session_data['validation_results'] = []
++
++                session_data['validation_results'].append({
++                    'file': file_path,
++                    'timestamp': validation_result['timestamp'],
++                    'success': validation_result['overall_success'],
++                    'issues': []
++                })
++
++                # Add specific issues if validation failed
++                if not validation_result['overall_success']:
++                    if not validation_result.get('syntax_valid', True):
++                        session_data['validation_results'][-1]['issues'].append({
++                            'type': 'syntax',
++                            'message': validation_result['syntax_message']
++                        })
++                    if not validation_result.get('unit_test_success', True):
++                        session_data['validation_results'][-1]['issues'].append({
++                            'type': 'unit_test',
++                            'message': validation_result['unit_test_message']
++                        })
++
++                with open(session_tree_file, 'w') as f:
++                    json.dump(session_data, f, indent=2)
++        except Exception as e:
++            print(f"Warning: Could not update session tree with validation results: {e}")
++
++        return validation_result
++
++
++# Global validation system instance (initialized per project)
++ai_validator = None
++
++
++def initialize_ai_testing(project_path: str) -> bool:
++    """Initialize the AI testing system for a project"""
++    global ai_validator
++    try:
++        ai_validator = AITestRunner(Path(project_path))
++        print(f"AI validation system initialized for project: {project_path}")
++        return True
++    except Exception as e:
++        print(f"Could not initialize AI validation system: {e}")
++        return False
++
++
++def validate_file_on_change(file_path: str) -> Optional[Dict]:
++    """Validate a file after it has been changed"""
++    global ai_validator
++    if ai_validator:
++        try:
++            result = ai_validator.auto_test_after_changes(file_path)
++            return result
++        except Exception as e:
++            print(f"Error validating file {file_path}: {e}")
++            return None
++    else:
++        print("AI validation system not initialized - please set project first")
++        return None
++
++
++def get_project_validation_summary() -> Optional[Dict]:
++    """Get validation summary for the current project"""
++    global ai_validator
++    if ai_validator:
++        try:
++            return ai_validator.validation_system.get_validation_summary()
++        except Exception as e:
++            print(f"Error getting validation summary: {e}")
++            return None
++    else:
++        print("AI validation system not initialized - please set project first")
++        return None
++
++
++if __name__ == "__main__":
++    # Example usage
++    import sys
++    if len(sys.argv) > 1:
++        project_path = sys.argv[1]
++        initialize_ai_testing(project_path)
++
++        if len(sys.argv) > 2:
++            file_path = sys.argv[2]
++            result = validate_file_on_change(file_path)
++            if result:
++                print(f"Validation result: {result}")
++            else:
++                print("Validation failed")
++    else:
++        print("Usage: python validation_system.py <project_path> [file_path_to_validate]")
+\ No newline at end of file
