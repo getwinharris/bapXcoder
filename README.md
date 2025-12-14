@@ -557,38 +557,36 @@ Join our community to make bapX Coder even better!
 
 ## Application Installation
 
-bapXcoder can be installed using one of two approaches:
+bapXcoder has a unified, simple installation process:
 
-### Recommended: Download from Landing Page
-The easiest way is to visit our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/) and click the **Download** button. This provides a native installer that guides you through:
-- Setting system default installation path
-- Downloading the model with progress indication
-- Granting necessary permissions
-- Configuring auto-start and desktop shortcuts
+### Single ZIP Download
+The recommended approach is to visit our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/) and click the **Download bapXcoder.zip** button.
 
-### Alternative: Web Application
-For the web application approach without installation:
+This downloads a single ZIP file named `bapXcoder.zip` that contains only one file with the application logo. When you extract this ZIP, you'll see just one executable file. Running this file launches a CLI installation wizard that:
 
-1. Run the application locally (`python qwen3VL_local_cli.py`) and access it in your browser (e.g., `http://localhost:7860`)
-2. Optionally, look for the **Install** button (in the top-right header section) - it will appear when the browser detects the app can be installed as a desktop application
-3. Click the button to trigger the browser's native install prompt
-4. Confirm the installation in the dialog that appears
+1. Clones the bapXcoder repository directly to your system
+2. Sets up the project in your chosen installation directory
+3. Downloads the required AI model
+4. Configures all dependencies
+5. Completes the setup with your project ready to use
 
 ### Technical Implementation
 
-The application is built as a web-based IDE with optional desktop installation:
+The installation process is unified across all platforms:
 
-- **Native Installer**: Packaged using PyInstaller with auto-model download and setup wizard
-- **Web Application**: Built with Flask/SocketIO for cross-platform web access
-- **Install Button**: Added to `templates/index.html` with JavaScript handling for the `beforeinstallprompt` event
+- **Single Distribution**: One ZIP file (`bapXcoder.zip`) for all platforms
+- **Logo-Branded Executable**: Single file with your application logo after extraction
+- **CLI Installation Wizard**: Cross-platform installation script that handles all setup steps
+- **Git-Based Setup**: Automatically clones the repository and configures for your system
 
-### Desktop-First Design
+### Platform Compatibility
 
-bapXcoder is designed specifically for desktop environments, avoiding mobile platforms to ensure:
-- Full access to system resources (no JIT restrictions)
-- Native development environment capabilities
-- Direct file system access
-- GPU/CPU intensive operations (like AI model processing)
+This unified approach works across all desktop platforms:
+- **Mac**: Intel and Apple Silicon (ARM) automatically detected during installation
+- **Windows**: 64-bit supported with full system access
+- **Linux**: All major distributions supported (Ubuntu, Debian, Fedora, etc.)
+
+After installation, the application runs as a local web application accessible through your browser, with full offline capabilities.
 
 ## AI-Driven Testing & Validation System
 

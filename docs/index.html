@@ -685,23 +685,13 @@
             <h2>Start Coding with Project Memory Today</h2>
             <p>No signup required. No account needed. Just download and start coding with continuous project context.</p>
             <div class="download-options">
-                <a href="https://github.com/getwinharris/bapXcoder/releases/download/v1.0/bapXcoder-mac-intel.zip" class="download-btn mac-btn" id="macDownloadBtn">
-                    <i class="fab fa-apple"></i> Mac (Intel)
-                </a>
-                <a href="https://github.com/getwinharris/bapXcoder/releases/download/v1.0/bapXcoder-mac-arm.zip" class="download-btn mac-btn" id="macArmDownloadBtn" style="display: none;">
-                    <i class="fab fa-apple"></i> Mac (ARM)
-                </a>
-                <a href="https://github.com/getwinharris/bapXcoder/releases/download/v1.0/bapXcoder-windows.zip" class="download-btn windows-btn">
-                    <i class="fab fa-windows"></i> Windows
-                </a>
-                <a href="https://github.com/getwinharris/bapXcoder/releases/download/v1.0/bapXcoder-linux.zip" class="download-btn linux-btn">
-                    <i class="fab fa-linux"></i> Linux
+                <a href="https://github.com/getwinharris/bapXcoder/releases/latest/download/bapXcoder.zip" class="primary-download-button">
+                    <i class="fas fa-download"></i> Download bapXcoder.zip
                 </a>
             </div>
-            <div id="macArchSelector" class="arch-selector" style="display: none; margin-top: 15px;">
-                <button id="macIntelBtn" class="arch-btn">Intel Chip</button>
-                <button id="macArmBtn" class="arch-btn">Apple Silicon</button>
-            </div>
+            <p style="text-align: center; margin-top: 15px; color: #a0a0c0; font-size: 0.9rem;">
+                Download single ZIP, extract, run installer with your logo to start CLI setup wizard
+            </p>
         </div>
     </section>
 
@@ -724,24 +714,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
     <script>
-        // Handle Mac architecture selection
-        document.getElementById('macDownloadBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-
-            // Show the architecture selector
-            document.getElementById('macArchSelector').style.display = 'block';
-
-            // Hide the generic mac button
-            document.getElementById('macDownloadBtn').style.display = 'none';
-
-            // Show specific buttons when option is selected
-            document.getElementById('macIntelBtn').onclick = function() {
-                window.location.href = 'https://github.com/getwinharris/bapXcoder/releases/download/v1.0/bapXcoder-mac-intel.zip';
-            };
-
-            document.getElementById('macArmBtn').onclick = function() {
-                window.location.href = 'https://github.com/getwinharris/bapXcoder/releases/download/v1.0/bapXcoder-mac-arm.zip';
-            };
+        // Simple download tracking could be added here if needed
+        document.querySelector('.primary-download-button').addEventListener('click', function() {
+            // Analytics or other actions could be tracked here
+            console.log('Download initiated for bapXcoder.zip');
         });
     </script>
 </body>
