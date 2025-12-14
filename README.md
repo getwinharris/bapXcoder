@@ -602,3 +602,61 @@ The AI-driven testing system adds comprehensive validation capabilities to bapXc
 - Frontend: Socket event handlers in `templates/index.html` for real-time feedback
 - Integration: Added to `qwen3VL_local_cli.py` with dedicated event handlers
 
+## VS Code-Style Interface with Project Memory
+
+bapXcoder now features a VS Code-style 4-panel interface with advanced project memory capabilities:
+
+### 4-Panel Layout
+1. **Sidebar Panel**: Navigation menu with explorer, search, git, run, debug, and extensions
+2. **Options Panel**: Dynamic content based on selected sidebar item
+3. **Editor Panel**: With file tabs and individual run buttons for each file
+4. **Chat/Terminal Panel**: AI chat interface with terminal at the bottom
+
+### Project-Based Memory System
+- All project state saved in `.bapXcoder` directory (like Git for code)
+- Session data preserved: open files, todo lists, AI context
+- Continuity across restarts with entire project context maintained
+- Git-integrated workflow with project-specific session trees
+
+### Advanced Features
+- **TTS Player**: Auto-play functionality with mute/forward/rewind controls
+- **File Icons**: Visual identification of different file types in explorer
+- **Live Syntax Checking**: Instant validation as you type
+- **Multi-Terminal Support**: Multiple terminal tabs for different tasks
+
+### Professional Theme
+- Dark theme matching VS Code's exact styling
+- Consistent purple (#7c5cff) accent colors
+- Professional, distraction-free interface
+- Fully responsive and scalable layouts
+
+## Landing Page
+
+A professional landing page is available at `https://getwinharris.github.io/bapXcoder/` featuring:
+- Clean, modern design similar to Cursor IDE
+- Clear download CTA in center of page
+- Focus on project memory and AI capabilities
+- Emphasizes free forever offering (no $20/mo like other tools)
+- Professional presentation for developer adoption
+
+## Architecture Overview
+
+### Core Components
+- `validation_system.py`: AI-driven testing and validation engine
+- `templates/index.html`: VS Code-style interface with all UI components
+- `qwen3VL_local_cli.py`: Backend handling socket events and AI integration
+- `.bapXcoder/`: Hidden project directory for session persistence
+
+### File Structure
+```
+project/
+├── .bapXcoder/              # Project memory and session data
+│   ├── sessiontree.json      # Session tree and context
+│   ├── todo.json             # Project-specific todo list
+│   └── validation_log.json   # Validation history
+├── .git/                     # Standard Git directory
+└── your_project_files...
+```
+
+This architecture provides a truly persistent project context that remembers your entire development state across sessions, unlike traditional editors that lose context when closed.
+
