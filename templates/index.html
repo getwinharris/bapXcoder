@@ -305,6 +305,26 @@
             font-size: 0.9rem;
         }
 
+        .community-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .community-link a {
+            color: #7c5cff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.3s;
+        }
+
+        .community-link a:hover {
+            color: #5a45b0;
+        }
+
         .file-input {
             display: none;
         }
@@ -1387,6 +1407,11 @@
                 <div id="gitStatusText">Git: Not in a repository</div>
             </div>
             <div class="status" id="status">Ready - bapX Coder AI Assistant Active</div>
+            <div class="community-link">
+                <a href="https://github.com/getwinharris/bapXcoder/discussions" target="_blank" title="Recent Activity">
+                    <i class="fab fa-github"></i> Community
+                </a>
+            </div>
         </div>
     </div>
 
