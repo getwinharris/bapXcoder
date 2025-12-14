@@ -447,6 +447,38 @@ Coimbatore, Tamil Nadu, India
 - 📷 [Instagram](https://www.instagram.com/bapxmediahub/)
 - 📘 [Facebook](https://www.facebook.com/bapxmediahub/)
 
+## Project Status
+
+### Current Version
+- **Stable Release**: v1.0 (Current)
+- **Next Release**: v1.1 (In Development)
+
+### Feature Completeness
+- [x] Core IDE Functionality
+- [x] AI-Powered Code Assistance
+- [x] Project-Based Memory System
+- [x] Web-Based Interface
+- [x] Local Model Integration
+- [x] Cross-Platform Support
+- [x] Single-File Installer
+- [x] Documentation
+
+### Planned for v1.1
+- [ ] Enhanced UI/UX
+- [ ] Additional Language Support
+- [ ] Performance Improvements
+- [ ] Advanced Validation Features
+
+## Repository Statistics
+![GitHub stars](https://img.shields.io/github/stars/getwinharris/bapXcoder?style=social)
+![GitHub forks](https://img.shields.io/github/forks/getwinharris/bapXcoder?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/getwinharris/bapXcoder?style=social)
+![GitHub language count](https://img.shields.io/github/languages/count/getwinharris/bapXcoder)
+![GitHub top language](https://img.shields.io/github/languages/top/getwinharris/bapXcoder)
+![GitHub repo size](https://img.shields.io/github/repo-size/getwinharris/bapXcoder)
+![GitHub issues](https://img.shields.io/github/issues/getwinharris/bapXcoder)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/getwinharris/bapXcoder)
+
 ## Testing
 
 The bapX Coder project includes comprehensive testing tools:
