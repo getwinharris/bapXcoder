@@ -48,11 +48,14 @@ The bapXcoder IDE leverages the power of the Qwen3-VL model and provides a compr
 - **Session Tracking**: Activity logs and context preservation per project session
 - **File Organization**: Automatic project structure maintenance with AI-aware file handling
 
-### CLI Integration:
+### CLI-First Architecture:
+- **Web UI Overlay**: Clean web interface that translates UI actions to underlying CLI operations
 - **Integrated Terminal**: Built-in command line interface within the web IDE
+- **Direct CLI Operations**: All functionality executed via CLI commands underneath the web UI
 - **Project Context**: Commands execute within the current project directory
-- **Git Integration**: Full Git operations with OAuth support
-- **File Operations**: Direct file manipulation through CLI within IDE
+- **Git Integration**: Full Git operations with OAuth support via CLI
+- **File Operations**: Direct file manipulation through CLI operations, with web UI providing convenience layer
+- **System Integration**: All system interactions handled via terminal commands at the backend
 
 ### Live Syntax Checking & Validation:
 - **Real-time Syntax Validation**: Checks syntax as you type without LSP overhead
@@ -81,7 +84,7 @@ The bapXcoder IDE leverages the power of the Qwen3-VL model and provides a compr
 - **Model Verification**: Confirms model file presence or initiates download
 
 - **bapX Coder AI Persona**: Advanced AI programming assistant with specialized coding expertise
-- Run Qwen3VL model locally without internet connection (after setup)
+- Run Qwen3VL model locally without internet connection (after setup) - automatically downloads to root directory during installation
 - Interactive chat interface with conversation history
 - Voice input using Speech-to-Text (STT)
 - Voice output with auto-play using Text-to-Speech (TTS)
@@ -89,8 +92,8 @@ The bapXcoder IDE leverages the power of the Qwen3-VL model and provides a compr
 - Integrated web search functionality
 - Git OAuth integration for repository access
 - Support for Git operations (clone, pull, push, etc.)
-- Integrated CLI/terminal emulator for command execution
-- File system access and project management
+- Integrated CLI/terminal emulator for command execution (CLI-first design)
+- File system access and project management via underlying CLI operations
 - Single prompt execution
 - Configurable parameters (temperature, max tokens, etc.)
 - Complete offline functionality - no cloud dependencies after setup
@@ -100,6 +103,28 @@ The bapXcoder IDE leverages the power of the Qwen3-VL model and provides a compr
 - Modern dark theme with purple accent color
 - Rich text editor for code editing with syntax highlighting
 - Integrated development tools for AI-assisted coding
+- CLI-first architecture with web UI overlay for convenient access
+
+
+## Architecture Overview
+
+### CLI-First Design Philosophy
+bapX Coder is fundamentally designed as a CLI-first development environment with a web-based UI overlay. All operations happen via CLI commands underneath the web interface, ensuring powerful terminal access while providing a convenient visual interface.
+
+### Core Components Architecture
+- **Backend Engine**: Flask/SocketIO server that translates web UI actions to CLI operations
+- **Model Handler**: Local Qwen3VL model (8.76GB) stored in project root, accessible via CLI
+- **Project Manager**: Project_explorer.py handles file operations via CLI underneath UI
+- **Validation System**: AI-driven testing (validation_system.py) that runs via CLI operations
+- **Syntax Checker**: Live syntax validation (syntax_checker.py) integrated with CLI file operations
+- **Project Memory**: .bapXcoder directories with persistent todo.json and sessiontree.json
+
+### Web Interface Integration
+- **Visual Convenience**: Web UI provides convenient access to underlying CLI operations
+- **Real-time Updates**: UI reflects all CLI operations in real-time
+- **File Operations**: All file read/write/delete operations happen via CLI underneath UI
+- **Command Execution**: Terminal commands execute directly via subprocess with UI feedback
+- **Session Management**: Project context and session data maintained via CLI file operations
 
 ## Prerequisites
 
@@ -382,7 +407,13 @@ Thank you to Alibaba for making this powerful multimodal model available as open
 
 ## bapX Coder IDE Capabilities Powered by Qwen3-VL & Project-Based Architecture
 
-Our IDE leverages the powerful Qwen3-VL model combined with our architectural innovations to provide unique capabilities:
+Our IDE leverages the powerful Qwen3-VL model combined with our CLI-first architectural innovations to provide unique capabilities:
+
+### CLI-First Architecture with Web UI Overlay
+- **Underlying CLI Operations**: All functionality executes via CLI commands underneath the web interface
+- **Direct System Integration**: File operations, command execution, and system interactions happen via terminal commands
+- **Web UI Overlay**: Clean web-based IDE interface that translates UI actions to underlying CLI operations
+- **Seamless Integration**: CLI operations and web UI operate together harmoniously
 
 ### Advanced Multimodal AI Assistance
 - **Enhanced Vision Processing**: Using Qwen3-VL's advanced visual capabilities to analyze UI mockups, diagrams, charts, and screenshots for code generation
@@ -396,7 +427,7 @@ Our IDE leverages the powerful Qwen3-VL model combined with our architectural in
 - **Long-Term Learning**: The system improves its understanding of your codebase over time within each project
 
 ### CLI-Integrated Development
-- **Terminal Integration**: Direct command execution within the project context for Git, build tools, and testing
+- **Integrated Terminal**: Built-in command line interface within the web IDE for direct command execution within project context
 - **Repo-Wide Awareness**: The AI understands the entire project structure and can suggest commands based on context
 - **File System Navigation**: Direct integration with the project file structure for seamless development workflows
 
@@ -404,6 +435,21 @@ Our IDE leverages the powerful Qwen3-VL model combined with our architectural in
 - **Project-Specific Todos**: Tasks are stored per project in `todo.json`, maintaining focus on current objectives
 - **Contextual Suggestions**: AI provides task suggestions based on actual code and project structure
 - **Progress Tracking**: Session trees track file usage and activity for better project management
+
+### Phase-Based Auto Execution & Testing
+- **AI-Driven Testing System**: Comprehensive validation that validates code after each change
+- **Individual File Testing**: Each file tab has its own "Test & Validate File" button (play icon)
+- **Project-Wide Validation**: "Validate Full Project" button for complete project analysis
+- **Phase-Based Execution**: System tracks validation history and project phases through sessiontree.json
+- **Run Primary Project File**: Left sidebar menu includes run buttons for executing primary project files
+- **AI-Integrated Testing**: Interact with AI to execute tests from the test folder
+
+### Model Download & Installation Process
+- **Automatic Download**: The Qwen3VL model (~8.76GB) automatically downloads from Hugging Face to the root directory during installation
+- **Root Directory Storage**: Model file (Qwen3VL-8B-Instruct-Q8_0.gguf) is placed directly in project root
+- **Hugging Face Integration**: Direct download from official Qwen repository during setup
+- **One-Time Download**: Single download during initial setup, unlimited local usage afterward
+- **Progress Tracking**: Download progress indicator during installation
 
 ### Web Research & Retrieval Augmentation
 - **Integrated Research**: Web search capabilities within the IDE for up-to-date information retrieval
@@ -499,9 +545,10 @@ python user_test.py
 The bapX Coder installation wizard will guide you through a complete setup process:
 
 1. **Environment Check**: Validates Python, dependencies, and system requirements
-2. **Model Download**: Automatically downloads the 8.76GB Qwen3VL model once
-3. **Configuration**: Sets up the project-based memory system with `.bapXcoder` directories
-4. **Verification**: Tests the complete AI pipeline before first use
+2. **Model Download**: Automatically downloads the 8.76GB Qwen3VL model once to the root directory
+3. **CLI-First Architecture Setup**: Configures the underlying CLI operations that power the web UI
+4. **Project-Based Memory System**: Sets up the `.bapXcoder` directories with session persistence
+5. **Verification**: Tests the complete AI pipeline before first use
 
 The installation only downloads the Qwen3-VL-8B-Instruct-Q8_0.gguf model (8.76GB) and no additional models beyond this.
 
