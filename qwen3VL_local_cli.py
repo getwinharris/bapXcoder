@@ -294,8 +294,6 @@ def decode_content(encoded_content, encoding_type='utf-8'):
         else:
             return encoded_content
 
-if __name__ == "__main__":
-
 def check_installation():
     """Run installation check before starting IDE"""
     print("Checking bapXcoder installation...")
@@ -703,6 +701,73 @@ def start_ide(args):
             })
         except Exception as e:
             emit('syntax_error', {'message': f'Error checking syntax: {str(e)}'})
+
+    @socketio.on('validate_file')
+    def handle_validate_file(data):
+        """Validate a file with AI-driven testing"""
+        file_path = data.get('file_path', '')
+        run_tests = data.get('run_tests', False)
+
+        if not project_explorer:
+            emit('validation_error', {'message': 'Project explorer not initialized'})
+            return
+
+        try:
+            # Create full path relative to project
+            full_path = project_explorer.project_path / file_path
+
+            # Check if file exists
+            if not full_path.exists():
+                emit('validation_error', {'message': f'File does not exist: {file_path}'})
+                return
+
+            # Import validation system
+            from validation_system import AITestRunner
+
+            # Initialize the AI test runner if not already done
+            global ai_test_runner
+            if 'ai_test_runner' not in globals():
+                ai_test_runner = AITestRunner(project_explorer.project_path)
+
+            # Run individual file validation
+            result = ai_test_runner.run_individual_file_tests(str(full_path))
+
+            emit('validation_result', {
+                'file_path': file_path,
+                'validation_result': result['validation_result'],
+                'ai_analysis': result['ai_analysis'],
+                'test_summary': result['test_summary'],
+                'timestamp': result['timestamp'],
+                'success': True
+            })
+        except Exception as e:
+            emit('validation_error', {'message': f'Error validating file: {str(e)}'})
+
+    @socketio.on('validate_project')
+    def handle_validate_project(data):
+        """Validate the entire project with AI-driven testing"""
+        if not project_explorer:
+            emit('validation_error', {'message': 'Project explorer not initialized'})
+            return
+
+        try:
+            # Import validation system
+            from validation_system import AITestRunner
+
+            # Initialize the AI test runner if not already done
+            global ai_test_runner
+            if 'ai_test_runner' not in globals():
+                ai_test_runner = AITestRunner(project_explorer.project_path)
+
+            # Run project-wide validation
+            result = ai_test_runner.run_project_wide_tests()
+
+            emit('project_validation_result', {
+                'results': result,
+                'success': True
+            })
+        except Exception as e:
+            emit('validation_error', {'message': f'Error validating project: {str(e)}'})
 
     @socketio.on('start_syntax_monitoring')
     def handle_start_syntax_monitoring(data):
