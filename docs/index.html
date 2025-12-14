@@ -413,77 +413,64 @@
             background: linear-gradient(180deg, #0f0f13 0%, #1a1a25 100%);
         }
 
-        /* Feature Comparison Cards */
-        .comparison-features {
-            margin: 50px auto;
+        /* Comparison Section */
+        .comparison-cols {
+            display: flex;
+            gap: 20px;
+            margin: 40px 0;
             max-width: 1200px;
+            margin: 50px auto;
         }
 
-        .feature-comparison {
-            display: flex;
-            margin-bottom: 20px;
+        .comparison-col {
+            flex: 1;
             background: linear-gradient(180deg, #161622 0%, #14141c 100%);
-            border-radius: 12px;
-            overflow: hidden;
             border: 1px solid #2d2d40;
+            border-radius: 12px;
+            padding: 25px;
         }
 
-        .feature-label {
-            flex: 0 0 200px;
-            background: linear-gradient(90deg, #1a1a25 0%, #14141c 100%);
-            padding: 20px;
-            border-right: 1px solid #2d2d40;
-            display: flex;
-            align-items: center;
+        .primary-col {
+            flex: 1.2; /* Make bapX Coder column slightly wider */
         }
 
-        .feature-label h3 {
+        .product-title {
             color: #7c5cff;
-            font-size: 1rem;
+            text-align: center;
+            margin: 0 0 25px 0;
+            font-size: 1.4rem;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #7c5cff;
+        }
+
+        .primary-col .product-title {
+            font-size: 1.6rem; /* Larger font for bapX Coder title */
+        }
+
+        .feature-item {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #2d2d40;
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .feature-item h4 {
+            color: #7c5cff;
+            margin: 0 0 10px 0;
             display: flex;
             align-items: center;
             gap: 10px;
-            margin: 0;
         }
 
-        .feature-options {
-            display: flex;
-            flex: 1;
-        }
-
-        .feature-option {
-            flex: 1;
-            padding: 20px;
-            border-right: 1px solid #2d2d40;
-        }
-
-        .feature-option:last-child {
-            border-right: none;
-        }
-
-        .feature-option.primary {
-            background: rgba(124, 92, 255, 0.05);
-            border: 1px solid #7c5cff;
-        }
-
-        .feature-option h4 {
-            color: #7c5cff;
-            margin: 0 0 10px 0;
-            font-size: 1.1rem;
-        }
-
-        .feature-option p {
+        .feature-item p {
             color: #a0a0c0;
             margin: 0;
             line-height: 1.5;
-        }
-
-        .feature-option.primary h4 {
-            color: #9d8aff;
-        }
-
-        .feature-option.primary p {
-            color: #c0c0e0;
         }
 
         /* Features Section */
@@ -921,83 +908,52 @@
     <section class="comparison" id="comparison">
         <div class="container">
             <h2 class="section-title">How bapX Coder Compares</h2>
-            <div class="comparison-features">
-                <div class="feature-comparison">
-                    <div class="feature-label">
-                        <h3><i class="fas fa-server"></i> Deployment</h3>
-                    </div>
-                    <div class="feature-options">
-                        <div class="feature-option primary">
-                            <h4>bapX Coder</h4>
-                            <p>Completely local web-based IDE</p>
+            <div class="comparison-header">
+                <h2 class="section-title">How bapX Coder Compares</h2>
+                <div class="comparison-cols">
+                    <div class="comparison-col primary-col">
+                        <h3 class="product-title">bapX Coder</h3>
+                        <div class="feature-item">
+                            <h4><i class="fas fa-server"></i> Deployment</h4>
+                            <p>Completely local web-based IDE with privacy: All data stays local, no cloud dependencies</p>
                         </div>
-                        <div class="feature-option">
-                            <h4>API & Local AI IDE</h4>
-                            <p>Desktop IDE with remote/local LLMs</p>
+                        <div class="feature-item">
+                            <h4><i class="fas fa-money-bill-wave"></i> Cost Model</h4>
+                            <p>Free forever after initial setup with privacy: All data stays local, no cloud dependencies</p>
                         </div>
-                        <div class="feature-option">
-                            <h4>Cloud CLI</h4>
-                            <p>Cloud-based IDE</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="feature-comparison">
-                    <div class="feature-label">
-                        <h3><i class="fas fa-money-bill-wave"></i> Cost Model</h3>
-                    </div>
-                    <div class="feature-options">
-                        <div class="feature-option primary">
-                            <h4>bapX Coder</h4>
-                            <p>Free forever after initial setup</p>
-                        </div>
-                        <div class="feature-option">
-                            <h4>API & Local AI IDE</h4>
-                            <p>Paid service or local model costs</p>
-                        </div>
-                        <div class="feature-option">
-                            <h4>Cloud CLI</h4>
-                            <p>Subscription/quota-walls</p>
+                        <div class="feature-item">
+                            <h4><i class="fas fa-plug"></i> Connectivity</h4>
+                            <p>Works completely offline after setup with privacy: All data stays local, no cloud dependencies</p>
                         </div>
                     </div>
-                </div>
-
-                <div class="feature-comparison">
-                    <div class="feature-label">
-                        <h3><i class="fas fa-shield-alt"></i> Privacy</h3>
-                    </div>
-                    <div class="feature-options">
-                        <div class="feature-option primary">
-                            <h4>bapX Coder</h4>
-                            <p>All data stays local, no cloud dependencies</p>
+                    <div class="comparison-col">
+                        <h3 class="product-title">API & Local AI IDE</h3>
+                        <div class="feature-item">
+                            <h4><i class="fas fa-server"></i> Deployment</h4>
+                            <p>Desktop IDE with remote/local LLMs with privacy: Local processing with cloud LLMs</p>
                         </div>
-                        <div class="feature-option">
-                            <h4>API & Local AI IDE</h4>
-                            <p>Local processing with cloud LLMs</p>
+                        <div class="feature-item">
+                            <h4><i class="fas fa-money-bill-wave"></i> Cost Model</h4>
+                            <p>Paid service or local model costs with privacy: Local processing with cloud LLMs</p>
                         </div>
-                        <div class="feature-option">
-                            <h4>Cloud CLI</h4>
-                            <p>Data stays on cloud servers</p>
+                        <div class="feature-item">
+                            <h4><i class="fas fa-plug"></i> Connectivity</h4>
+                            <p>Some features require internet with privacy: Local processing with cloud LLMs</p>
                         </div>
                     </div>
-                </div>
-
-                <div class="feature-comparison">
-                    <div class="feature-label">
-                        <h3><i class="fas fa-plug"></i> Connectivity</h3>
-                    </div>
-                    <div class="feature-options">
-                        <div class="feature-option primary">
-                            <h4>bapX Coder</h4>
-                            <p>Works completely offline after setup</p>
+                    <div class="comparison-col">
+                        <h3 class="product-title">Cloud CLI</h3>
+                        <div class="feature-item">
+                            <h4><i class="fas fa-server"></i> Deployment</h4>
+                            <p>Cloud-based IDE with privacy: Data stays on cloud servers</p>
                         </div>
-                        <div class="feature-option">
-                            <h4>API & Local AI IDE</h4>
-                            <p>Some features require internet</p>
+                        <div class="feature-item">
+                            <h4><i class="fas fa-money-bill-wave"></i> Cost Model</h4>
+                            <p>Subscription/quota-walls with privacy: Data stays on cloud servers</p>
                         </div>
-                        <div class="feature-option">
-                            <h4>Cloud CLI</h4>
-                            <p>Requires internet constantly</p>
+                        <div class="feature-item">
+                            <h4><i class="fas fa-plug"></i> Connectivity</h4>
+                            <p>Requires internet constantly with privacy: Data stays on cloud servers</p>
                         </div>
                     </div>
                 </div>
