@@ -295,4 +295,118 @@ def decode_content(encoded_content, encoding_type='utf-8'):
             return encoded_content
 
 if __name__ == "__main__":
+
+def check_installation():
+    """Run installation check before starting IDE"""
+    print("Checking bapXcoder installation...")
+    print("-" * 30)
+    
+    # Check dependencies
+    missing_deps = []
+    required_deps = [
+        'flask', 'flask_socketio', 'requests', 
+        'tqdm', 'configparser'
+    ]
+    
+    # Check if llm-cpp-python is available
+    try:
+        import llama_cpp
+    except ImportError:
+        missing_deps.append('llama-cpp-python')
+    
+    for dep in ['flask', 'flask_socketio', 'requests', 'tqdm', 'configparser']:
+        try:
+            __import__(dep.replace('-', '_').replace('.', '_'))
+        except ImportError:
+            missing_deps.append(dep)
+    
+    if missing_deps:
+        print(f"\nFound {len(missing_deps)} missing dependencies:")
+        for dep in missing_deps:
+            print(f"  - {dep}")
+        
+        response = input(f"\nWould you like to install these dependencies? (Y/n): ")
+        if response.lower() == 'y' or response == '':
+            print("\nInstalling dependencies...")
+            for dep in missing_deps:
+                pip_name = dep
+                if dep == 'flask_socketio':
+                    pip_name = 'flask-socketio'
+                
+                result = subprocess.run([sys.executable, '-m', 'pip', 'install', pip_name], 
+                                      capture_output=True, text=True)
+                if result.returncode == 0:
+                    print(f"✓ {dep} installed successfully")
+                else:
+                    print(f"❌ Failed to install {dep}: {result.stderr}")
+                    return False
+            print(f"\n✓ Successfully installed dependencies!")
+        else:
+            print("Installation cancelled. Dependencies are required.")
+            return False
+    else:
+        print("✓ All dependencies satisfied")
+    
+    # Check model file
+    model_file = Path("Qwen3VL-8B-Instruct-Q8_0.gguf")
+    if model_file.exists():
+        size_gb = model_file.stat().st_size / (1024**3)
+        print(f"✓ Model file found: {size_gb:.2f} GB")
+    else:
+        print("ℹ Model file not found - will be downloaded on first run")
+    
+    return True
+
+def main():
+    # Run installation check first
+    if not check_installation():
+        print("❌ Installation check failed. Please run: python install.py")
+        sys.exit(1)
+    
+    config = load_config()
+    
+    # Get command line arguments
+    parser = argparse.ArgumentParser(description="bapX Coder - AI-Powered IDE")
+    parser.add_argument("--model", type=str, default=config.get('model', 'model_path', fallback='Qwen3VL-8B-Instruct-Q8_0.gguf'), 
+                       help="Path to the GGUF model file")
+    parser.add_argument("--host", type=str, default=config.get('server', 'host', fallback='127.0.0.1'), 
+                       help="Host address (default: 127.0.0.1)")
+    parser.add_argument("--port", type=int, default=config.getint('server', 'port', fallback=7860), 
+                       help="Port to run the web interface (default: 7860)")
+    parser.add_argument("--temperature", type=float, default=config.getfloat('defaults', 'temperature', fallback=0.7),
+                       help="Sampling temperature (default: 0.7)")
+    parser.add_argument("--max-tokens", type=int, default=config.getint('defaults', 'max_tokens', fallback=512),
+                       help="Maximum tokens to generate (default: 512)")
+    parser.add_argument("--threads", type=int, default=config.getint('defaults', 'threads', fallback=4),
+                       help="Number of CPU threads (default: 4)")
+    parser.add_argument("--context-size", type=int, default=config.getint('defaults', 'context_size', fallback=4096),
+                       help="Context size in tokens (default: 4096)")
+    parser.add_argument("--gpu-layers", type=int, default=config.getint('defaults', 'gpu_layers', fallback=0),
+                       help="Number of GPU layers (0 for CPU only, default: 0)")
+    
+    args = parser.parse_args()
+    
+    # Check if model exists, download if needed
+    if not ensure_model_exists(args.model):
+        print("Cannot proceed without the model file.")
+        sys.exit(1)
+    
+    # Initialize the model runner
+    global model_runner
+    try:
+        model_runner = Qwen3VLRunner(
+            args.model,
+            args.temperature,
+            args.threads,
+            args.context_size,
+            args.gpu_layers
+        )
+    except Exception as e:
+        print(f"Error initializing model: {e}")
+        sys.exit(1)
+    
+    # Start the web-based IDE
+    start_ide(args)
+
+if __name__ == "__main__":
     main()

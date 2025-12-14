@@ -31,7 +31,46 @@ So bapXcoder is:
 • **One session for one project** with one todo list for one project on a certain path
 • **Aware of diff to Git Repo** after file updates
 
-## Features
+## bapXcoder IDE Capabilities
+
+The bapXcoder IDE leverages the power of the Qwen3-VL model and provides a comprehensive development environment:
+
+### Core AI Capabilities:
+- **Multimodal Processing**: Advanced vision-language understanding for image analysis, OCR, document processing
+- **Code Assistance**: Real-time coding help and suggestions with context awareness
+- **Voice Features**: Speech-to-text for input and text-to-speech for auto-play output
+- **Web Research**: Integrated search for current information and research retrieval
+- **File Analysis**: Attach and analyze code, image, and document files directly
+
+### Project-Based Features:
+- **Project Memory System**: Each project gets its own `.bapXcoder` directory with persistent `todo.json` and `sessiontree.json`
+- **Task Management**: Project-specific to-do lists with priority and completion tracking
+- **Session Tracking**: Activity logs and context preservation per project session
+- **File Organization**: Automatic project structure maintenance with AI-aware file handling
+
+### CLI Integration:
+- **Integrated Terminal**: Built-in command line interface within the web IDE
+- **Project Context**: Commands execute within the current project directory
+- **Git Integration**: Full Git operations with OAuth support
+- **File Operations**: Direct file manipulation through CLI within IDE
+
+### Research & Analysis:
+- **Web Retrieval**: RAG (Retrieval Augmented Generation) for online research
+- **Document Analysis**: Process multi-page documents, tables, and complex content
+- **Code Understanding**: Deep analysis of code structure and dependencies across files
+- **Visual Processing**: OCR and GUI element recognition for screenshot-to-code features
+
+### Testing & Validation:
+- **Built-in Test Suite**: Automated validation of user projects developed with the IDE
+- **Code Quality Checks**: Syntax validation and error detection for multiple languages
+- **Feature Utilization Tracking**: Validates proper use of IDE features in your projects
+- **Run Buttons**: Each file tab has a run button for immediate execution testing
+
+### Installation Wizard:
+- **Automatic Dependency Check**: Verifies Python, required packages, system resources
+- **Permission-based Installation**: Asks user permission before installing any dependencies
+- **System Validation**: Checks for sufficient RAM, disk space, OS compatibility
+- **Model Verification**: Confirms model file presence or initiates download
 
 - **bapX Coder AI Persona**: Advanced AI programming assistant with specialized coding expertise
 - Run Qwen3VL model locally without internet connection (after setup)
@@ -45,11 +84,6 @@ So bapXcoder is:
 - Integrated CLI/terminal emulator for command execution
 - File system access and project management
 - Single prompt execution
-- **Multimodal Processing**: Leverages Qwen3-VL's advanced vision-language capabilities for image analysis, OCR, and visual understanding
-- **Full Encoding Support**: Handles various text encodings (UTF-8, ASCII, Base64, Hex, etc.) for international and specialized text processing
-- **Project-Based Memory**: Each project gets its own dedicated memory space with `.bapXcoder` directory containing `todo.json` and `sessiontree.json`
-- **Web Research Integration**: Built-in web search capabilities with information retrieval and synthesis
-- **8.76GB Qwen3-VL Model**: Powerful multimodal model with 8.76GB size, providing advanced AI capabilities for coding, vision, and reasoning
 - Configurable parameters (temperature, max tokens, etc.)
 - Complete offline functionality - no cloud dependencies after setup
 - Auto-download of model from Hugging Face during initial setup
