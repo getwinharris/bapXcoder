@@ -1093,15 +1093,85 @@ def start_ide(args):
     def static_files(path):
         return send_from_directory('.', path)
 
+    def check_user_subscription_status(user_id):
+        """Check user's subscription status with expiry validation"""
+        try:
+            # In a real implementation, this would fetch from GitHub metadata
+            # For now, simulate the check for trial expiration
+
+            # Check if user has a subscription file in their GitHub repo
+            bapxcoder_dir = Path('.bapXcoder')
+            bapxcoder_dir.mkdir(exist_ok=True)
+
+            user_data_file = bapxcoder_dir / f"users_{user_id}.json"
+            if user_data_file.exists():
+                with open(user_data_file, 'r') as f:
+                    user_data = json.load(f)
+
+                # Check subscription expiration
+                sub_end_str = user_data.get('subscription_end_date', 'never')
+                if sub_end_str == 'never':
+                    return { 'type': 'lifetime', 'expires': 'never', 'days_left': float('inf') }
+                else:
+                    sub_end = datetime.fromisoformat(sub_end_str)
+                    if datetime.now() > sub_end:
+                        return { 'type': 'expired', 'expires': sub_end_str, 'days_left': 0 }
+                    else:
+                        days_left = (sub_end - datetime.now()).days
+                        return { 'type': 'active', 'expires': sub_end_str, 'days_left': days_left }
+            else:
+                # New user - assign trial
+                trial_end = (datetime.now() + timedelta(days=60)).isoformat()
+                user_data = {
+                    'subscription_type': 'trial',
+                    'subscription_start': datetime.now().isoformat(),
+                    'subscription_end_date': trial_end,
+                    'user_id': user_id
+                }
+
+                with open(user_data_file, 'w') as f:
+                    json.dump(user_data, f, indent=2)
+
+                days_left = (datetime.fromisoformat(trial_end) - datetime.now()).days
+                return { 'type': 'trial', 'expires': trial_end, 'days_left': days_left }
+        except Exception as e:
+            # Default to trial if anything fails
+            trial_end = (datetime.now() + timedelta(days=60)).isoformat()
+            return { 'type': 'trial', 'expires': trial_end, 'days_left': 60 }
+
     @socketio.on('connect')
     def handle_connect():
         print('Client connected')
-        # Check if user has proper authentication/subscription
+        # Check if user has proper authentication
         auth_required = os.getenv('AUTH_REQUIRED', 'false').lower() == 'true'
         if auth_required and not is_user_authenticated():
             emit('auth_required', {'msg': 'Authentication required to access IDE features'})
         else:
             emit('status', {'msg': 'Connected to bapXcoder IDE'})
+
+            # Check subscription status and emit to client
+            auth_header = request.headers.get('Authorization', '').replace('Bearer ', '')
+            if auth_header:
+                try:
+                    payload = jwt.decode(auth_header, os.environ.get('SECRET_KEY', 'default_secret_key'), algorithms=['HS256'])
+                    user_id = payload.get('user_id', 'anonymous')
+                    user_subscription = check_user_subscription_status(user_id)
+
+                    emit('subscription_info', {
+                        'type': user_subscription['type'],
+                        'expires': user_subscription['expires'],
+                        'days_left': user_subscription['days_left']
+                    })
+
+                    # If it's a trial user, emit daily validation reminder
+                    if user_subscription['type'] == 'trial':
+                        emit('trial_reminder', {
+                            'days_left': user_subscription['days_left'],
+                            'expires': user_subscription['expires'],
+                            'message': f"Trial expires in {user_subscription['days_left']} days. Renew subscription to continue using all features."
+                        })
+                except:
+                    pass  # If token invalid, just continue without subscription info
 
     @socketio.on('chat_message')
     def handle_chat_message(data):
