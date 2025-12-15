@@ -17,15 +17,10 @@ import json
 import time
 import webbrowser
 from datetime import datetime, timedelta
+# Load configuration settings and provide centralized management for application settings
+# Connects to model, server, and defaults systems during startup
 def load_config():
-    """
-    Load configuration from config.ini file
-
-    Function: Reads configuration settings from the config.ini file
-    Connection: Provides settings for model, server, and defaults to various systems
-    Purpose: Centralized configuration management for application settings
-    Internal wiring: Called during startup to configure model and server parameters
-    """
+    """Load configuration from config.ini file"""
     config = configparser.ConfigParser()
     config_path = Path("config.ini")
 
@@ -1008,15 +1003,10 @@ def admin_logout():
     
     return True
 
+# Initializes the dual-model AI development environment with CLI and web interface
+# Orchestrates all subsystems (models, UI, project management, validation)
 def main():
-    """
-    Main entry point for bapX Coder application
-
-    Function: Initializes the dual-model AI development environment with CLI and web interface
-    Connection: Orchestrates all subsystems (models, UI, project management, validation)
-    Purpose: Provide integrated development environment with interpreter-developer model architecture
-    Internal wiring: Connects Flask web server, SocketIO for real-time communication, model handlers, and project explorer
-    """
+    """Main entry point for bapXcoder application"""
     # Run installation check first
     if not check_installation():
         print("❌ Installation check failed. Please run: python install.py")

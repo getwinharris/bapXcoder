@@ -21,15 +21,10 @@ class AIValidationSystem:
         self.test_log_file = project_path / ".bapXcoder" / "validation_log.json"
         self.setup_validation_directory()
 
+    # Creates validation directory and initializes log files for AI-driven testing framework
+    # Links to project-based memory system in .bapXcoder directory
     def setup_validation_directory(self):
-        """
-        Set up the validation infrastructure
-
-        Function: Creates validation directory and initializes log files
-        Connection: Links to project-based memory system in .bapXcoder directory
-        Purpose: Establish AI-driven testing framework within projects
-        Internal wiring: Connects to validation logging and result aggregation systems
-        """
+        """Set up the validation infrastructure"""
         bapxcoder_dir = self.project_path / ".bapXcoder"
         bapxcoder_dir.mkdir(exist_ok=True)
 
