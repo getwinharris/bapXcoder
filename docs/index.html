@@ -392,6 +392,66 @@
                 font-size: 2rem;
             }
         }
+
+        /* OS Detection Download Styles */
+        .os-download-section {
+            margin-top: 60px;
+            padding: 40px 20px;
+            background: linear-gradient(180deg, #0f0f13 0%, #1a1a25 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 12px;
+        }
+
+        .os-download-section h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #7c5cff;
+        }
+
+        .os-downloads {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .platform-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(90deg, #2d2d40 0%, #1a1a25 100%);
+            color: white;
+            border: 1px solid #444460;
+            border-radius: 8px;
+            padding: 15px 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 8px 25px rgba(124, 92, 255, 0.3);
+        }
+
+        .platform-download:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(124, 92, 255, 0.5);
+        }
+
+        .mac-download {
+            background: linear-gradient(90deg, #4a4a4a 0%, #2a2a2a 100%);
+        }
+
+        .windows-download {
+            background: linear-gradient(90deg, #0078d7 0%, #005a9e 100%);
+        }
+
+        .linux-download {
+            background: linear-gradient(90deg, #f05541 0%, #c04433 100%);
+        }
+
+        .universal-download {
+            background: linear-gradient(90deg, #50fa7b 0%, #3dd56d 100%);
+            color: #282a36;
+        }
     </style>
 </head>
 <body>
@@ -475,7 +535,7 @@
                         <i class="fas fa-download"></i> Start Trial
                     </a>
                 </div>
-                
+
                 <div class="pricing-card popular">
                     <h3>Monthly</h3>
                     <div class="price">$1<span> / month</span></div>
@@ -489,7 +549,7 @@
                         <i class="fas fa-download"></i> Get Monthly
                     </a>
                 </div>
-                
+
                 <div class="pricing-card">
                     <h3>Lifetime</h3>
                     <div class="price">$100<span> one-time</span></div>
@@ -503,6 +563,29 @@
                         <i class="fas fa-download"></i> Get Lifetime
                     </a>
                 </div>
+            </div>
+
+            <!-- OS-Detected Download Section -->
+            <div class="os-download-section">
+                <h3>Download for Your Platform</h3>
+                <div class="os-downloads">
+                    <a href="#" class="platform-download mac-download" id="macDownloadLink" style="display: none;" onclick="showLoginModal()">
+                        <i class="fab fa-apple"></i> bapXcoder.dmg (Apple Silicon)
+                    </a>
+                    <a href="#" class="platform-download mac-download" id="intelMacDownloadLink" style="display: none;" onclick="showLoginModal()">
+                        <i class="fab fa-apple"></i> bapXcoder_intel.dmg (Intel Mac)
+                    </a>
+                    <a href="#" class="platform-download windows-download" id="windowsDownloadLink" style="display: none;" onclick="showLoginModal()">
+                        <i class="fab fa-windows"></i> bapXcoder.exe (Windows)
+                    </a>
+                    <a href="#" class="platform-download linux-download" id="linuxDownloadLink" style="display: none;" onclick="showLoginModal()">
+                        <i class="fab fa-linux"></i> bapXcoder.AppImage (Linux)
+                    </a>
+                    <a href="#" class="platform-download universal-download" id="universalDownload" style="display: inline-block;" onclick="showLoginModal()">
+                        <i class="fas fa-download"></i> bapXcoder.sh (Universal)
+                    </a>
+                </div>
+                <p class="os-auto-detect-note">Automatic installer detection based on your OS. Sign up required for download access.</p>
             </div>
         </div>
     </section>
@@ -553,7 +636,7 @@
                 <a href="https://github.com/getwinharris/bapXcoder/blob/main/README.md">Documentation</a>
                 <a href="#pricing">Pricing</a>
             </div>
-            <p>&copy; 2025 bapXcoder. Free and open source for developers.</p>
+            <p>&copy; 2025 bapXcoder. Professional AI-powered IDE for developers.</p>
         </div>
     </footer>
 
@@ -586,9 +669,74 @@
             }
         }
 
+        // OS Detection for download links
+        function detectOS() {
+            const userAgent = navigator.userAgent;
+            const platform = navigator.platform;
+
+            if (platform.indexOf('Win') !== -1 || userAgent.indexOf('Win') !== -1) {
+                return 'windows';
+            } else if (platform.indexOf('Mac') !== -1 || userAgent.indexOf('Mac') !== -1) {
+                if (userAgent.toLowerCase().indexOf('arm') !== -1 || userAgent.toLowerCase().indexOf('apple') !== -1) {
+                    return 'mac-arm'; // Apple Silicon
+                } else {
+                    return 'mac-intel'; // Intel Mac
+                }
+            } else if (platform.indexOf('Linux') !== -1 || userAgent.indexOf('Linux') !== -1 || userAgent.indexOf('X11') !== -1) {
+                return 'linux';
+            } else {
+                return 'unknown';
+            }
+        }
+
+        // Show platform-specific download link based on OS detection
+        function showPlatformDownload() {
+            const os = detectOS();
+
+            // Hide all download options first
+            const macLink = document.getElementById('macDownloadLink');
+            const intelMacLink = document.getElementById('intelMacDownloadLink');
+            const winLink = document.getElementById('windowsDownloadLink');
+            const linuxLink = document.getElementById('linuxDownloadLink');
+            const universalLink = document.getElementById('universalDownload');
+
+            if(macLink) macLink.style.display = 'none';
+            if(intelMacLink) intelMacLink.style.display = 'none';
+            if(winLink) winLink.style.display = 'none';
+            if(linuxLink) linuxLink.style.display = 'none';
+            if(universalLink) universalLink.style.display = 'none';
+
+            // Show the appropriate download link based on detected OS
+            switch(os) {
+                case 'mac-intel':
+                case 'mac-arm':  // Treat both Mac variants the same for download purposes
+                    if(macLink) macLink.style.display = 'inline-flex';
+                    break;
+                case 'windows':
+                    if(winLink) winLink.style.display = 'inline-flex';
+                    break;
+                case 'linux':
+                    if(linuxLink) linuxLink.style.display = 'inline-flex';
+                    break;
+                default:
+                    // If OS can't be detected, show universal option
+                    if(universalLink) universalLink.style.display = 'inline-flex';
+            }
+        }
+
+        // Initialize OS detection when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(showPlatformDownload, 100); // Slight delay to ensure DOM elements are ready
+        });
+
+        // Update the showLoginModal function to handle downloads
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
         // Simple authentication simulation
         function simulateDownload() {
-            alert('This would download the bapXcoder.sh installer in a real implementation');
+            alert('This would download the appropriate bapXcoder installer for your platform in a real implementation');
         }
     </script>
 </body>
