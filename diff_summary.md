@@ -80,7 +80,7 @@
 
 ## Research Folders (For Reference Only)
 
-These folders contain research repositories that were used as reference during development but are not part of the main bapX Coder application:
+These folders contain research repositories that were used as reference during development but are not part of the main bapXcoder application:
 
 ### research/qwen-code/ - Reference
 - Original Qwen Code project for CLI workflow reference
@@ -134,7 +134,7 @@ These folders contain research repositories that were used as reference during d
 ## Repository Organization
 
 The repository now clearly separates:
-- **Main Project**: Core bapX Coder application files
+- **Main Project**: Core bapXcoder application files
 - **Research References**: External repositories used for development reference
 - **Analysis Documentation**: Research findings and comparisons
 

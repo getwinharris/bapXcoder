@@ -72,51 +72,32 @@ def download_model_with_progress(model_path):
 def check_subscription_status(user_id):
     """Check if user's subscription is still valid"""
     try:
-        # Check user's subscription status against GitHub
-        github_api_url = f"https://api.github.com/user/{user_id}"
-        headers = {'Authorization': f'token {os.getenv("GITHUB_TOKEN", "")}'}
-        response = requests.get(github_api_url, headers=headers)
+        # Check local subscription status - no external API calls
+        # For now, we'll just allow access based on existence of user data
+        user_data_file = Path('.bapXcoder/users') / f"{user_id}.json"
+        if user_data_file.exists():
+            with open(user_data_file, 'r') as f:
+                user_data = json.load(f)
 
-        if response.status_code == 200:
-            # In a real implementation, we would check a subscription database
-            # For now, we'll just allow access based on existence of user data
-            user_data_file = Path('.IDEbapXcoder/users') / f"{user_id}.json"
-            if user_data_file.exists():
-                with open(user_data_file, 'r') as f:
-                    user_data = json.load(f)
-
-                # Check if subscription is still active
-                sub_end_date_str = user_data.get('subscription_end_date')
-                if sub_end_date_str and sub_end_date_str != 'never':
-                    sub_end_date = datetime.fromisoformat(sub_end_date_str)
-                    if datetime.now() > sub_end_date:
-                        return False  # Subscription expired
-                return True
-            else:
-                # For free trial users, check if trial period has expired
-                return True  # Allow access by default if no subscription data
+            # Check if subscription is still active
+            sub_end_date_str = user_data.get('subscription_end_date')
+            if sub_end_date_str and sub_end_date_str != 'never':
+                sub_end_date = datetime.fromisoformat(sub_end_date_str)
+                if datetime.now() > sub_end_date:
+                    return False  # Subscription expired
+            return True
         else:
-            return False
+            # For free trial users, check if trial period has expired
+            return True  # Allow access by default if no subscription data
     except Exception:
-        return False  # If any error occurs, don't grant access
+        return True  # If any error occurs, allow access (local system only)
 
 
 def is_user_authenticated():
-    """Check if user is authenticated via JWT token"""
-    token = request.headers.get('Authorization', '').replace('Bearer ', '')
-    if not token:
-        return False
-
-    try:
-        # Verify token using secret key
-        payload = jwt.decode(token, os.getenv('SECRET_KEY', 'default_secret_key'), algorithms=['HS256'])
-        # Check if user's subscription is still valid
-        user_id = payload.get('user_id')
-        return check_subscription_status(user_id)
-    except jwt.ExpiredSignatureError:
-        return False
-    except jwt.InvalidTokenError:
-        return False
+    """Check if user is authenticated locally"""
+    # For local use, assume user is authenticated by default
+    # In a real implementation, this would check local authentication
+    return True
 
 # Online users tracking
 online_users = set()
@@ -159,28 +140,22 @@ def emit_online_count():
     # Broadcast to all clients
     socketio.emit('online_users_count', {'count': online_count, 'users': [{'id': u[0], 'name': u[1]} for u in online_users]})
 
-def store_session_to_github(project_path, user_id, session_data):
-    """Store session data to user's GitHub repo"""
+def store_session_locally(project_path, user_id, session_data):
+    """Store session data locally in the project's .bapXcoder folder"""
     try:
         # Create or access the .bapXcoder directory in the project
         project_dir = Path(project_path)
         bapx_dir = project_dir / '.bapXcoder'
         bapx_dir.mkdir(exist_ok=True)
 
-        # Save session data locally first
+        # Save session data locally
         session_file = bapx_dir / 'session.json'
         with open(session_file, 'w') as f:
             json.dump(session_data, f, indent=2)
 
-        # If user has GitHub token, attempt to sync to their repo
-        github_token = os.environ.get('GITHUB_TOKEN', '')
-        if github_token and user_id:
-            # In a real implementation this would push to user's GitHub repo
-            # For now just save locally - the actual GitHub sync would be triggered by a Git command
-            return True
         return True
     except Exception as e:
-        print(f"Error storing session to GitHub: {e}")
+        print(f"Error storing session locally: {e}")
         return False
 
 def get_current_project_path():
@@ -195,28 +170,22 @@ def get_session_project_path(session_id):
     # For now, return current directory
     return str(Path.cwd())
 
-def store_todo_to_github(project_path, user_id, todo_data):
-    """Store todo data to user's GitHub repo"""
+def store_todo_locally(project_path, user_id, todo_data):
+    """Store todo data locally in the project's .bapXcoder folder"""
     try:
         # Create or access the .bapXcoder directory in the project
         project_dir = Path(project_path)
         bapx_dir = project_dir / '.bapXcoder'
         bapx_dir.mkdir(exist_ok=True)
 
-        # Save todo data locally first
+        # Save todo data locally
         todo_file = bapx_dir / 'todo.json'
         with open(todo_file, 'w') as f:
             json.dump(todo_data, f, indent=2)
 
-        # If user has GitHub token, attempt to sync to their repo
-        github_token = os.environ.get('GITHUB_TOKEN', '')
-        if github_token and user_id:
-            # In a real implementation this would push to user's GitHub repo
-            # For now just save locally - the actual GitHub sync would be triggered by a Git command
-            return True
         return True
     except Exception as e:
-        print(f"Error storing todo to GitHub: {e}")
+        print(f"Error storing todo locally: {e}")
         return False
 
 def ensure_model_exists(model_path):
@@ -885,26 +854,17 @@ ADMIN_PANEL_HTML = '''
 
         <!-- Credentials Section -->
         <div id="credentials" class="admin-section hidden">
-            <h2><i class="fas fa-key"></i> API Credentials</h2>
-            <form class="credentials-form" method="POST" action="/admin/update-credentials">
-                <h3>GitHub OAuth</h3>
-                <label>Client ID:</label>
-                <input type="text" name="github_client_id" placeholder="Enter GitHub Client ID">
-                <label>Client Secret:</label>
-                <input type="password" name="github_client_secret" placeholder="Enter GitHub Client Secret">
+            <h2><i class="fas fa-cog"></i> Configuration Settings</h2>
+            <div class="config-section">
+                <h3>Runtime Configuration</h3>
+                <p>Model runtime settings configured via local config file</p>
 
-                <h3>Google OAuth</h3>
-                <label>Client ID:</label>
-                <input type="text" name="google_client_id" placeholder="Enter Google Client ID">
-                <label>Client Secret:</label>
-                <input type="password" name="google_client_secret" placeholder="Enter Google Client Secret">
+                <h3>Local Settings</h3>
+                <p>Project-specific configurations stored locally</p>
 
-                <h3>Stripe API</h3>
-                <label>Secret Key:</label>
-                <input type="password" name="stripe_secret_key" placeholder="Enter Stripe Secret Key">
-
-                <button type="submit">Save Credentials</button>
-            </form>
+                <h3>Licensing</h3>
+                <p>License validation handled locally</p>
+            </div>
         </div>
     </div>
 
@@ -944,13 +904,13 @@ ADMIN_PANEL_HTML = '''
 </html>
 '''
 
-@app.route('/admin/update-credentials', methods=['POST'])
-def admin_update_credentials():
-    """Update API credentials"""
+@app.route('/admin/update-config', methods=['POST'])
+def admin_update_config():
+    """Update local configuration settings"""
     if not session.get('admin_logged_in'):
         return redirect('/admin')
 
-    # In a real implementation, this would securely store credentials
+    # In a real implementation, this would update local configuration
     # For now, just return to dashboard
     return redirect('/admin/dashboard')
 
@@ -1015,7 +975,7 @@ def main():
     config = load_config()
     
     # Get command line arguments
-    parser = argparse.ArgumentParser(description="bapX Coder - Dual-Model AI Development Environment (Interpreter + Developer)")
+    parser = argparse.ArgumentParser(description="bapXcoder - Dual-Model AI Development Environment (Interpreter + Developer)")
     parser.add_argument("--model", type=str, default=config.get('model', 'model_path', fallback='Qwen3VL-8B-Instruct-Q8_0.gguf'), 
                        help="Path to the GGUF model file")
     parser.add_argument("--host", type=str, default=config.get('server', 'host', fallback='127.0.0.1'), 
@@ -1223,7 +1183,7 @@ def start_ide(args):
                 'timestamp': datetime.now().isoformat(),
                 'user_id': user_id
             }
-            store_session_to_github(project_path, user_id, session_data)
+            store_session_locally(project_path, user_id, session_data)
 
         emit('chat_response', {'response': response})
 
@@ -1540,7 +1500,7 @@ def start_ide(args):
                 'user_id': user_id,
                 'completed': False
             }
-            success = store_todo_to_github(project_path, user_id, todo_data)
+            success = store_todo_locally(project_path, user_id, todo_data)
 
             if success:
                 # Update session tree with todo
@@ -1589,7 +1549,7 @@ def start_ide(args):
             online_users.remove(disconnected_user)
             emit_online_count()
 
-    print(f"Starting bapX Coder IDE with dual-model architecture (Interpreter + Developer) at http://{args.host}:{args.port}")
+    print(f"Starting bapXcoder IDE with dual-model architecture (Interpreter + Developer) at http://{args.host}:{args.port}")
     print("Press Ctrl+C to stop the server")
     socketio.run(app, host=args.host, port=args.port, debug=False)
 

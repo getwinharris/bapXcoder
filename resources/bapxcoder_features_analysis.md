@@ -1,9 +1,9 @@
 # Complete Analysis of bapXcoder README
 
 ## Project Overview
-- **Name**: bapX Coder - Advanced AI-Powered PWA IDE
+- **Name**: bapXcoder - Advanced AI-Powered PWA IDE
 - **Type**: Cross-platform PWA (Progressive Web App) Integrated Development Environment
-- **Core Feature**: AI persona named "bapX Coder" with multimodal capabilities
+- **Core Feature**: AI persona named "bapXcoder" with multimodal capabilities
 - **Deployment**: Works on Mac, Windows, Linux and mobile devices through any modern web browser
 
 ## Key Features and Capabilities
@@ -65,7 +65,7 @@
 - **Model Verification**: Confirms model file presence or initiates download
 
 ### 9. AI-Powered Features
-- **bapX Coder AI Persona**: Advanced AI programming assistant with specialized coding expertise
+- **bapXcoder AI Persona**: Advanced AI programming assistant with specialized coding expertise
 - **Local Model**: Run Qwen3VL model locally without internet connection (after setup) - automatically downloads to root directory during installation
 - **Interactive Chat Interface**: With conversation history
 - **Voice Input**: Using Speech-to-Text (STT)

@@ -1,6 +1,6 @@
 # bapXcoder - Advanced AI-Powered PWA IDE
 
-**bapXcoder** is a revolutionary, cross-platform PWA (Progressive Web App) Integrated Development Environment that combines the power of dual AI models into a single, deterministic development environment. Unlike traditional AI tools that lose context or operate in fragments, bapXcoder maintains persistent project memory and executes tasks through a sophisticated interpreter-developer model architecture.
+**bapXcoder** is a revolutionary, cross-platform PWA (Progressive Web App) Integrated Development Environment featuring the "bapXcoder" AI persona. This deterministic CLI-first development environment combines dual AI models into a single, coherent IDE that maintains full repository context. Unlike traditional AI tools that lose context or operate in fragments, bapXcoder maintains persistent project memory and executes tasks through a sophisticated interpreter-developer model architecture.
 
 ## What Problem Does bapXcoder Solve?
 
@@ -17,7 +17,7 @@ Modern AI development tools suffer from fundamental issues:
 - **Dual-Model Intelligence**: Interpreter model handles communication while Developer model handles coding
 - **Deterministic Execution**: Predictable, safe execution with change previews
 - **Complete Privacy**: All project data stays local; only model access happens externally
-- **Autonomous Modes**: YOLO/Autonomous execution for complex tasks
+- **Autonomous Modes**: Advanced autonomous execution for complex tasks
 
 ## Key Capabilities
 
@@ -56,7 +56,7 @@ Unlike other AI IDEs that struggle with context, bapXcoder provides:
 - **Predictable Results**: Deterministic behavior through interpreter-developer model separation
 - **Safe Operations**: Preview all changes before applying with diff visualization
 - **Privacy-First**: All project data remains local; only model interactions happen externally
-- **Autonomous Execution**: Advanced YOLO/Autonomous modes for complex task execution
+- **Autonomous Execution**: Advanced autonomous modes for complex task execution
 
 ## Learn More
 

@@ -1,10 +1,10 @@
-# bapX Coder - Advanced AI-Powered PWA IDE
+# bapXcoder - Advanced AI-Powered PWA IDE
 
-bapX Coder is an advanced, cross-platform PWA (Progressive Web App) Integrated Development Environment featuring the "bapX Coder" AI persona. This comprehensive multimodal AI-powered development environment includes chat interface, voice input/output, image analysis (OCR), encoding-aware text processing (Base64, ASCII, Unicode, etc.), web search, Git integration with OAuth, and all necessary tools for AI development. The project uses a dual-model architecture with Interpreter model (Qwen3-VL) handling user communication and context management, and Developer model (Qwen3-Coder) for specialized coding tasks, connecting via llama.cpp to models. Works on Mac, Windows, Linux and mobile devices through any modern web browser.
+bapXcoder is an advanced, cross-platform PWA (Progressive Web App) Integrated Development Environment featuring the "bapXcoder" AI persona. This comprehensive multimodal AI-powered development environment includes chat interface, voice input/output, image analysis (OCR), encoding-aware text processing (Base64, ASCII, Unicode, etc.), web search, Git integration with OAuth, and all necessary tools for AI development. The project uses a dual-model architecture with Interpreter model (Qwen3-VL) handling user communication and context management, and Developer model (Qwen3-Coder) for specialized coding tasks, connecting via llama.cpp to models. Works on Mac, Windows, Linux and mobile devices through any modern web browser.
 
 ## Key Architecture: Dual-Model Pipeline
 
-The bapX Coder project implements a sophisticated dual-model architecture:
+The bapXcoder project implements a sophisticated dual-model architecture:
 
 ### Interpreter Model (Qwen3-VL)
 - **Handles**: All user communication, multimodal processing, OCR, voice input/output, web research
@@ -72,7 +72,7 @@ The bapX Coder project implements a sophisticated dual-model architecture:
 
 ## Usage
 
-bapX Coder runs as a web-based PWA accessible through your browser on any platform:
+bapXcoder runs as a web-based PWA accessible through your browser on any platform:
 
 ```bash
 python qwen3VL_local_cli.py
@@ -101,7 +101,7 @@ After accessing the application in your browser, you can install it as a PWA on 
 
 ## Advanced Encoding & Internationalization Support
 
-bapX Coder includes comprehensive support for multiple text encodings and international character sets:
+bapXcoder includes comprehensive support for multiple text encodings and international character sets:
 - **UTF-8/Unicode Support**: Full support for international characters and symbols
 - **Base64 Encoding/Decoding**: For binary content and data transfer
 - **Hexadecimal Support**: For hex-encoded data processing
@@ -111,7 +111,7 @@ bapX Coder includes comprehensive support for multiple text encodings and intern
 
 ## CLI-First Architecture with Web UI Overlay
 
-bapX Coder implements a sophisticated dual-server model:
+bapXcoder implements a sophisticated dual-server model:
 - **Frontend Server** (hosted on Hostinger): Handles authentication, payments, and landing page
 - **Local Application** (downloaded by users): Full IDE functionality with llama.cpp runtime model connections
 
@@ -125,7 +125,7 @@ bapX Coder implements a sophisticated dual-server model:
 - **Dual-Model Coordinator**: Interpreter model (Qwen3-VL) acts as coordinator, receiving all user prompts and issuing structured instructions to Developer model (Qwen3-Coder)
 
 ## Project-Based Memory System
-- **Persistent Context**: Unlike cloud IDEs that lose session context, bapX Coder maintains project-specific memory with `.bapXcoder` directories
+- **Persistent Context**: Unlike cloud IDEs that lose session context, bapXcoder maintains project-specific memory with `.bapXcoder` directories
 - **File-Level Association**: Todos, session trees, and conversation history are tied to individual projects, maintaining focused context
 - **Local Session Memory**: Only session + RAG context lives locally in `.bapXcoder` directories
 - **Cross-File Understanding**: The AI remembers relationships between files in your project, providing better contextual suggestions
@@ -196,7 +196,7 @@ These resources provide insight into implementation patterns but are not part of
 
 ## Capabilities via Dual-Model Architecture
 
-The dual-model architecture with Qwen3-VL and Qwen3-Coder via llama.cpp runtime enables these unique capabilities in bapX Coder:
+The dual-model architecture with Qwen3-VL and Qwen3-Coder via llama.cpp runtime enables these unique capabilities in bapXcoder:
 
 - **Full repo context**: Interpreter model (Qwen3-VL) processes entire project context for comprehensive understanding
 - **Persistent memory**: Session-based memory system keeps context across runs
@@ -214,7 +214,7 @@ The dual-model architecture with Qwen3-VL and Qwen3-Coder via llama.cpp runtime 
 ## Architecture Overview
 
 ### Dual-Server and Dual-Model Architecture
-bapX Coder implements a sophisticated architecture combining both dual-server and dual-model approaches:
+bapXcoder implements a sophisticated architecture combining both dual-server and dual-model approaches:
 
 **Server Architecture:**
 - **Frontend Server** (hosted on Hostiger): Handles authentication, payments, and landing page
@@ -233,7 +233,7 @@ Most AI IDEs use a single model that directly interacts with users. This creates
 - Poor project awareness
 - No safety checks
 
-bapX Coder uses a deterministic pipeline:
+bapXcoder uses a deterministic pipeline:
 - **Interpreter** (Qwen3-VL) receives all user input and maintains context
 - **Developer** (Qwen3-Coder) only executes structured instructions from Interpreter
 - No direct user-to-Developer communication prevents inconsistency
@@ -261,7 +261,7 @@ bapX Coder uses a deterministic pipeline:
 ## Models Documentation & Images
 
 ### Qwen3-VL (Interpreter Model)
-The Qwen3-VL model provides the interpretation layer of bapX Coder:
+The Qwen3-VL model provides the interpretation layer of bapXcoder:
 
 ![Qwen3-VL Model Architecture](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Coder/qwen3_coder.png)
 
@@ -306,7 +306,7 @@ The `resources/codespaces-base/` folder contains reference for development envir
 
 ## Comparison with Other Tools
 
-| Feature | bapX Coder | Continue.dev | Antigravity IDE |
+| Feature | bapXcoder | Continue.dev | Antigravity IDE |
 |---------|-------------|----------------|------------------|
 | **Operation** | Dual-model with llama.cpp runtime (similar to Cursor/Continue) | Hybrid (local LLMs) | Cloud-based |
 | **Cost** | License-based with 60-day trial | Subscription | Pay-per-use |
@@ -366,7 +366,7 @@ The system implements a strict separation of concerns:
 
 ## Contributing
 
-This project welcomes contributions! If you'd like to help enhance bapX Coder:
+This project welcomes contributions! If you'd like to help enhance bapXcoder:
 
 - Report bugs or suggest features
 - Contribute code improvements
@@ -393,7 +393,7 @@ The bapXcoder IDE leverages a dual-model architecture with Interpreter model (Qw
 - **Download Management**: Authorized downloads only after subscription validation
 
 ### Project-Based Memory System:
-- **Persistent Context**: Unlike cloud IDEs that lose session context, bapX Coder maintains project-specific memory with `.bapXcoder` directories
+- **Persistent Context**: Unlike cloud IDEs that lose session context, bapXcoder maintains project-specific memory with `.bapXcoder` directories
 - **File-Level Association**: Todos, session trees, and conversation history are tied to individual projects, maintaining focused context
 - **Local Session Memory**: Only session + RAG context lives locally in `.bapXcoder` directories
 - **Cross-File Understanding**: The AI remembers relationships between files in your project, providing better contextual suggestions
@@ -417,7 +417,7 @@ The bapXcoder IDE leverages a dual-model architecture with Interpreter model (Qw
 
 ## Resources Integration
 
-As mentioned, the `resources/` folder contains valuable reference implementations that informed the development of bapX Coder:
+As mentioned, the `resources/` folder contains valuable reference implementations that informed the development of bapXcoder:
 
 - **Qwen Code Resources**: Reference for CLI workflow patterns and direct model connections
 - **Qwen3-Coder Resources**: Reference for advanced coding model capabilities  
@@ -480,9 +480,9 @@ For support, questions, or to report issues, please use the GitHub repository is
 
 ## About the Qwen Models
 
-The Qwen3-VL and Qwen3-Coder models powering bapX Coder are available as open-source models from Alibaba Cloud. These files are compatible with llama.cpp runtime, supporting inference on CPU, NVIDIA GPU (CUDA), Apple Silicon (Metal), Intel GPUs (SYCL), and more. You can mix precisions for optimal performance.
+The Qwen3-VL and Qwen3-Coder models powering bapXcoder are available as open-source models from Alibaba Cloud. These files are compatible with llama.cpp runtime, supporting inference on CPU, NVIDIA GPU (CUDA), Apple Silicon (Metal), Intel GPUs (SYCL), and more. You can mix precisions for optimal performance.
 
-Thank you to Alibaba for making these powerful multimodal models available as open source, enabling projects like bapX Coder to provide advanced AI capabilities locally without cloud dependencies.
+Thank you to Alibaba for making these powerful multimodal models available as open source, enabling projects like bapXcoder to provide advanced AI capabilities locally without cloud dependencies.
 
 ## Project Status
 

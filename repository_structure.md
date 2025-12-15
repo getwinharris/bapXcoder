@@ -1,6 +1,6 @@
 # Git Repository Structure and Changes Overview
 
-## Repository: bapX Coder - Advanced AI-Powered PWA IDE
+## Repository: bapXcoder - Advanced AI-Powered PWA IDE
 
 ### Main Project Folders and Files
 
@@ -37,66 +37,66 @@
 ### Research and Reference Folders
 
 #### Research Projects (for reference and development)
-These folders contain reference implementations and research projects that inform the development of bapX Coder:
+These folders contain reference implementations and research projects that inform the development of bapXcoder:
 
 **`research/qwen-code/`** - Research reference
 - Contains the Qwen Code project (AI-powered command-line workflow tool)
 - Used as reference for CLI workflow patterns and Qwen model optimization
-- Not part of the main bapX Coder application
+- Not part of the main bapXcoder application
 - **Status**: Research and reference only
 
 **`research/Qwen3-Coder/`** - Research reference  
 - Contains the Qwen3-Coder project (Agentic coding model by QwenLM)
 - Used as reference for advanced coding capabilities and model integration
-- Not part of the main bapX Coder application
+- Not part of the main bapXcoder application
 - **Status**: Research and reference only
 
 **`research/codespaces-base/`** - Research reference
 - Contains GitHub Codespaces base starter template
 - Used as reference for development environment concepts
-- Not part of the main bapX Coder application
+- Not part of the main bapXcoder application
 - **Status**: Research and reference only
 
 **`research/qwen3-vl-hf/`** - Research reference
 - Contains documentation about connecting to Hugging Face Qwen3-VL model
 - Used for understanding direct Hugging Face connection approaches
-- Not part of the main bapX Coder application
+- Not part of the main bapXcoder application
 - **Status**: Research and reference only
 
 #### Analysis Folders (for development insights)
 **`research/comparison_analysis.md`** - Research reference
-- Contains comparative analysis between bapX Coder and research repositories
-- Not part of the main bapX Coder application
+- Contains comparative analysis between bapXcoder and research repositories
+- Not part of the main bapXcoder application
 - **Status**: Research and reference only
 
 **`research/tts_modalities_analysis.md`** - Research reference
-- Contains analysis of TTS and other modalities in bapX Coder
-- Not part of the main bapX Coder application
+- Contains analysis of TTS and other modalities in bapXcoder
+- Not part of the main bapXcoder application
 - **Status**: Research and reference only
 
 **`research/bapxcoder_features_analysis.md`** - Research reference
-- Contains complete analysis of bapX Coder features
-- Not part of the main bapX Coder application
+- Contains complete analysis of bapXcoder features
+- Not part of the main bapXcoder application
 - **Status**: Research and reference only
 
 **`research/projects_comparison.md`** - Research reference
 - Contains comparison of three research projects
-- Not part of the main bapX Coder application
+- Not part of the main bapXcoder application
 - **Status**: Research and reference only
 
 **`research/final_analysis.md`** - Research reference
 - Contains final comprehensive analysis
-- Not part of the main bapX Coder application
+- Not part of the main bapXcoder application
 - **Status**: Research and reference only
 
 **`research/huggingface_connection.md`** - Research reference
 - Contains documentation about connecting to Hugging Face models without downloading
-- Not part of the main bapX Coder application
+- Not part of the main bapXcoder application
 - **Status**: Research and reference only
 
-### Key Differentiators of bapX Coder
+### Key Differentiators of bapXcoder
 
-#### Main Project (bapX Coder):
+#### Main Project (bapXcoder):
 1. **Dual-Model Architecture**: Qwen3-VL for communication/UI and Qwen3-Coder for specialized coding tasks
 2. **Direct Hugging Face Connection**: No local model downloads, direct connections using allocated quotas
 3. **CLI-First with Web UI Overlay**: Combines CLI power with user-friendly web interface
@@ -113,7 +113,7 @@ These folders contain reference implementations and research projects that infor
 
 ### Updated Architecture Summary
 
-The bapX Coder project now uses:
+The bapXcoder project now uses:
 - **Qwen3-VL Model**: For communication, UI understanding, multimodal processing, OCR, and user interactions
 - **Qwen3-Coder Model**: For specialized coding tasks, code generation, analysis, and implementation  
 - **Direct Hugging Face Connection**: Both models connect directly to Hugging Face without local downloads
@@ -125,6 +125,6 @@ The bapX Coder project now uses:
 The separation between main project files and research folders allows for:
 1. Clear distinction between production code and research references
 2. Proper attribution and understanding of reference materials
-3. Maintained focus on the core bapX Coder application
+3. Maintained focus on the core bapXcoder application
 4. Easy maintenance and updates to the main project
 5. Preservation of research insights for future development

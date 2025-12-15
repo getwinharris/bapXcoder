@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document clarifies the purpose and status of the research folders in this repository. These folders contain external projects and references that were used during the development of bapX Coder but are NOT part of the main application distribution.
+This document clarifies the purpose and status of the research folders in this repository. These folders contain external projects and references that were used during the development of bapXcoder but are NOT part of the main application distribution.
 
 ## Research Folders Status
 
@@ -36,7 +36,7 @@ This document clarifies the purpose and status of the research folders in this r
 
 ## Main Application Components
 
-The actual bapX Coder application consists of:
+The actual bapXcoder application consists of:
 
 ### Core Files:
 - qwen3VL_local_cli.py
@@ -61,14 +61,14 @@ The actual bapX Coder application consists of:
 
 ## Important Distinction
 
-- **Main Application**: The actual bapX Coder IDE with dual-model architecture
+- **Main Application**: The actual bapXcoder IDE with dual-model architecture
 - **Research Folders**: External repositories used as reference during development
 
 The research folders are included to provide context for development decisions and architectural choices, but they are not distributed with or required by the main application.
 
 ## Business Model Clarification
 
-The main bapX Coder application:
+The main bapXcoder application:
 - Uses a licensing model (60-day trial, then license required)
 - Connects directly to Hugging Face models using allocated quotas
 - Implements dual-model architecture (Qwen3-VL for communication, Qwen3-Coder for coding)

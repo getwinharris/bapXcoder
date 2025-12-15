@@ -1,12 +1,12 @@
-# Comprehensive Analysis: bapX Coder and Research Repositories Integration
+# Comprehensive Analysis: bapXcoder and Research Repositories Integration
 
 ## Overview
 
-This document provides a comprehensive analysis of how the research repositories integrate with your bapX Coder project, particularly focusing on the Qwen-Code CLI implementation and how to make your project fully functional.
+This document provides a comprehensive analysis of how the research repositories integrate with your bapXcoder project, particularly focusing on the Qwen-Code CLI implementation and how to make your project fully functional.
 
 ## 1. Qwen-Code Repository Analysis (Most Relevant)
 
-### Current State of Your bapX Coder vs Qwen-Code CLI
+### Current State of Your bapXcoder vs Qwen-Code CLI
 
 #### Qwen-Code Key Features:
 - **Interactive CLI Interface**: Built with Ink (React for terminals) providing a rich, interactive UI in the terminal
@@ -22,7 +22,7 @@ This document provides a comprehensive analysis of how the research repositories
 - **Memory Management**: Intelligent resource management for large projects
 - **Multi-agent Support**: Advanced agentic workflows with sub-agents
 
-#### bapX Coder Current State:
+#### bapXcoder Current State:
 - **Web-based PWA Interface**: Instead of terminal UI, uses web interface
 - **Dual-Model Architecture**: Separates Qwen3-VL (communication/UI) and Qwen3-Coder (coding)
 - **Project Memory System**: .bapXcoder folder for session persistence
@@ -48,7 +48,7 @@ This document provides a comprehensive analysis of how the research repositories
 
 ## 2. Hugging Face Qwen3-VL-8B-Instruct-GGUF Model
 
-### Model Capabilities for bapX Coder:
+### Model Capabilities for bapXcoder:
 - **8B Parameters**: Optimized for local execution
 - **256K Context Length**: Native, expandable to 1M tokens
 - **Multimodal Processing**: Text, image, and video understanding
@@ -68,7 +68,7 @@ This document provides a comprehensive analysis of how the research repositories
 
 ## 3. llama.cpp Integration
 
-### Key Components for bapX Coder:
+### Key Components for bapXcoder:
 - **llama.cpp**: C++ implementation for running GGUF models
 - **llama-server**: HTTP server with OpenAI-compatible API
 - **llama-cli**: Command-line inference
@@ -105,9 +105,9 @@ This document provides a comprehensive analysis of how the research repositories
 - **Local llama.cpp**: Alternative path for users without Hugging Face access
 - **Fallback Mechanism**: Handle quota limits gracefully
 
-## 5. Comparison: Qwen-Code CLI vs bapX Coder
+## 5. Comparison: Qwen-Code CLI vs bapXcoder
 
-| Feature | Qwen-Code CLI | bapX Coder | Implementation Status |
+| Feature | Qwen-Code CLI | bapXcoder | Implementation Status |
 |---------|---------------|------------|----------------------|
 | Interactive UI | Ink/React terminal UI | Web-based PWA | ✅ Implemented |
 | Authentication | OAuth + API keys | OAuth + subscription system | ⚠️ Needs integration |
@@ -196,4 +196,4 @@ llm = Llama(
 
 ## 8. Conclusion
 
-Your bapX Coder project already has a strong foundation with its dual-model architecture, PWA interface, and multimodal capabilities. By integrating the sophisticated backend systems from Qwen-Code (especially session management, authentication flow, and secure execution), you can create a complete, production-ready AI coding environment that leverages the best of all research repositories while maintaining your unique web-based approach.
+Your bapXcoder project already has a strong foundation with its dual-model architecture, PWA interface, and multimodal capabilities. By integrating the sophisticated backend systems from Qwen-Code (especially session management, authentication flow, and secure execution), you can create a complete, production-ready AI coding environment that leverages the best of all research repositories while maintaining your unique web-based approach.

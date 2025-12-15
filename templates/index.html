@@ -1125,7 +1125,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fa-solid fa-square-binary logo-icon"></i>bapX Coder</h1>
+            <h1><i class="fa-solid fa-square-binary logo-icon"></i>bapXcoder</h1>
             <div class="header-right">
                 <div class="subscription-status" id="subscriptionStatus">
                     <span id="subscriptionType">Trial:</span>
@@ -1191,7 +1191,7 @@
             <!-- 1. Sidebar (left panel) -->
             <div class="sidebar-panel">
                 <div class="sidebar-header">
-                    <h2>bapX Coder</h2>
+                    <h2>bapXcoder</h2>
                 </div>
                 <div class="sidebar-menu">
                     <button class="menu-btn active" data-panel="explorer"><i class="fas fa-folder"></i></button>
@@ -1253,8 +1253,8 @@
                     <div class="chat-container">
                         <div class="chat-messages" id="chatMessages">
                             <div class="message ai-message">
-                                <div class="message-header">bapX Coder</div>
-                                <div>Welcome! I'm bapX Coder, your advanced AI programming assistant. I can help with coding, image analysis (OCR), web searches, Git operations, and more. Use the buttons above to attach files, search the web, or use voice input. How can I assist you today?</div>
+                                <div class="message-header">bapXcoder</div>
+                                <div>Welcome! I'm bapXcoder, your advanced AI programming assistant. I can help with coding, image analysis (OCR), web searches, Git operations, and more. Use the buttons above to attach files, search the web, or use voice input. How can I assist you today?</div>
                             </div>
                         </div>
                         <div class="chat-input">
@@ -1309,7 +1309,7 @@
                             </div>
                         </div>
                         <div class="terminal-output" id="terminalOutput">
-                            bapX Coder terminal ready. Type 'help' for available commands.
+                            bapXcoder terminal ready. Type 'help' for available commands.
                         </div>
                         <div class="terminal-input">
                             <input type="text" id="terminalInput" placeholder="Enter command..." autofocus>
@@ -1325,7 +1325,7 @@
                     <div class="git-indicator" id="gitIndicator"></div>
                     <div id="gitStatusText">Git: Not in a repository</div>
                 </div>
-                <div class="status" id="status">Ready - bapX Coder AI Assistant Active</div>
+                <div class="status" id="status">Ready - bapXcoder AI Assistant Active</div>
             </div>
         </div>
                 </div>
@@ -1430,7 +1430,7 @@
                 </div>
             </div>
             <div class="terminal-output" id="terminalOutput">
-                bapX Coder terminal ready. Type 'help' for available commands.
+                bapXcoder terminal ready. Type 'help' for available commands.
             </div>
             <div class="terminal-input">
                 <input type="text" id="terminalInput" placeholder="Enter command..." autofocus>
@@ -1443,7 +1443,7 @@
                 <div class="git-indicator" id="gitIndicator"></div>
                 <div id="gitStatusText">Git: Not in a repository</div>
             </div>
-            <div class="status" id="status">Ready - bapX Coder AI Assistant Active</div>
+            <div class="status" id="status">Ready - bapXcoder AI Assistant Active</div>
             <div class="community-link">
                 <a href="https://github.com/getwinharris/bapXcoder/discussions" target="_blank" title="Recent Activity">
                     <i class="fab fa-github"></i> Community
@@ -1507,7 +1507,7 @@
 
         // Socket event handlers
         socket.on('connect', function() {
-            updateStatus('Connected to bapX Coder IDE');
+            updateStatus('Connected to bapXcoder IDE');
         });
 
         // Handle subscription information from backend
@@ -1564,7 +1564,7 @@
         socket.on('chat_response', function(data) {
             // Remove the last message (thinking message) if it was from AI
             const lastMsg = chatMessages.lastChild;
-            if (lastMsg && lastMsg.classList.contains('ai-message') && lastMsg.querySelector('.message-header').textContent === 'bapX Coder') {
+            if (lastMsg && lastMsg.classList.contains('ai-message') && lastMsg.querySelector('.message-header').textContent === 'bapXcoder') {
                 const content = lastMsg.querySelector('div:not(.message-header)');
                 if (content && content.textContent.includes('Thinking') && content.textContent.includes('...')) {
                     lastMsg.remove();
@@ -1658,7 +1658,7 @@
                 addMessage(`Web search: ${query}`, 'user');
 
                 // Show thinking message
-                const thinkingMsg = addMessage('bapX Coder is searching the web for: ' + query + '...', 'ai', true);
+                const thinkingMsg = addMessage('bapXcoder is searching the web for: ' + query + '...', 'ai', true);
 
                 // Send web search request
                 socket.emit('web_search', { query: query });
@@ -1896,7 +1896,7 @@
                 chatInput.value = '';
 
                 // Show thinking message
-                const thinkingMsg = addMessage('bapX Coder is thinking...', 'ai', true);
+                const thinkingMsg = addMessage('bapXcoder is thinking...', 'ai', true);
 
                 // Prepare conversation history to send - get all messages
                 const messages = document.querySelectorAll('#chatMessages .message');
@@ -1915,7 +1915,7 @@
                             // Determine role based on the CSS classes
                             const role = isUser ? 'user' : 'assistant';
 
-                            if (content && content !== 'bapX Coder is thinking...') { // Don't include thinking messages
+                            if (content && content !== 'bapXcoder is thinking...') { // Don't include thinking messages
                                 conversationHistory.push({
                                     role: role,
                                     content: content
@@ -2025,7 +2025,7 @@
             if (sender === 'ai') {
                 const headerDiv = document.createElement('div');
                 headerDiv.classList.add('message-header');
-                headerDiv.textContent = 'bapX Coder';
+                headerDiv.textContent = 'bapXcoder';
                 messageDiv.appendChild(headerDiv);
             }
 
@@ -2069,7 +2069,7 @@
 
         require(['vs/editor/editor.main'], function() {
             editor = monaco.editor.create(document.getElementById('editor'), {
-                value: '// Welcome to bapX Coder - AI-Powered IDE\n// Select a file to edit or start coding here',
+                value: '// Welcome to bapXcoder - AI-Powered IDE\n// Select a file to edit or start coding here',
                 language: 'python',
                 theme: 'vs-dark',
                 automaticLayout: true,

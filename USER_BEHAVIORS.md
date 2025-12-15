@@ -1,4 +1,4 @@
-# bapX Coder - User-Facing Behaviors TODO List
+# bapXcoder - User-Facing Behaviors TODO List
 
 ## 1. Installation & Setup Pipeline
 - [ ] Single File Installation: Download and run `install.sh` with our logo to install the entire system

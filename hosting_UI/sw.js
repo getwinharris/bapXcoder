@@ -1,4 +1,4 @@
-// bapX Coder Service Worker
+// bapXcoder Service Worker
 // Note: For true offline functionality, static assets would need to be properly cached
 // This service worker provides basic PWA functionality
 

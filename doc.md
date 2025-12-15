@@ -1,9 +1,9 @@
-# bapX Coder - Internal Developer Documentation
+# bapXcoder - Internal Developer Documentation
 
 ## Resources Folders & Architecture
 
 ### Resources Overview
-The `resources/` directory contains reference implementations that informed the development of bapX Coder:
+The `resources/` directory contains reference implementations that informed the development of bapXcoder:
 
 1. **resources/wired-CLI-Tool/** - Original Qwen-Code project (https://github.com/QwenLM/qwen-code)
    - **Purpose**: Reference for CLI workflow patterns and direct model connections
@@ -85,10 +85,10 @@ The `resources/` directory contains reference implementations that informed the 
 ### Command-Line Interface Architecture
 
 **./coder.bapx executable:**
-- **Function**: Primary command-line entry point for bapX Coder
+- **Function**: Primary command-line entry point for bapXcoder
 - **Connection**: Calls main application with proper parameters
 - **Purpose**: Provides CLI-first access to dual-model system
-- **Internal wiring**: Acts as launcher for the main bapX Coder application
+- **Internal wiring**: Acts as launcher for the main bapXcoder application
 
 ## Technical Implementation
 

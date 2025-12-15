@@ -1,0 +1,21 @@
+# Git attributes for bapXcoder project
+
+# Properly handle resource folders as submodules/subtrees
+resources/Qwen3-Coder/**
+resources/codespaces-base/**
+resources/llama.cpp/**
+resources/wired-CLI-Tool/**
+resources/qwen3-vl-hf/**
+
+# Text files with proper line endings
+*.txt text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.ini text eol=lf
+*.json text eol=lf
+
+# Binary files
+*.gguf binary
+*.bin binary
+*.zip binary
+*.tar.gz binary
