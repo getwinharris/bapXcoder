@@ -18,10 +18,17 @@ import time
 import webbrowser
 from datetime import datetime, timedelta
 def load_config():
-    """Load configuration from config.ini file"""
+    """
+    Load configuration from config.ini file
+
+    Function: Reads configuration settings from the config.ini file
+    Connection: Provides settings for model, server, and defaults to various systems
+    Purpose: Centralized configuration management for application settings
+    Internal wiring: Called during startup to configure model and server parameters
+    """
     config = configparser.ConfigParser()
     config_path = Path("config.ini")
-    
+
     if config_path.exists():
         config.read(config_path)
         return config
@@ -1002,15 +1009,23 @@ def admin_logout():
     return True
 
 def main():
+    """
+    Main entry point for bapX Coder application
+
+    Function: Initializes the dual-model AI development environment with CLI and web interface
+    Connection: Orchestrates all subsystems (models, UI, project management, validation)
+    Purpose: Provide integrated development environment with interpreter-developer model architecture
+    Internal wiring: Connects Flask web server, SocketIO for real-time communication, model handlers, and project explorer
+    """
     # Run installation check first
     if not check_installation():
         print("❌ Installation check failed. Please run: python install.py")
         sys.exit(1)
-    
+
     config = load_config()
     
     # Get command line arguments
-    parser = argparse.ArgumentParser(description="bapX Coder - AI-Powered IDE")
+    parser = argparse.ArgumentParser(description="bapX Coder - Dual-Model AI Development Environment (Interpreter + Developer)")
     parser.add_argument("--model", type=str, default=config.get('model', 'model_path', fallback='Qwen3VL-8B-Instruct-Q8_0.gguf'), 
                        help="Path to the GGUF model file")
     parser.add_argument("--host", type=str, default=config.get('server', 'host', fallback='127.0.0.1'), 
@@ -1584,7 +1599,7 @@ def start_ide(args):
             online_users.remove(disconnected_user)
             emit_online_count()
 
-    print(f"Starting bapXcoder IDE at http://{args.host}:{args.port}")
+    print(f"Starting bapX Coder IDE with dual-model architecture (Interpreter + Developer) at http://{args.host}:{args.port}")
     print("Press Ctrl+C to stop the server")
     socketio.run(app, host=args.host, port=args.port, debug=False)
 

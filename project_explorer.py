@@ -12,15 +12,22 @@ class ProjectExplorer:
         self.setup_project_structure()
     
     def setup_project_structure(self):
-        """Setup the project-based memory structure"""
+        """
+        Setup the project-based memory structure
+
+        Function: Creates the .bapXcoder directory and initializes project-specific files
+        Connection: Links to session management and task tracking systems
+        Purpose: Establish persistent project memory with todo.json and sessiontree.json
+        Internal wiring: Sets up local storage for project-specific session data and task lists
+        """
         self.bapxcoder_dir.mkdir(exist_ok=True)
-        
+
         # Initialize project-specific files
         todo_file = self.bapxcoder_dir / 'todo.json'
         if not todo_file.exists():
             with open(todo_file, 'w') as f:
                 json.dump([], f, indent=2)
-        
+
         session_file = self.bapxcoder_dir / 'sessiontree.json'
         if not session_file.exists():
             with open(session_file, 'w') as f:
@@ -37,7 +44,14 @@ class ProjectExplorer:
                 }, f, indent=2)
     
     def get_project_tree(self, max_depth=3):
-        """Get the project file tree structure"""
+        """
+        Get the project file tree structure
+
+        Function: Builds a hierarchical representation of the project directory structure
+        Connection: Links to file system navigation and UI rendering components
+        Purpose: Provide project context and file structure visualization
+        Internal wiring: Connects to UI components that display project hierarchy
+        """
         tree = {}
         self._build_tree_recursive(self.project_path, tree, max_depth, 0)
         return tree

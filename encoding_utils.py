@@ -1,7 +1,12 @@
 def encode_content(content, encoding_type='utf-8'):
     """
     Encode content using various encoding schemes
-    Supported encodings: utf-8, ascii, base64, hex, etc.
+
+    Function: Converts content between different text encoding formats (UTF-8, Base64, ASCII, Hex, etc.)
+    Connection: Links to file processing and communication systems in the application
+    Purpose: Handle international character sets and encoding transformations for diverse input
+    Internal wiring: Connects to file operations, API communications, and user input processing
+    Supported encodings: utf-8, ascii, base64, hex, unicode, and others
     """
     if encoding_type.lower() == 'base64':
         import base64
@@ -53,7 +58,12 @@ def encode_content(content, encoding_type='utf-8'):
 def decode_content(encoded_content, encoding_type='utf-8'):
     """
     Decode content from various encoding schemes
-    Supported encodings: utf-8, ascii, base64, hex, etc.
+
+    Function: Converts encoded content back to readable format (UTF-8, Base64, ASCII, Hex, etc.)
+    Connection: Links to content processing and display systems in the application
+    Purpose: Handle international character sets and decoding transformations for diverse input
+    Internal wiring: Connects to file readers, API response processors, and user input handlers
+    Supported encodings: utf-8, ascii, base64, hex, unicode, and others
     """
     if encoding_type.lower() == 'base64':
         import base64
