@@ -54,6 +54,12 @@
             text-shadow: 0 0 10px rgba(124, 92, 255, 0.3);
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
         .git-section {
             display: flex;
             align-items: center;
@@ -199,6 +205,30 @@
         .logo-icon {
             margin-right: 8px;
             color: #7c5cff;
+        }
+
+        /* Subscription Status Display */
+        .subscription-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(26, 26, 37, 0.9);
+            border: 1px solid #7c5cff;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 0.8rem;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(124, 92, 255, 0.3);
+        }
+
+        .subscription-status .days-left {
+            color: #50fa7b;
+            font-weight: bold;
+        }
+
+        .subscription-status.lifetime {
+            border: 1px solid #50fa7b;
+            background: rgba(40, 50, 40, 0.9);
         }
 
         .terminal-container {
@@ -1096,13 +1126,20 @@
     <div class="container">
         <div class="header">
             <h1><i class="fa-solid fa-square-binary logo-icon"></i>bapX Coder</h1>
-            <div class="git-section">
-                <button class="git-btn" id="gitConnectBtn">Connect to Git</button>
-                <button class="git-btn" id="gitRepoBtn">Git Repo</button>
-                <button class="git-btn" id="installBtn" style="display: none;">Install App</button>
-                <button class="git-btn" id="projectExplorerBtn" title="Project Explorer">
-                    <i class="fas fa-folder"></i>
-                </button>
+            <div class="header-right">
+                <div class="subscription-status" id="subscriptionStatus">
+                    <span id="subscriptionType">Trial:</span>
+                    <span id="subscriptionDaysLeft" class="days-left">60 days</span>
+                    <span id="subscriptionExpires" style="display: none;">(expires: <span id="expiryDate">2025-02-13</span>)</span>
+                </div>
+                <div class="git-section">
+                    <button class="git-btn" id="gitConnectBtn">Connect to Git</button>
+                    <button class="git-btn" id="gitRepoBtn">Git Repo</button>
+                    <button class="git-btn" id="installBtn" style="display: none;">Install App</button>
+                    <button class="git-btn" id="projectExplorerBtn" title="Project Explorer">
+                        <i class="fas fa-folder"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1471,6 +1508,53 @@
         // Socket event handlers
         socket.on('connect', function() {
             updateStatus('Connected to bapX Coder IDE');
+        });
+
+        // Handle subscription information from backend
+        socket.on('subscription_info', function(data) {
+            const subType = data.type || 'trial';
+            const daysLeft = data.days_left || 60;
+            const expires = data.expires || 'unknown';
+
+            document.getElementById('subscriptionType').textContent = subType + ':';
+            document.getElementById('subscriptionDaysLeft').textContent = daysLeft + (daysLeft === 1 ? ' day' : ' days') + ' left';
+            document.getElementById('expiryDate').textContent = expires;
+
+            // Update UI based on subscription type
+            const subStatusElement = document.getElementById('subscriptionStatus');
+            if (subType === 'lifetime') {
+                subStatusElement.classList.add('lifetime');
+                document.getElementById('subscriptionDaysLeft').textContent = 'Lifetime access';
+            } else if (subType === 'expired') {
+                subStatusElement.style.border = '1px solid #ff6b6b';
+                document.getElementById('subscriptionDaysLeft').style.color = '#ff6b6b';
+            } else if (subType === 'trial' && daysLeft < 7) {
+                // Highlight if trial is almost ending
+                subStatusElement.style.background = 'rgba(255, 107, 107, 0.2)';
+                document.getElementById('subscriptionDaysLeft').style.color = '#ff6b6b';
+            }
+        });
+
+        // Handle trial reminder popup
+        socket.on('trial_reminder', function(data) {
+            if (data.days_left <= 10) {
+                // Show trial expiry reminder if less than 10 days left
+                const reminderHtml = `
+                    <div id="trialPopup" class="popup-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;">
+                        <div style="background: linear-gradient(180deg, #1a1a25 0%, #252536 100%); border: 1px solid #7c5cff; border-radius: 12px; padding: 30px; max-width: 500px; text-align: center;">
+                            <h3 style="color: #7c5cff; margin-bottom: 15px;">Trial Expiration Notice</h3>
+                            <p>Your free trial expires in ${data.days_left} days on ${data.expires}.</p>
+                            <p>Subscribe to continue using all AI features after trial ends.</p>
+                            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+                                <button onclick="document.getElementById('trialPopup').remove();" style="background: #2d2d40; color: #a0a0c0; border: 1px solid #444460; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Dismiss</button>
+                                <button onclick="location.href='#pricing'; document.getElementById('trialPopup').remove();" style="background: linear-gradient(90deg, #7c5cff 0%, #6a4fd6 100%); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">View Plans</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.insertAdjacentHTML('beforeend', reminderHtml);
+            }
         });
 
         socket.on('status', function(data) {

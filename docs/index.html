@@ -75,6 +75,28 @@
             color: #7c5cff;
         }
 
+        /* Subscription Status Header */
+        .subscription-status-header {
+            background: linear-gradient(90deg, #2d2d40 0%, #1a1a25 100%);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #444460;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subscription-type {
+            color: #a0a0c0;
+            font-size: 0.8rem;
+        }
+
+        .days-left {
+            color: #7c5cff;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
         /* Hero Section */
         .hero {
             padding: 100px 0;
@@ -468,6 +490,10 @@
                     <a href="#faq">FAQ</a>
                     <a href="https://github.com/getwinharris/bapXcoder/blob/main/README.md" target="_blank">Docs</a>
                 </div>
+                <div class="subscription-status-header">
+                    <span class="subscription-type">Trial:</span>
+                    <span class="days-left">60 days left</span>
+                </div>
             </nav>
         </div>
     </header>
@@ -738,6 +764,47 @@
         function simulateDownload() {
             alert('This would download the appropriate bapXcoder installer for your platform in a real implementation');
         }
+
+        // Function to update subscription status based on real data
+        function updateSubscriptionStatus(subType, daysLeft, expires) {
+            const subTypeElement = document.querySelector('.subscription-type');
+            const daysElement = document.querySelector('.days-left');
+
+            if (subTypeElement && daysElement) {
+                if (subType === 'lifetime') {
+                    subTypeElement.textContent = 'Lifetime:';
+                    daysElement.textContent = 'Unlimited access';
+                    daysElement.style.color = '#50fa7b'; // Green for lifetime access
+                } else if (subType === 'expired') {
+                    subTypeElement.textContent = 'Expired:';
+                    daysElement.textContent = '0 days';
+                    daysElement.style.color = '#ff6b6b'; // Red for expired
+                } else {
+                    subTypeElement.textContent = subType + ':';
+                    daysElement.textContent = daysLeft + (daysLeft === 1 ? ' day' : ' days') + ' left';
+
+                    // Highlight in red if approaching expiry
+                    if (daysLeft <= 7) {
+                        daysElement.style.color = '#ff6b6b'; // Red for low days
+                    } else if (daysLeft <= 30) {
+                        daysElement.style.color = '#f1fa8c'; // Yellow for low days
+                    } else {
+                        daysElement.style.color = '#7c5cff'; // Default purple
+                    }
+                }
+            }
+        }
+
+        // Simulate loading subscription status from server
+        document.addEventListener('DOMContentLoaded', function() {
+            // In a real implementation, this would fetch from the server
+            // updateSubscriptionStatus(realSubType, realDaysLeft, realExpiryDate);
+
+            // For demo purposes, simulate a call to get subscription status
+            setTimeout(function() {
+                updateSubscriptionStatus('trial', 60, '2025-02-13'); // Set initial status
+            }, 500);
+        });
     </script>
 </body>
 </html>
