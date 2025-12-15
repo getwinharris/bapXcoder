@@ -272,6 +272,35 @@
             margin-bottom: 15px;
         }
 
+        /* Progress Bar Styles */
+        .progress-container {
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #252536;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 5px;
+            border: 1px solid #33334d;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7c5cff 0%, #6a4fd6 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #7c5cff;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
         /* Download Options */
         .download-options {
             display: flex;
@@ -641,35 +670,47 @@
             </div>
         </section>
 
-        <section class="github-authentication" id="github-auth">
+        <section class="installation" id="installation">
             <div class="container">
-                <h2 class="section-title">Connect with GitHub</h2>
-                <p>Sign in with GitHub to access the bapXcoder IDE with full functionality</p>
+                <h2 class="section-title">Get Started in Seconds</h2>
+                <p>Just one file to connect and authenticate with GitHub - handles everything automatically</p>
 
                 <div style="text-align: center; margin-top: 40px;">
                     <a href="https://github.com/login/oauth/authorize?client_id=YOUR_GITHUB_CLIENT_ID&redirect_uri=https://coder.bapx.in/callback&scope=user:email%20repo" class="primary-download-button" target="_blank">
-                        <i class="fab fa-github"></i> Continue with GitHub
+                        <i class="fab fa-github"></i> Connect with GitHub to Download
                     </a>
-                    <p style="margin-top: 15px; color: #a0a0c0;">Connect your GitHub account to download and use bapXcoder</p>
+                    <p style="margin-top: 15px; color: #a0a0c0;">Single executable connects to your GitHub repo and handles installation</p>
                 </div>
 
-                <div class="authentication-process" style="margin-top: 50px;">
-                    <h3>Authentication Process</h3>
+                <div class="installation-process" style="margin-top: 50px;">
+                    <h3>What Gets Installed</h3>
                     <div class="installation-steps">
                         <div class="installation-step">
                             <div class="step-number">1</div>
-                            <h3>GitHub Connection</h3>
-                            <p>Connect your GitHub account with read/write permissions to store encrypted user data</p>
+                            <h3>bapX PWA Interface</h3>
+                            <p>PWA installation that works in browser and as desktop application</p>
                         </div>
                         <div class="installation-step">
                             <div class="step-number">2</div>
-                            <h3>Subscription Verification</h3>
-                            <p>Verify your subscription status (free trial, monthly, or lifetime)</p>
+                            <h3>Local AI Model</h3>
+                            <p>Qwen3VL model (~8.76GB) downloads to your device for offline AI processing</p>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%;"></div>
+                                </div>
+                                <div class="progress-text">0%</div>
+                            </div>
                         </div>
                         <div class="installation-step">
                             <div class="step-number">3</div>
-                            <h3>Download & Install</h3>
-                            <p>Download the appropriate installer for your OS and complete installation</p>
+                            <h3>Dependencies & Setup</h3>
+                            <p>Required dependencies install with progress indicator</p>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%;"></div>
+                                </div>
+                                <div class="progress-text">0%</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -982,6 +1023,65 @@
             showAdminPanel();
         };
         footerLinks.appendChild(adminLink);
+
+        // Subscription check for chat functionality
+        function checkSubscriptionForChat() {
+            // In a real implementation, this would check the user's subscription status
+            // For now, simulate the check
+            const isLoggedIn = true; // Would check actual auth status in real implementation
+            // In real implementation, this would call to backend to check subscription status
+            // Would verify with server if user has valid subscription/trial
+
+            // This would typically make an AJAX call to check subscription status
+            /*
+            fetch('/api/check-subscription', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + getSessionToken()
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'expired' || data.status === 'not-subscribed') {
+                    showSubscriptionPrompt();
+                    return false;
+                }
+                return true;
+            })
+            .catch(error => {
+                console.error('Error checking subscription:', error);
+                showSubscriptionPrompt();
+                return false;
+            });
+            */
+
+            // For demo purposes, return true to allow chat access
+            return true;
+        }
+
+        // Show subscription prompt when chat access is restricted
+        function showSubscriptionPrompt() {
+            alert('Your trial has expired. Subscribe to continue using the AI Chat features. The IDE continues to work normally for basic editing and file operations.');
+
+            // In real implementation, this would show a proper modal with subscription options
+            // Would redirect to subscription page or show in-app purchase options
+        }
+
+        // Function to get session token (placeholder)
+        function getSessionToken() {
+            // In real implementation, return the actual auth token
+            // For now, return a mock token
+            return localStorage.getItem('auth_token') || sessionStorage.getItem('session_token');
+        }
+
+        // Initialize subscription check when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up event listeners for any chat panel access
+            // In real implementation, this would monitor for attempts to access AI features
+
+            console.log('bapXcoder UI initialization complete');
+            console.log('Subscription system ready for chat access checks');
+        });
     </script>
 </body>
 </html>
