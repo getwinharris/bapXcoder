@@ -40,4 +40,7 @@ Thumbs.db
 *.backup
 
 # Logs
-*.log
+*.logresearch/Qwen3-Coder/
+research/codespaces-base/
+research/qwen-code/
+research/llama.cpp/
