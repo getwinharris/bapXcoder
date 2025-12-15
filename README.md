@@ -1,6 +1,6 @@
 # bapXcoder - Advanced AI-Powered PWA IDE
 
-bapX Coder is an advanced, cross-platform PWA (Progressive Web App) Integrated Development Environment featuring the "bapX Coder" AI persona. This comprehensive multimodal AI-powered development environment includes chat interface, voice input/output, image analysis (OCR), encoding-aware text processing (Base64, ASCII, Unicode, etc.), web search, Git integration with OAuth, and all necessary tools for local AI development. The project uses a dual-model architecture with Qwen3-VL for communication and UI understanding, and Qwen3-Coder for specialized coding tasks, connecting directly to Hugging Face without local downloads. Works on Mac, Windows, Linux and mobile devices through any modern web browser.
+bapX Coder is an advanced, cross-platform PWA (Progressive Web App) Integrated Development Environment featuring the "bapX Coder" AI persona. This comprehensive multimodal AI-powered development environment includes chat interface, voice input/output, image analysis (OCR), encoding-aware text processing (Base64, ASCII, Unicode, etc.), web search, Git integration with OAuth, and all necessary tools for AI development via direct Hugging Face connections. The project uses a dual-model architecture with Qwen3-VL for communication and UI understanding, and Qwen3-Coder for specialized coding tasks, connecting directly to Hugging Face without local downloads. Works on Mac, Windows, Linux and mobile devices through any modern web browser.
 
 ## Advanced Encoding & Internationalization Support
 
@@ -25,9 +25,9 @@ Traditional development tools have critical limitations:
 So bapXcoder is:
 
 • **A deterministic CLI-first dev tool** with inbuilt model without losing repo-level awareness
-• **Local model (Qwen3VL)** never hits quota
-• **"Local ollama models are not automatically connected to the whole repo like CLI"**
-• **Local, license-based, repo-aware AI IDE** that doesn't require extensions like VSCode
+• **Direct Hugging Face connection** never hits local storage quota
+• **"Hugging Face models are not stored locally, but directly accessed via API like CLI"**
+• **Online, license-based, repo-aware AI IDE** that doesn't require extensions like VSCode
 • **One session for one project** with one todo list for one project on a certain path
 • **Aware of diff to Git Repo** after file updates
 
@@ -113,7 +113,7 @@ bapX Coder implements a sophisticated architecture combining both dual-server an
 
 **Server Architecture:**
 - **Frontend Server** (hosted on Hostinger): Handles authentication, payments, and landing page
-- **Local Application** (downloaded by users): Full IDE functionality with model connections
+- **Local Application** (downloaded by users): Full IDE functionality with direct Hugging Face model connections
 
 **AI Model Architecture:**
 - **Qwen3-VL Model**: Handles communication, UI understanding, multimodal processing, OCR, and user interactions
@@ -389,10 +389,10 @@ This project differs from cloud-based development tools in several key ways:
 
 | Aspect | [bapXcoder](https://github.com/getwinharris/bapXcoder) | [Continue.dev](https://continue.dev) | JetBrains IDEs |
 |--------|------------------|------------------|------------------|
-| **Deployment** | Completely local web-based IDE | Mixed (CLI tool with local LLMs) | Desktop applications with some cloud features |
+| **Deployment** | Online web-based IDE with direct model connections | Mixed (CLI tool with local LLMs) | Desktop applications with some cloud features |
 | **Costs** | License-based with 60-day trial | Free with optional paid features | Paid licenses |
-| **Privacy** | All data stays local | Local processing with local LLMs | Data stays local mostly |
-| **Connectivity** | Requires internet for model access | Requires internet for setup | Works offline mostly |
+| **Privacy** | All project data stays local | Local processing with local LLMs | Data stays local mostly |
+| **Connectivity** | Requires internet for model access | Requires internet for setup | Requires internet for model access |
 | **Model Access** | Direct connection to Hugging Face models | Configurable LLMs | N/A |
 | **Customization** | Full local control | High customization | High customization |
 | **Integrated CLI** | Built-in terminal in web interface | VS Code integrated terminal | Built-in terminal |
@@ -460,9 +460,9 @@ Our IDE leverages the powerful Qwen3-VL model combined with our CLI-first archit
 - **Trial Period**: 60 days of full access to all features
 - **Monthly License**: $1 per month for ongoing access
 - **Lifetime License**: $100 one-time payment for perpetual access
-- **Secure Storage**: All subscription data encrypted and stored in user's GitHub repositories
+- **Secure Storage**: All subscription data encrypted and stored in user's GitHub repositories with time-based license management
 - **No Recurring Charges**: After lifetime license purchase, no further costs
-- **Privacy Protection**: No user code stored on our servers - only encrypted metadata in GitHub
+- **Privacy Protection**: No user code stored on our servers - only encrypted metadata in GitHub with time-based license validation
 
 ### Phase-Based Auto Execution & Testing
 - **AI-Driven Testing System**: Comprehensive validation that validates code after each change
@@ -481,9 +481,9 @@ Our IDE leverages the powerful Qwen3-VL model combined with our CLI-first archit
 
 ### Web Research & Retrieval Augmentation
 - **Integrated Research**: Web search capabilities within the IDE for up-to-date information retrieval
-- **Contextual Results**: Search results are processed by the local AI to provide relevant, project-specific responses
+- **Contextual Results**: Search results are processed by the AI to provide relevant, project-specific responses via Hugging Face connections
 - **Research Continuation**: The "Continue Reasoning" feature allows extended research sessions beyond context windows
-- **Local Processing**: All retrieved information is processed locally, maintaining privacy and security
+- **Secure Processing**: All retrieved information is processed with privacy and security maintained
 
 ### Online Connection with Quota-Based Operation
 - **Dual-Model Architecture**: Qwen3-VL for communication/UI and Qwen3-Coder for specialized coding, both connecting directly to Hugging Face
@@ -737,7 +737,7 @@ This unified approach works across all desktop platforms:
 - **Windows**: 64-bit supported with full system access
 - **Linux**: All major distributions supported (Ubuntu, Debian, Fedora, etc.)
 
-After installation, the application runs as a local web application accessible through your browser, with full offline capabilities and AI model processing.
+After installation, the application runs as a local web application accessible through your browser, with AI model processing via direct Hugging Face connections requiring internet access.
 
 ## AI-Driven Testing & Validation System
 
@@ -799,7 +799,7 @@ A professional landing page is available at `https://getwinharris.github.io/bapX
 - Clean, modern design similar to Cursor IDE
 - Clear download CTA in center of page (after license acquisition)
 - Focus on project memory and AI capabilities
-- Emphasizes dual-model architecture with licensing model (no $20/mo like other tools)
+- Emphasizes dual-model architecture with licensing model (no $20/mo like other tools - only $1/month)
 - Professional presentation for developer adoption
 
 ## Architecture Overview
@@ -807,7 +807,7 @@ A professional landing page is available at `https://getwinharris.github.io/bapX
 ### Core Components
 - `validation_system.py`: AI-driven testing and validation engine
 - `templates/index.html`: VS Code-style interface with all UI components
-- `qwen3VL_local_cli.py`: Backend handling socket events and AI integration
+- `qwen3VL_local_cli.py`: Backend handling socket events and model connections (file name reflects legacy naming)
 - `.bapXcoder/`: Hidden project directory for session persistence
 
 ### File Structure
