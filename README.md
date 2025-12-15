@@ -1,4 +1,4 @@
-# bapX Coder - Advanced AI-Powered PWA IDE
+# bapXcoder - Advanced AI-Powered PWA IDE
 
 bapX Coder is an advanced, cross-platform PWA (Progressive Web App) Integrated Development Environment featuring the "bapX Coder" AI persona. This comprehensive multimodal AI-powered development environment includes chat interface, voice input/output, image analysis (OCR), encoding-aware text processing (Base64, ASCII, Unicode, etc.), web search, Git integration with OAuth, and all necessary tools for local AI development. The project automatically downloads the Qwen3VL model for completely offline usage after setup. Works on Mac, Windows, Linux and mobile devices through any modern web browser.
 
