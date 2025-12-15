@@ -108,23 +108,31 @@ The bapXcoder IDE leverages the power of the Qwen3-VL model and provides a compr
 
 ## Architecture Overview
 
-### CLI-First Design Philosophy
-bapX Coder is fundamentally designed as a CLI-first development environment with a web-based UI overlay. All operations happen via CLI commands underneath the web interface, ensuring powerful terminal access while providing a convenient visual interface.
+### Dual-Server Architecture
+bapX Coder implements a sophisticated dual-server model:
+- **Frontend Server** (hosted on Hostinger): Handles authentication, payments, and landing page
+- **Local Application** (downloaded by users): Full IDE functionality with local AI processing
 
 ### Core Components Architecture
-- **Backend Engine**: Flask/SocketIO server that translates web UI actions to CLI operations
-- **Model Handler**: Local Qwen3VL model (8.76GB) stored in project root, accessible via CLI
-- **Project Manager**: Project_explorer.py handles file operations via CLI underneath UI
-- **Validation System**: AI-driven testing (validation_system.py) that runs via CLI operations
-- **Syntax Checker**: Live syntax validation (syntax_checker.py) integrated with CLI file operations
-- **Project Memory**: .bapXcoder directories with persistent todo.json and sessiontree.json
+- **Authentication Server**: Flask/SocketIO server handling GitHub/Google OAuth and Stripe payments
+- **User Data Storage**: Encrypted subscription metadata stored in GitHub repositories (not our servers)
+- **Model Handler**: Local Qwen3VL model (8.76GB) stored locally after download, no cloud dependency
+- **Project Manager**: Project_explorer.py handles local file operations via CLI
+- **Validation System**: AI-driven testing (validation_system.py) runs entirely locally
+- **Project Memory**: .bapXcoder directories with persistent todo.json and sessiontree.json stored locally
 
 ### Web Interface Integration
-- **Visual Convenience**: Web UI provides convenient access to underlying CLI operations
-- **Real-time Updates**: UI reflects all CLI operations in real-time
-- **File Operations**: All file read/write/delete operations happen via CLI underneath UI
-- **Command Execution**: Terminal commands execute directly via subprocess with UI feedback
-- **Session Management**: Project context and session data maintained via CLI file operations
+- **Landing Page**: Marketing and authentication interface hosted on Hostinger
+- **GitHub Integration**: Secure OAuth authentication with encrypted data storage
+- **Payment Processing**: Stripe integration for subscription management
+- **Download Management**: Authorized downloads only after subscription validation
+
+### Subscription Model
+- **Free Trial**: 60 days access to full functionality
+- **Monthly Plan**: $1/month for continued access
+- **Lifetime Plan**: $100 one-time for unlimited access
+- **Secure Storage**: All user data encrypted and stored in public GitHub repositories
+- **Privacy Focus**: No user code ever transmitted to servers - all AI processing local
 
 ## Prerequisites
 
@@ -142,19 +150,22 @@ Choose your preferred installation method:
 ### Method 1: Single Executable Installation (Easy Primary - Recommended)
 The simplest approach using our unified installer with our fa-square-binary logo:
 
-1. Download the single executable file `install.sh` with our fa-square-binary logo from our landing page at [https://getwinharris.github.io/bapXcoder/](https://getwinharris.github.io/bapXcoder/)
-2. Make it executable: `chmod +x install.sh`
-3. Run the installer: `./install.sh`
-4. The script will automatically handle:
+1. Visit our main page at [https://coder.bapx.in](https://coder.bapx.in) (hosted on Hostinger)
+2. Authenticate with GitHub or Google OAuth
+3. Choose subscription plan (60-day free trial, $1/month, or $100 lifetime)
+4. Download the single executable file `bapXcoder.sh` with our fa-square-binary logo
+5. Make it executable: `chmod +x bapXcoder.sh`
+6. Run the installer: `./bapXcoder.sh`
+7. The script will automatically handle:
    - Detecting your operating system
    - Checking for required dependencies
    - Cloning the repository
    - Installing Python dependencies
-   - Downloading the Qwen3VL model
+   - Downloading the Qwen3VL model (~8.76GB)
    - Setting up the application
-   - Starting the web interface
+   - Starting the web interface locally
 
-This single file with our fa-square-binary logo automatically handles everything for you.
+This authentication-protected installer with our fa-square-binary logo automatically handles everything for you.
 
 ### Method 2: Direct Terminal Installation (For Developers)
 Manual installation via command line:
@@ -435,6 +446,14 @@ Our IDE leverages the powerful Qwen3-VL model combined with our CLI-first archit
 - **Project-Specific Todos**: Tasks are stored per project in `todo.json`, maintaining focus on current objectives
 - **Contextual Suggestions**: AI provides task suggestions based on actual code and project structure
 - **Progress Tracking**: Session trees track file usage and activity for better project management
+
+### Subscription & Pricing Model
+- **Free Trial**: 60 days of full access to all features
+- **Monthly Plan**: $1 per month for unlimited access
+- **Lifetime Plan**: $100 one-time payment for permanent access
+- **Secure Storage**: All subscription data encrypted and stored in user's GitHub repositories
+- **No Recurring Charges**: After one-time lifetime payment, no further costs
+- **Privacy Protection**: No user data stored on our servers - only encrypted metadata in GitHub
 
 ### Phase-Based Auto Execution & Testing
 - **AI-Driven Testing System**: Comprehensive validation that validates code after each change
