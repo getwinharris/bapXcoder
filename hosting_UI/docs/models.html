@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bapXcoder AI Models - Dual-Model Architecture with Specialized Functions</title>
+    <meta name="description" content="Detailed documentation on bapXcoder's dual-model AI architecture with Interpreter and Developer functions." />
+    <meta name="keywords" content="bapXcoder models, dual-model AI, interpreter developer architecture, Qwen3-VL, Qwen3-Coder, specialized AI functions" />
+    <link rel="canonical" href="https://coder.bapx.in/docs/models.html" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0f13 0%, #1a1a25 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(124, 92, 255, 0.2);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #7c5cff;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #7c5cff;
+        }
+        
+        .subtitle {
+            color: #a0a0c0;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        
+        h2 {
+            color: #7c5cff;
+            margin: 30px 0 15px 0;
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            color: #50fa7b;
+            margin: 20px 0 10px 0;
+            font-size: 1.3rem;
+        }
+        
+        .model-section {
+            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .model-card {
+            background: rgba(124, 92, 255, 0.1);
+            border: 1px solid #7c5cff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .capability-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .capability-card {
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .capability-title {
+            color: #50fa7b;
+            margin-bottom: 10px;
+        }
+        
+        .model-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+        }
+        
+        .model-comparison th, .model-comparison td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2d2d40;
+        }
+        
+        .model-comparison th {
+            background: rgba(124, 92, 255, 0.2);
+            color: #7c5cff;
+        }
+        
+        .architecture-diagram {
+            background: #0f0f13;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(124, 92, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .nav-links a {
+            color: #7c5cff;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: rgba(124, 92, 255, 0.2);
+        }
+        
+        .nav-links a:hover {
+            background: rgba(124, 92, 255, 0.3);
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid rgba(124, 92, 255, 0.2);
+            color: #a0a0c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">⬡ bapXcoder</div>
+            <h1>AI Model Architecture</h1>
+            <p class="subtitle">Dual-model specialization with internal interpreter and developer functions for optimal development assistance</p>
+        </header>
+        
+        <main class="content">
+            <h2>Overview of Dual-Model Architecture</h2>
+            <p>bapXcoder implements a sophisticated dual-model architecture that separates cognitive responsibilities between two specialized internal functions: an Interpreter for communication and context management, and a Developer for coding tasks. This approach provides both safety and specialization while maintaining deterministic behavior.</p>
+            
+            <div class="arch-highlights">
+                <p><strong>Key Innovation:</strong> Single agent with internal role separation, providing the benefits of specialization without the risks of context drift or inconsistent responses.</p>
+            </div>
+            
+            <h2>Internal Model Functions</h2>
+            
+            <div class="model-section">
+                <h3>Interpreter Function (bapXcoder-VL)</h3>
+                
+                <div class="model-card">
+                    <h4>Primary Responsibilities</h4>
+                    <ul>
+                        <li><strong>Communication Management</strong>: All user interaction and request processing</li>
+                        <li><strong>Context Maintenance</strong>: Session state, project memory, and task tracking</li>
+                        <li><strong>Multimodal Processing</strong>: OCR, image analysis, voice input/output</li>
+                        <li><strong>UI Understanding</strong>: Visual interface comprehension and processing</li>
+                        <li><strong>Project Navigation</strong>: File system exploration and project structure awareness</li>
+                        <li><strong>Developer Coordination</strong>: Routing appropriate tasks to Developer function</li>
+                        <li><strong>Response Validation</strong>: Quality assurance and safety checking</li>
+                    </ul>
+                </div>
+                
+                <h4>Special Capabilities</h4>
+                <div class="capability-grid">
+                    <div class="capability-card">
+                        <div class="capability-title">OCR Processing</div>
+                        <p>32+ language support</p>
+                    </div>
+                    <div class="capability-card">
+                        <div class="capability-title">Visual Understanding</div>
+                        <p>UI mockup analysis</p>
+                    </div>
+                    <div class="capability-card">
+                        <div class="capability-title">Context Management</div>
+                        <p>Session continuity</p>
+                    </div>
+                    <div class="capability-card">
+                        <div class="capability-title">Communication</div>
+                        <p>Human-like interaction</p>
+                    </div>
+                    <div class="capability-card">
+                        <div class="capability-title">Task Coordination</div>
+                        <p>Developer function routing</p>
+                    </div>
+                    <div class="capability-card">
+                        <div class="capability-title">Safety Mediation</div>
+                        <p>Change validation</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="model-section">
+                <h3>Developer Function (bapXcoder-Coder)</h3>
+                
+                <div class="model-card">
+                    <h4>Primary Responsibilities</h4>
+                    <ul>
+                        <li><strong>Code Generation</strong>: Implementation of coding tasks following specifications</li>
+                        <li><strong>Code Analysis</strong>: Performance, security, and quality assessment</li>
+                        <li><strong>Code Refactoring</strong>: Optimization and restructuring based on best practices</li>
+                        <li><strong>Testing Implementation</strong>: Unit tests, integration tests, and validation</li>
+                        <li><strong>Dependency Management</strong>: Package management and library integration</li>
+                        <li><strong>Architecture Planning</strong>: System design and structural implementation</li>
+                        <li><strong>Performance Optimization</strong>: Code efficiency and resource optimization</li>
+                    </ul>
+                </div>
+                
+                <h4>Special Capabilities</h4>
+                <div class="capability-grid">
+                    <div class="capability-card">
+                        <div class="capability-title">Code Generation</div>
+                        <p>358+ language support</p>
+                    </div>
+                    <div class="capability-card">
+                        <div class="capability-title">Refactoring</div>
+                        <p>Code optimization</p>
+                    </div>
+                    <div class="capability-card">
+                        <div class="capability-title">Testing</div>
+                        <p>Automated test gen</p>
+                    </div>
+                    <div class="capability-card">
+                        <div class="capability-title">Debugging</div>
+                        <p>Error identification</p>
+                    </div>
+                    <div class="capability-card">
+                        <div class="capability-title">Architecture</div>
+                        <p>System design</p>
+                    </div>
+                    <div class="capability-card">
+                        <div class="capability-title">Implementation</div>
+                        <p>Feature development</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>Model Coordination Architecture</h2>
+            
+            <div class="coordination-section">
+                <h3>Internal Communication Protocol</h3>
+                
+                <p>The dual-model system operates through a controlled internal communication protocol:</p>
+                
+                <div class="architecture-diagram">
+User Input → bapXcoder IDE Agent → (Internal Routing) → Interpreter Function → (if needed) → Developer Function → (validated) → Interpreter Function → Output to User
+                    </div>
+                
+                <table class="model-comparison">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Interpreter Function</th>
+                            <th>Developer Function</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Direct User Contact</td>
+                            <td>✅ Yes</td>
+                            <td>❌ No</td>
+                        </tr>
+                        <td>Can Initiate Actions</td>
+                            <td>✅ Yes</td>
+                            <td>❌ No (responds to instructions only)</td>
+                        </tr>
+                        <tr>
+                            <td>Communication Handling</td>
+                            <td>Primary responsibility</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>Coding Task Execution</td>
+                            <td>Coordinates with Developer</td>
+                            <td>Primary responsibility</td>
+                        </tr>
+                        <tr>
+                            <td>Project Memory Management</td>
+                            <td>Primary responsibility</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>File Operations</td>
+                            <td>Supervision & Validation</td>
+                            <td>Execution (with approval)</td>
+                        </tr>
+                        <tr>
+                            <td>Context Management</td>
+                            <td>Primary responsibility</td>
+                            <td>Follows instructions only</td>
+                        </tr>
+                        <tr>
+                            <td>Session Continuity</td>
+                            <td>Primary responsibility</td>
+                            <td>None</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h2>Model Connection & Access</h2>
+            
+            <div class="connection-section">
+                <h3>Direct Model Access via llama.cpp</h3>
+                
+                <p>bapXcoder connects directly to Hugging Face models via llama.cpp runtime:</p>
+                
+                <div class="model-spec">
+                    <h4>Connection Methodology</h4>
+                    <ul>
+                        <li><strong>Runtime Connection</strong>: Direct access to models without local storage</li>
+                        <li><strong>Hugging Face Integration</strong>: Via Qwen3-VL and Qwen3-Coder GGUF models</li>
+                        <li><strong>Quota-Based Access</strong>: Uses allocated runtime quotas for both functions</li>
+                        <li><strong>Secure Transmission</strong>: All communication encrypted via llama.cpp</li>
+                        <li><strong>Efficient Processing</strong>: Optimized context windows and token usage</li>
+                    </ul>
+                </div>
+                
+                <h4>Model Specifications</h4>
+                
+                <div class="model-details">
+                    <h5>Interpreter Model (bapXcoder-VL)</h5>
+                    <ul>
+                        <li><strong>Base Model</strong>: Qwen3-VL architecture (multimodal capabilities)</li>
+                        <li><strong>Context Window</strong>: 256K tokens native, extendable with Yarn</li>
+                        <li><strong>Modalities</strong>: Text, images, OCR, voice processing</li>
+                        <li><strong>Special Features</strong>: GUI understanding, spatial reasoning, 32+ language OCR</li>
+                        <li><strong>Quantization</strong>: Q8_0 optimized for performance</li>
+                        <li><strong>Memory Requirements</strong>: 8GB+ RAM recommended</li>
+                    </ul>
+                </div>
+                
+                <div class="model-details">
+                    <h5>Developer Model (bapXcoder-Coder)</h5>
+                    <ul>
+                        <li><strong>Base Model</strong>: Qwen3-Coder architecture (coding specialization)</li>
+                        <li><strong>Context Window</strong>: 256K tokens native, optimized for code</li>
+                        <li><strong>Capabilities</strong>: Code generation, analysis, refactoring</li>
+                        <li><strong>Language Support</strong>: 358+ programming languages</li>
+                        <li><strong>Special Features</strong>: Agentic coding, multi-file coordination</li>
+                        <li><strong>Quantization</strong>: Q8_0 optimized for coding tasks</li>
+                        <li><strong>Memory Requirements</strong>: 12GB+ RAM for complex tasks</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2>Task Routing Decision Logic</h2>
+            
+            <p>The system intelligently routes tasks between functions based on content analysis:</p>
+            
+            <div class="routing-section">
+                <h3>Routing Algorithm</h3>
+                
+                <div class="decision-tree">
+                    <h4>Decision Flow</h4>
+                    <ol>
+                        <li><strong>Input Reception</strong>: All user input goes to Interpreter function</li>
+                        <li><strong>Intent Classification</strong>: Interpreter determines if coding task required</li>
+                        <li><strong>Context Analysis</strong>: Interpreter assesses project state and requirements</li>
+                        <li><strong>Coordinator Decision</strong>: If complex coding needed, generate structured instructions for Developer</li>
+                        <li><strong>Developer Execution</strong>: Developer executes only structured, validated instructions</li>
+                        <li><strong>Output Mediation</strong>: Interpreter validates and formats output before user delivery</li>
+                        <li><strong>Memory Update</strong>: Interpreter updates session memory with all changes</li>
+                    </ol>
+                </div>
+                
+                <h4>Classification Criteria</h4>
+                <p>Interpreter identifies coding tasks when user input contains:</p>
+                <ul>
+                    <li>Keywords: "code", "implement", "function", "generate", "refactor", "debug", "fix", "create"</li>
+                    <li>Programming concepts: "class", "method", "variable", "algorithm", "syntax", "error", "test"</li>
+                    <li>File operations: "modify", "update", "add", "change", "rewrite", "optimize"</li>
+                    <li>Technical requirements: "performance", "security", "architecture", "dependency", "build"</li>
+                </ul>
+            </div>
+            
+            <h2>Security & Safety Measures</h2>
+            
+            <div class="security-section">
+                <h3>Model Interaction Safety</h3>
+                
+                <p>Multiple safety layers prevent unauthorized operations:</p>
+                
+                <ul>
+                    <li><strong>Role Isolation</strong>: Developer cannot communicate directly with user</li>
+                    <li><strong>Instruction Validation</strong>: All Developer actions validated by Interpreter</li>
+                    <li><strong>File Boundary Enforcement</strong>: All operations constrained to project directory</li>
+                    <li><strong>Change Approval Required</strong>: All file modifications shown as diffs before user approval</li>
+                    <li><strong>Context Consistency</strong>: Shared memory prevents context drift between functions</li>
+                    <li><strong>Authorization Mediation</strong>: Interpreter approves all actions before Developer execution</li>
+                </ul>
+            </div>
+            
+            <h2>Performance Optimization</h2>
+            
+            <div class="performance-section">
+                <h3>Model-Specific Optimization</h3>
+                
+                <h4>Interpreter Optimization</h4>
+                <ul>
+                    <li>Higher context management for session continuity</li>
+                    <li>Optimized for multimodal processing and communication</li>
+                    <li>Balanced temperature settings for responsive interaction</li>
+                    <li>Efficient routing for Developer task delegation</li>
+                </ul>
+                
+                <h4>Developer Optimization</h4>
+                <ul>
+                    <li>Specialized context for code generation and analysis</li>
+                    <li>Enhanced token allocation for complex implementations</li>
+                    <li>Code-specific prompt templates for best output quality</li>
+                    <li>Performance optimizations for structural coding tasks</li>
+                </ul>
+            </div>
+            
+            <div class="nav-links">
+                <a href="index.html">← All Docs</a>
+                <a href="security.html">← Previous: Security & Privacy</a>
+                <a href="performance.html">Next: Performance Tuning →</a>
+            </div>
+            
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: What is the difference between Interpreter and Developer functions?</div>
+                <p>A: The Interpreter handles all user communication, context management, and multimodal processing. The Developer specializes in coding tasks only when instructed by the Interpreter.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Does bapXcoder use two separate models or one model with roles?</div>
+                <p>A: bapXcoder uses a single agent with internal role separation (dual-functions architecture) to maintain context consistency while providing specialization.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: How does the routing between functions work?</div>
+                <p>A: The Interpreter analyzes user intent and determines if specialized coding is needed, then sends structured instructions to the Developer function.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Why use dual-internal functions instead of a single model?</div>
+                <p>A: This provides both specialization and safety - the Developer only executes authorized instructions from the Interpreter.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Can the Developer function respond directly to user requests?</div>
+                <p>A: No, the Developer function only executes structured instructions from the Interpreter and cannot communicate directly with users.</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025 bapXcoder Model Documentation. All rights reserved.</p>
+            <p>Part of the bapX Media Hub ecosystem.</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bapXcoder Web Interface - Rich GUI Development Environment</title>
+    <meta name="description" content="Complete guide to bapXcoder's web interface with rich GUI development tools and continuous project memory." />
+    <meta name="keywords" content="bapXcoder web interface, GUI IDE, rich web IDE, AI development environment" />
+    <link rel="canonical" href="https://coder.bapx.in/docs/web.html" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0f13 0%, #1a1a25 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(124, 92, 255, 0.2);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #7c5cff;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #7c5cff;
+        }
+        
+        .subtitle {
+            color: #a0a0c0;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        
+        h2 {
+            color: #7c5cff;
+            margin: 30px 0 15px 0;
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            color: #50fa7b;
+            margin: 20px 0 10px 0;
+            font-size: 1.3rem;
+        }
+        
+        .web-feature {
+            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .interface-preview {
+            background: #0f0f13;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .interface-preview img, .interface-preview div {
+            max-width: 100%;
+            border-radius: 6px;
+            border: 1px solid #2d2d40;
+        }
+        
+        .ui-element {
+            background: rgba(124, 92, 255, 0.1);
+            border: 1px solid #7c5cff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .component-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #161622;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #2d2d40;
+        }
+        
+        .component-table th, .component-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2d2d40;
+        }
+        
+        .component-table th {
+            background: rgba(124, 92, 255, 0.2);
+            color: #7c5cff;
+        }
+        
+        .tab-interface {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .tab {
+            background: #2d2d40;
+            color: #a0a0c0;
+            padding: 8px 15px;
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+        }
+        
+        .tab.active {
+            background: #7c5cff;
+            color: white;
+        }
+        
+        .panel {
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 0 8px 8px 8px;
+            padding: 15px;
+            min-height: 100px;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(124, 92, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .nav-links a {
+            color: #7c5cff;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: rgba(124, 92, 255, 0.2);
+        }
+        
+        .nav-links a:hover {
+            background: rgba(124, 92, 255, 0.3);
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid rgba(124, 92, 255, 0.2);
+            color: #a0a0c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">⬡ bapXcoder</div>
+            <h1>Web Interface</h1>
+            <p class="subtitle">Rich GUI development environment with persistent project memory and dual-model AI assistance</p>
+        </header>
+        
+        <main class="content">
+            <h2>Overview of Web Interface</h2>
+            <p>bapXcoder's web interface provides a comprehensive, PWA-capable IDE with rich graphical elements, real-time collaboration features, and seamless integration with the dual-model AI system. The interface offers sophisticated development tools with visual project memory management and intuitive controls for both code and AI interaction.</p>
+            
+            <div class="interface-highlights">
+                <p><strong>Core Philosophy:</strong> A modern, responsive web interface that combines the power of AI with intuitive visual development tools while maintaining the persistent project memory system.</p>
+            </div>
+            
+            <h2>Main Interface Components</h2>
+            <table class="interface-components">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Function</th>
+                        <th>Memory Integration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>File Explorer</td>
+                        <td>File navigation and project structure visualization</td>
+                        <td>Maintains last viewed files and directory context</td>
+                    </tr>
+                    <tr>
+                        <td>Code Editor</td>
+                        <td>Real-time code editing with syntax highlighting</td>
+                        <td>Preserves cursor position, open files, and recent edits</td>
+                    </tr>
+                    <tr>
+                        <td>AI Chat Panel</td>
+                        <td>Conversation interface with dual-model AI</td>
+                        <td>Continues exact conversation state across sessions</td>
+                    </tr>
+                    <tr>
+                        <td>Terminal</td>
+                        <td>Integrated terminal for command execution</td>
+                        <td>Preserves command history and current directory</td>
+                    </tr>
+                    <tr>
+                        <td>Task Manager</td>
+                        <td>Visual todo list and task tracking</td>
+                        <td>Syncs with todo.json for persistent task tracking</td>
+                    </tr>
+                    <tr>
+                        <td>Session Memory Panel</td>
+                        <td>Visual display of current project context</td>
+                        <td>Directly connected to sessiontree.json for live updates</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>Four-Panel Layout</h2>
+            <p>bapXcoder implements a flexible four-panel interface layout optimized for AI-assisted development:</p>
+            
+            <div class="layout-feature">
+                <h3>Panel Organization</h3>
+                <div class="panel-layout">
+                    <div class="panel">
+                        <strong>Top-Left: File Explorer</strong>
+                        <p>Project navigation tree with search and filtering</p>
+                    </div>
+                    <div class="panel">
+                        <strong>Top-Right: Code Editor</strong>
+                        <p>Advanced editor with syntax highlighting, real-time analysis</p>
+                    </div>
+                    <div class="panel">
+                        <strong>Bottom-Left: AI Chat + Task Manager</strong>
+                        <p>Combined AI interaction and task management panel</p>
+                    </div>
+                    <div class="panel">
+                        <strong>Bottom-Right: Terminal + Session Memory</strong>
+                        <p>Integrated terminal with visual session context</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>License Display and Session Continuity</h2>
+            <p>The web interface prominently displays licensing information and session continuity:</p>
+            
+            <div class="license-panel">
+                <h3>Top-Right License/Session Display</h3>
+                <p>Shows current license status with countdown timer:</p>
+                <div class="license-display">
+                    <div class="license-info">Subscription: <span class="status-active">Active</span> | Expires: <span class="date-remaining">45 days</span> | <span class="model-type">Dual-Model (Int+Dev)</span></div>
+                    <div class="continuity-message">System resumed. You were working on user authentication API. Last action was debugging OAuth flow. Pending tasks: 3.</div>
+                </div>
+            </div>
+            
+            <h3>Session Continuity Banner</h3>
+            <p>On startup, the interface displays continuity information:</p>
+            
+            <div class="continuity-banner">
+                <div class="banner-content">
+                    <i class="fa-solid fa-bolt"></i>
+                    <div class="banner-text">
+                        <strong>Session Resumed</strong>
+                        <p>You were working on: User authentication system implementation</p>
+                        <p>Last action: Debugging GitHub OAuth flow in auth.service.ts</p>
+                        <p>Pending tasks: Fix token refresh, Add rate limiting, Write tests [3/5 completed]</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>AI Integration Features</h2>
+            <div class="ai-feature">
+                <h3>Interpreter Function Interface</h3>
+                <p>The Interpreter function handles all communication and context management:</p>
+                <ul>
+                    <li>Primary chat interface with multimodal capabilities</li>
+                    <li>Voice input/output with automatic transcription</li>
+                    <li>Image upload and analysis with OCR capabilities</li>
+                    <li>Context awareness and project memory management</li>
+                    <li>Coordination with Developer function</li>
+                </ul>
+            </div>
+            
+            <div class="ai-feature">
+                <h3>Developer Function Interface</h3>
+                <p>The Developer function specializes in coding tasks:</p>
+                <ul>
+                    <li>Code generation and implementation panel</li>
+                    <li>Refactoring and optimization tools</li>
+                    <li>Code analysis and quality checking</li>
+                    <li>Security scanning and vulnerability detection</li>
+                    <li>Only executes authorized instructions from Interpreter</li>
+                </ul>
+            </div>
+            
+            <h2>File Management and Project Memory</h2>
+            <p>The web interface integrates advanced file management with persistent project memory:</p>
+            
+            <div class="file-management">
+                <h3>Visual File Operations</h3>
+                <ul>
+                    <li>Drag-and-drop file uploads with AI analysis</li>
+                    <li>Visual file comparison with semantic understanding</li>
+                    <li>Smart file search across entire project memory</li>
+                    <li>Image and document processing with OCR</li>
+                    <li>Project structure visualization and navigation</li>
+                </ul>
+            </div>
+            
+            <div class="project-memory">
+                <h3>Memory Visualization</h3>
+                <p>Visual representation of project memory system:</p>
+                <ul>
+                    <li>Timeline view of session history</li>
+                    <li>Task completion tracking with visual indicators</li>
+                    <li>File modification history with AI analysis</li>
+                    <li>Context flow visualization across sessions</li>
+                    <li>Knowledge graph of project elements</li>
+                </ul>
+            </div>
+            
+            <h2>Real-Time Collaboration</h2>
+            <p>bapXcoder supports real-time collaboration with memory preservation:</p>
+            
+            <table class="collaboration-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Description</th>
+                        <th>Memory Impact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Live Code Sharing</td>
+                        <td>Real-time collaborative editing</td>
+                        <td>Separate memory maintained per user</td>
+                    </tr>
+                    <tr>
+                        <td>AI Assistant Sharing</td>
+                        <td>Shared AI interaction context</td>
+                        <td>Common project context with user-specific tasks</td>
+                    </tr>
+                    <tr>
+                        <td>Session Continuity</td>
+                        <td>Individual session restoration</td>
+                        <td>Each user maintains personal context</td>
+                    </tr>
+                    <tr>
+                        <td>Task Coordination</td>
+                        <td>Shared todo lists and task assignment</td>
+                        <td>Both shared and individual task tracking</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>AI Chat Interface</h2>
+            <p>The primary interface for interacting with the dual-model system:</p>
+            
+            <div class="chat-features">
+                <h3>Enhanced Chat Capabilities</h3>
+                <ul>
+                    <li><strong>Voice Input</strong>: Speech-to-text for hands-free development</li>
+                    <li><strong>Image Analysis</strong>: Upload screenshots, diagrams, code images for analysis</li>
+                    <li><strong>File Attachments</strong>: Attach any file for AI processing</li>
+                    <li><strong>Code Snippets</strong>: Share and discuss specific code segments</li>
+                    <li><strong>Context Awareness</strong>: Full project context in every response</li>
+                    <li><strong>Session Continuity</strong>: Conversation continues across browser refreshes</li>
+                </ul>
+            </div>
+            
+            <h3>Visual Response Elements</h3>
+            <p>AI responses include visual elements:</p>
+            
+            <ul>
+                <li>Syntax-highlighted code snippets</li>
+                <li>Visual file structure diagrams</li>
+                <li>Flowcharts and architecture diagrams</li>
+                <li>Step-by-step implementation guides</li>
+                <li>Security and performance recommendations</li>
+                <li>Testing and validation suggestions</li>
+            </ul>
+            
+            <h2>Customization and Theming</h2>
+            <p>Full customization options:</p>
+            
+            <div class="customization-options">
+                <h3>Visual Themes</h3>
+                <ul>
+                    <li>Dark/Light mode with adaptive interfaces</li>
+                    <li>Terminal-inspired themes</li>
+                    <li>Focus modes for distraction-free coding</li>
+                    <li>Accessibility options for different needs</li>
+                    <li>Custom color schemes for syntax highlighting</li>
+                </ul>
+            </div>
+            
+            <h3>Layout Configuration</h3>
+            <p>Adjustable interface layout:</p>
+            <ul>
+                <li>Resizable panels with drag handles</li>
+                <li>Collapsible sections for maximum workspace</li>
+                <li>Tabbed interfaces for efficient space use</li>
+                <li>Customizable keyboard shortcuts</li>
+                <li>Preset layouts for different development styles</li>
+            </ul>
+            
+            <h2>Performance and Optimization</h2>
+            <p>Web interface optimized for performance:</p>
+            
+            <ul>
+                <li><strong>Progressive Web App</strong>: Works offline with cached resources</li>
+                <li><strong>Efficient Rendering</strong>: Optimized for large file editing</li>
+                <li><strong>Smart Loading</strong>: Lazy loading of interface components</li>
+                <li><strong>Memory Management</strong>: Efficient state handling for long sessions</li>
+                <li><strong>Real-time Sync</strong>: Fast updates to project memory system</li>
+            </ul>
+            
+            <div class="nav-links">
+                <a href="index.html">← All Docs</a>
+                <a href="cli.html">← Previous: CLI Interface</a>
+                <a href="api.html">Next: API Integration →</a>
+            </div>
+            
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: Does the web interface maintain session continuity like the CLI?</div>
+                <p>A: Yes, the web interface uses the same .bapXcoder project memory system with sessiontree.json and todo.json for continuity.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: How is the license status displayed in the web interface?</div>
+                <p>A: License status is prominently displayed in the top-right corner with countdown timer and subscription status.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: Can I access both the dual-model functions through the web interface?</div>
+                <p>A: Yes, the web interface provides access to both Interpreter (communication/UI) and Developer (coding) functions.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: Does the web interface work offline?</div>
+                <p>A: The interface works as a PWA with cached resources, but AI features require model access via llama.cpp runtime.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: How does project memory integrate with the visual interface?</div>
+                <p>A: The visual interface connects directly to .bapXcoder directory and updates session files in real-time with GUI operations.</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025 bapXcoder Documentation. All rights reserved.</p>
+            <p>Part of the bapX Media Hub ecosystem.</p>
+        </footer>
+    </div>
+</body>
+</html>

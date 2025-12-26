@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bapXcoder Performance - Optimizing Dual-Model AI IDE Performance</title>
+    <meta name="description" content="Performance optimization guide for bapXcoder with dual-model architecture and persistent project memory." />
+    <meta name="keywords" content="bapXcoder performance, AI IDE optimization, dual-model performance, project memory optimization" />
+    <link rel="canonical" href="https://coder.bapx.in/docs/performance.html" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0f13 0%, #1a1a25 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(124, 92, 255, 0.2);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #7c5cff;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #7c5cff;
+        }
+        
+        .subtitle {
+            color: #a0a0c0;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        
+        h2 {
+            color: #7c5cff;
+            margin: 30px 0 15px 0;
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            color: #50fa7b;
+            margin: 20px 0 10px 0;
+            font-size: 1.3rem;
+        }
+        
+        .perf-section {
+            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .optimization-tip {
+            background: rgba(80, 250, 123, 0.1);
+            border-left: 4px solid #50fa7b;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .performance-metric {
+            display: flex;
+            justify-content: space-between;
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        
+        .metric-label {
+            color: #7c5cff;
+        }
+        
+        .metric-value {
+            color: #50fa7b;
+            font-weight: bold;
+        }
+        
+        .benchmark-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+        }
+        
+        .benchmark-table th, .benchmark-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2d2d40;
+        }
+        
+        .benchmark-table th {
+            background: rgba(124, 92, 255, 0.2);
+            color: #7c5cff;
+        }
+        
+        .command-block {
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .warning-box {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid #ff6b6b;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .success-box {
+            background: rgba(80, 250, 123, 0.1);
+            border-left: 4px solid #50fa7b;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(124, 92, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .nav-links a {
+            color: #7c5cff;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: rgba(124, 92, 255, 0.2);
+        }
+        
+        .nav-links a:hover {
+            background: rgba(124, 92, 255, 0.3);
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid rgba(124, 92, 255, 0.2);
+            color: #a0a0c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">⬡ bapXcoder</div>
+            <h1>Performance Optimization</h1>
+            <p class="subtitle">Maximize performance of dual-model AI IDE with persistent project memory system</p>
+        </header>
+        
+        <main class="content">
+            <h2>Performance Overview</h2>
+            <p>bapXcoder's dual-model architecture with persistent project memory provides powerful capabilities while requiring proper configuration for optimal performance. This guide covers optimization strategies for the Interpreter (communication/UI) and Developer (coding) functions.</p>
+            
+            <div class="perf-highlights">
+                <p><strong>Key Performance Areas:</strong> Model execution, context management, project memory I/O, session continuity, and dual-model coordination.</p>
+            </div>
+            
+            <h2>Hardware Requirements</h2>
+            
+            <div class="perf-section">
+                <h3>Minimum vs Recommended Requirements</h3>
+                
+                <table class="requirements-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Minimum</th>
+                            <th>Recommended</th>
+                            <th>Performance Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CPU</td>
+                            <td>6 core processor</td>
+                            <td>8+ core with high IPC</td>
+                            <td>More cores = faster token generation</td>
+                        </tr>
+                        <tr>
+                            <td>RAM</td>
+                            <td>8GB</td>
+                            <td>16GB+ (32GB for large projects)</td>
+                            <td>VRAM equivalent for model performance</td>
+                        </tr>
+                        <tr>
+                            <td>GPU</td>
+                            <td>None required</td>
+                            <td>NVIDIA 4090/3090+, AMD RX 7900 XTX+, Apple M3 Max/Pro</td>
+                            <td>Major performance improvement</td>
+                        </tr>
+                        <tr>
+                            <td>Storage</td>
+                            <td>SSD with 5GB free</td>
+                            <td>NVMe SSD with 50GB+ free</td>
+                            <td>Model cache performance</td>
+                        </tr>
+                        <tr>
+                            <td>Network</td>
+                            <td>10Mbps</td>
+                            <td>50Mbps+ stable</td>
+                            <td>Model access speed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h2>Model Performance Tuning</h2>
+            
+            <div class="optimization-section">
+                <h3>Runtime Configuration</h3>
+                
+                <p>Optimal configuration for llama.cpp runtime connections:</p>
+                
+                <div class="command-block">
+# In config.ini or via command line
+[defaults]
+threads = 8                            # Use as many threads as CPU cores
+context_size = 32768                   # 32K context recommended
+gpu_layers = 27                        # For 30B models on consumer GPUs
+temperature = 0.7                      # Generation randomness
+batch_size = 512                       # Processing batch size
+max_tokens = 512                       # Output token limit
+
+# GPU-specific optimizations
+[context_size]
+small_models = 8192                    # For 7B models
+medium_models = 16384                  # For 14B models
+large_models = 32768                   # For 30B+ models
+very_large_models = 65536              # For 70B+ models
+                </div>
+            </div>
+            
+            <div class="optimization-tip">
+                <h4>Performance Tip</h4>
+                <p>Set <code>gpu_layers</code> to maximum value that fits in your VRAM. Use <code>nvidia-smi</code> to monitor memory usage during model loading.</p>
+            </div>
+            
+            <h3>Interpreter Model Optimization</h3>
+            
+            <p>The Interpreter model (bapXcoder-VL) for communication and multimodal processing:</p>
+            
+            <ul>
+                <li><strong>Context Size</strong>: Use larger context (32K+) for better multimodal understanding</li>
+                <li><strong>VRAM Allocation</strong>: 15-20+ layers for responsive multimodal processing</li>
+                <li><strong>Quantization</strong>: Q8_0 for best balance of quality and speed</li>
+                <li><strong>Memory Management</strong>: Higher memory allocation for image processing</li>
+            </ul>
+            
+            <h3>Developer Model Optimization</h3>
+            
+            <p>The Developer model (bapXcoder-Coder) for coding tasks:</p>
+            
+            <ul>
+                <li><strong>Context Size</strong>: Maximum context for code analysis and understanding</li>
+                <li><strong>VRAM Usage</strong>: 25+ layers for complex code reasoning</li>
+                <li><strong>Temperature</strong>: Lower (0.1-0.3) for consistent code generation</li>
+                <li><strong>Batch Processing</strong>: Larger batches for code tokenization</li>
+            </ul>
+            
+            <div class="perf-section">
+                <h2>Project Memory Performance</h2>
+                
+                <p>Optimize the persistent project memory system for better performance:</p>
+                
+                <h3>Memory File Optimization</h3>
+                
+                <div class="performance-metric">
+                    <div class="metric-label">Session Continuity File Size</div>
+                    <div class="metric-value">Optimize at 1-5MB</div>
+                </div>
+                
+                <div class="performance-metric">
+                    <div class="metric-label">Todo File Efficiency</div>
+                    <div class="metric-value">Compact and structured</div>
+                </div>
+                
+                <div class="performance-metric">
+                    <div class="metric-label">Load Time</div>
+                    <div class="metric-value">&lt; 2 seconds</div>
+                </div>
+                
+                <div class="command-block">
+# Optimize memory files for large projects
+ai optimize --memory --project-large
+
+# Clean up old session data
+ai cleanup --memory --session-state
+
+# Compress session files
+ai compress --memory-files
+                </div>
+            </div>
+            
+            <h2>Dual-Model Coordination Performance</h2>
+            
+            <div class="perf-section">
+                <h3>Internal Communication Efficiency</h3>
+                
+                <p>Optimize the communication between Interpreter and Developer functions:</p>
+                
+                <ul>
+                    <li><strong>Message Format</strong>: Structured, efficient communication</li>
+                    <li><strong>Context Passing</strong>: Minimize redundant context transfer</li>
+                    <li><strong>Response Mediation</strong>: Fast validation and formatting</li>
+                    <li><strong>Shared Memory Access</strong>: Efficient project state sharing</li>
+                </ul>
+                
+                <h4>Typical Performance Metrics</h4>
+                <table class="benchmark-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Optimal Value</th>
+                            <th>Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Interpreter Response Time</td>
+                            <td>&lt; 2-3s</td>
+                            <td>User interaction responsiveness</td>
+                        </tr>
+                        <tr>
+                            <td>Developer Task Execution</td>
+                            <td>&lt; 5-10s</td>
+                            <td>Coding task completion</td>
+                        </tr>
+                        <tr>
+                            <td>Project Memory Load Time</td>
+                            <td>&lt; 1s</td>
+                            <td>IDE startup speed</td>
+                        </tr>
+                        <tr>
+                            <td>File Operation Speed</td>
+                            <td>&lt; 500ms</td>
+                            <td>Code editing efficiency</td>
+                        </tr>
+                        <tr>
+                            <td>Session Continuity Restore</td>
+                            <td>&lt; 2s</td>
+                            <td>Context restoration</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h2>Large Project Handling</h2>
+            
+            <div class="optimization-section">
+                <h3>Scaling to Large Codebases</h3>
+                
+                <p>For projects with 10K+ files or complex architectures:</p>
+                
+                <ul>
+                    <li><strong>Selective Indexing</strong>: Only load relevant project sections into context</li>
+                    <li><strong>Incremental Analysis</strong>: Process large codebases in chunks</li>
+                    <li><strong>Memory Compression</strong>: Compress session memory periodically</li>
+                    <li><strong>File Filtering</strong>: Ignore unnecessary files (build, dist, node_modules)</li>
+                    <li><strong>Context Window Management</strong>: Efficient context window utilization</li>
+                </ul>
+                
+                <h4>Configuration for Large Projects</h4>
+                <div class="command-block">
+# In config.ini for large projects
+[large_projects]
+max_file_size = 100000                    ; 100KB max per file
+max_project_size = 500000000              ; 500MB max project size  
+context_filter = "*.py,*.js,*.ts,*.jsx,*.tsx,*.html,*.css"
+ignore_patterns = "node_modules,*.log,__pycache__,.git,build,dist,*.min.js"
+session_compression = true                ; Compress session files automatically
+todo_optimization = true                  ; Optimize todo storage for performance
+                </div>
+            </div>
+            
+            <h2>Network and Model Connection Optimization</h2>
+            
+            <div class="perf-section">
+                <h3>Hugging Face Connection Performance</h3>
+                
+                <p>Optimize connections to Hugging Face models via llama.cpp:</p>
+                
+                <ul>
+                    <li><strong>Connection Pooling</strong>: Reuse connections for multiple requests</li>
+                    <li><strong>Caching Strategy</strong>: Cache model responses locally when appropriate</li>
+                    <li><strong>Bandwidth Management</strong>: Optimize data transfer through HTTP/2</li>
+                    <li><strong>Retry Logic</strong>: Robust retry mechanisms for rate limits</li>
+                    <li><strong>Token Management</strong>: Efficient token usage to minimize costs</li>
+                </ul>
+                
+                <div class="command-block">
+# Connection optimization
+export HF_HUB_ENABLE_HF_TRANSFER=1        # Enable accelerated downloads
+export HF_HUB_CACHE=/fast/ssd/huggingface # Cache on fast storage
+export HF_HUB_OFFLINE=0                   # Enable online model access
+export REQUESTS_PER_SECOND=30             # Rate limiting
+                </div>
+            </div>
+            
+            <h2>Performance Monitoring and Diagnostics</h2>
+            
+            <div class="diag-section">
+                <h3>Real-time Performance Monitoring</h3>
+                
+                <p>Use built-in tools to monitor performance:</p>
+                
+                <div class="command-block">
+# Show real-time performance metrics
+ai monitor --performance
+
+# Monitor model usage and resource consumption
+ai monitor --models --detailed
+
+# Check project memory performance
+ai monitor --memory --project-current
+
+# View dual-model coordination metrics
+ai monitor --coordination --detailed
+
+# Performance summary
+ai report --performance --detailed
+                </div>
+                
+                <h3>Diagnostic Commands</h3>
+                <ul>
+                    <li><code>ai diagnostics</code> - Complete system health check</li>
+                    <li><code>ai diagnostics --models</code> - Model connection and performance check</li>
+                    <li><code>ai diagnostics --memory</code> - Project memory and session continuity check</li>
+                    <li><code>ai diagnostics --network</code> - Connection and quota verification</li>
+                    <li><code>ai diagnostics --license</code> - Subscription status verification</li>
+                </ul>
+            </div>
+            
+            <h2>Session Continuity Performance</h2>
+            
+            <p>Optimize the startup and continuity restoration process:</p>
+            
+            <div class="optimization-tip">
+                <h4>Continuity Performance Tip</h4>
+                <p>The session continuity system can load both <code>sessiontree.json</code> and <code>todo.json</code> in under 1 second for efficient context restoration. Use the "System resumed" messages to verify proper context loading.</p>
+            </div>
+            
+            <div class="warning-box">
+                <h4>Performance Warning</h4>
+                <p>As project memory files grow larger, IDE startup times may increase. Regular cleanup of session history and closed todo items can maintain optimal performance.</p>
+            </div>
+            
+            <div class="success-box">
+                <h4>Performance Success Indicator</h4>
+                <p>Well-optimized installations should achieve: sub-2s IDE startup, sub-3s interpreter responses, and seamless session continuity with fast context restoration.</p>
+            </div>
+            
+            <div class="nav-links">
+                <a href="index.html">← All Docs</a>
+                <a href="api.html">← Previous: API Integration</a>
+                <a href="security.html">Next: Security & Privacy →</a>
+            </div>
+            
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: How can I improve response times for large projects?</div>
+                <p>A: Use project-specific filtering, optimize context size, and ensure adequate system resources for both models.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Why does session continuity take longer to restore on large projects?</div>
+                <p>A: Larger projects have more context to load. Use file filtering and selective loading to optimize.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: How do I monitor dual-model performance?</div>
+                <p>A: Use the ai monitor --performance and ai diagnostics commands to track both models' efficiency.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: What affects the speed of the dual-model coordination?</div>
+                <p>A: Context size, complexity of tasks, and system resources affect coordination speed between models.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: How do I optimize memory file performance?</div>
+                <p>A: Regular cleanup of session history, compression of memory files, and selective context storage optimizes performance.</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025 bapXcoder Documentation. All rights reserved.</p>
+            <p>Part of the bapX Media Hub ecosystem.</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bapXcoder Security Architecture - Privacy-First AI Development</title>
+    <meta name="description" content="Security architecture and privacy practices for bapXcoder with dual-model safety and encrypted project memory." />
+    <meta name="keywords" content="bapXcoder security, AI IDE privacy, dual-model security, project encryption, development security" />
+    <link rel="canonical" href="https://docs.coder.bapx.in/security.html" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0f13 0%, #1a1a25 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(124, 92, 255, 0.2);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #7c5cff;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #7c5cff;
+        }
+        
+        .subtitle {
+            color: #a0a0c0;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        
+        h2 {
+            color: #7c5cff;
+            margin: 30px 0 15px 0;
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            color: #50fa7b;
+            margin: 20px 0 10px 0;
+            font-size: 1.3rem;
+        }
+        
+        .security-section {
+            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .security-metric {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid #50fa7b;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .security-highlight {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid #ff6b6b;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .safety-diagram {
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .threat-matrix {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+        }
+        
+        .threat-matrix th, .threat-matrix td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2d2d40;
+        }
+        
+        .threat-matrix th {
+            background: rgba(124, 92, 255, 0.2);
+            color: #7c5cff;
+        }
+        
+        .protection-level {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        
+        .level-high {
+            background: #50fa7b;
+            color: black;
+        }
+        
+        .level-medium {
+            background: #f1fa8c;
+            color: black;
+        }
+        
+        .level-low {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(124, 92, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .nav-links a {
+            color: #7c5cff;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: rgba(124, 92, 255, 0.2);
+        }
+        
+        .nav-links a:hover {
+            background: rgba(124, 92, 255, 0.3);
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid rgba(124, 92, 255, 0.2);
+            color: #a0a0c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">⬡ bapXcoder</div>
+            <h1>Security & Privacy Architecture</h1>
+            <p class="subtitle">Safety-first development environment with dual-model isolation and encrypted project memory</p>
+        </header>
+        
+        <main class="content">
+            <h2>Privacy-First Architecture</h2>
+            <p>bapXcoder implements a comprehensive security framework designed to protect developer data and maintain privacy without compromising functionality. The system ensures that project data stays local while securely connecting to AI models via runtime access.</p>
+            
+            <div class="security-highlights">
+                <p><strong>Core Security Principle:</strong> Project content stays completely local while model access happens through encrypted runtime connections. No source code or project files are ever transmitted to external servers.</p>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🔒 Local Data</h4>
+                    <p>All project files remain on user's device</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🤖 Safe AI Coordination</h4>
+                    <p>Internal function isolation prevents unsafe operations</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🔑 Encrypted Memory</h4>
+                    <p>Project memory encrypted with user-specific keys</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🛡️ Boundary Protection</h4>
+                    <p>All operations constrained to project directory</p>
+                </div>
+            </div>
+            
+            <h2>Dual-Model Safety Architecture</h2>
+            
+            <div class="safety-section">
+                <h3>Internal Role Separation Security</h3>
+                
+                <p>bapXcoder implements multiple safety layers through its dual-internal function architecture:</p>
+                
+                <div class="safety-diagram">
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   User Input   │───▶│  Interpreter     │───▶│   Developer     │
+│                │    │  Function        │    │  Function       │
+│ (Natural       │    │ • Communication  │    │ • Code Gen      │
+│  Language)     │    │ • Context Safety │    │ • Implementation│
+│                │    │ • Authorization  │    │ • Validation    │
+└─────────────────┘    │ • Mediation      │    │ • No Direct     │
+                      │ • Session Memory │    │   User Comm     │
+                      └──────────────────┘    └─────────────────┘
+                           │                       │
+                           ▼                       ▼
+                    ┌─────────────────┐    ┌─────────────────┐
+                    │  Safety Check   │    │  Restricted      │
+                    │  & Validation   │    │  Operations      │
+                    │ • Approves safe │    │ • Executes only  │
+                    │   instructions  │    │   approved instr │
+                    │ • Blocks unsafe │    │ • No direct      │
+                    │   operations    │    │   actions       │
+                    └─────────────────┘    └─────────────────┘
+                </div>
+                
+                <table class="safety-table">
+                    <thead>
+                        <tr>
+                            <th>Safety Feature</th>
+                            <th>Implementation</th>
+                            <th>Protection Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Role Isolation</td>
+                            <td>Interpreter/Developer function separation</td>
+                            <td><span class="protection-level level-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>Communication Mediation</td>
+                            <td>Only Interpreter handles user communication</td>
+                            <td><span class="protection-level level-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>Approval Workflow</td>
+                            <td>All code changes require user approval</td>
+                            <td><span class="protection-level level-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>Diff Visualization</td>
+                            <td>Changes shown as diffs before application</td>
+                            <td><span class="protection-level level-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>Boundary Enforcement</td>
+                            <td>Project-scoped file operations only</td>
+                            <td><span class="protection-level level-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>Instruction Validation</td>
+                            <td>Developer only executes Interpreter-approved instructions</td>
+                            <td><span class="protection-level level-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>Context Consistency</td>
+                            <td>Shared memory prevents context drift</td>
+                            <td><span class="protection-level level-medium">Medium</span></td>
+                        </tr>
+                        <tr>
+                            <td>Session Security</td>
+                            <td>User-specific project isolation</td>
+                            <td><span class="protection-level level-high">High</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h2>Data Flow and Privacy Model</h2>
+            
+            <div class="security-section">
+                <h3>What Stays Local vs External Communication</h3>
+                
+                <div class="data-classification">
+                    <h4>🔒 Completely Local (Never Exits Device)</h4>
+                    <ul>
+                        <li>All project source code and files</li>
+                        <li>Project memory in .bapXcoder directory</li>
+                        <li>User session data and todos</li>
+                        <li>File operation history and context</li>
+                        <li>Image and file attachments processed locally</li>
+                        <li>Terminal command history and project navigation</li>
+                        <li>Git configuration and local repository data</li>
+                        <li>Model responses cached locally in user-specific files</li>
+                        <li>Encrypted subscription metadata in user's GitHub repo</li>
+                    </ul>
+                    
+                    <h4>🌐 Secure External Communications Only</h4>
+                    <ul>
+                        <li>AI model access via encrypted llama.cpp runtime connections</li>
+                        <li>Authentication validation with GitHub/Google OAuth endpoints</li>
+                        <li>License verification with payment processor</li>
+                        <li>Web search queries (with user consent)</li>
+                        <li>Model responses (processed locally after return)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2>Memory Encryption and Isolation</h2>
+            
+            <div class="encryption-section">
+                <h3>Secure Project Memory System</h3>
+                
+                <p>All project memory is stored securely with user-specific isolation:</p>
+                
+                <div class="memory-structure">
+                    <h4>Memory Directory Structure with Security</h4>
+                    <div class="code-block">
+.bapXcoder/
+└── users/
+    └── {encrypted_user_id}/
+        ├── sessiontree.json          # Encrypted session state and continuity
+        ├── todo.json                # Encrypted user intent and tasks  
+        ├── validation_log.json      # Encrypted testing results
+        └── session_key.enc          # Unique encryption key per user
+                    </div>
+                    
+                    <h4>Security Measures</h4>
+                    <ul>
+                        <li>Each user gets isolated memory space with encryption</li>
+                        <li>Project data segregated by user and project identifiers</li>
+                        <li>Session keys stored separately per user identity</li>
+                        <li>Memory files encrypted with user-specific keys</li>
+                        <li>Authentication required to access memory</li>
+                        <li>Boundaries enforced to prevent cross-project access</li>
+                    </ul>
+                </div>
+                
+                <div class="security-metric">
+                    <h4>Memory Isolation Security</h4>
+                    <p>Each user working on the same project maintains separate encrypted memory spaces, preventing cross-contamination and ensuring privacy.</p>
+                </div>
+            </div>
+            
+            <h2>Authentication and Access Control</h2>
+            
+            <div class="auth-section">
+                <h3>Secure Authentication System</h3>
+                
+                <p>bapXcoder uses industry-standard authentication:</p>
+                
+                <div class="auth-mechanisms">
+                    <h4>OAuth 2.0 Integration</h4>
+                    <ul>
+                        <li>GitHub and Google OAuth 2.0 for secure user verification</li>
+                        <li>JWT tokens for session management with automatic refresh</li>
+                        <li>Secure token storage with encryption locally</li>
+                        <li>Subscription validation through encrypted GitHub storage</li>
+                        <li>User session isolation with unique identifiers</li>
+                    </ul>
+                    
+                    <h4>Subscription Security Model</h4>
+                    <p>Subscription validation happens through encrypted data stored in user's GitHub repositories:</p>
+                    <ul>
+                        <li>Users link their own GitHub account to store encrypted subscription data</li>
+                        <li>No subscription information stored on bapXcoder servers</li>
+                        <li>Encryption keys derived from user authentication context</li>
+                        <li>Subscription validation happens at runtime with secure API calls</li>
+                        <li>Secure access control based on subscription status</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2>File Operation Security</h2>
+            
+            <div class="file-security">
+                <h3>Secure File Operations Framework</h3>
+                
+                <p>All file operations are constrained within security boundaries:</p>
+                
+                <table class="security-table">
+                    <thead>
+                        <tr>
+                            <th>Operation Type</th>
+                            <th>Security Controls</th>
+                            <th>Approval Required</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>File Creation</td>
+                            <td>Restricted to project directory only, with user consent</td>
+                            <td>No - but shown location before creation</td>
+                        </tr>
+                        <tr>
+                            <td>File Modification</td>
+                            <td>Shows complete diff before any changes, security validation</td>
+                            <td>Yes - explicit approval required</td>
+                        </tr>
+                        <tr>
+                            <td>File Deletion</td>
+                            <td>Confirmation required with file preview</td>
+                            <td>Yes - explicit approval required</td>
+                        </tr>
+                        <tr>
+                            <td>Directory Operations</td>
+                            <td>Project boundary enforcement, file type validation</td>
+                            <td>Review required for each operation</td>
+                        </tr>
+                        <tr>
+                            <td>Multi-file Operations</td>
+                            <td>Context validation, security scanning</td>
+                            <td>Explicit approval for bulk operations</td>
+                        </tr>
+                        <tr>
+                            <td>System Command Execution</td>
+                            <td>Sandboxed execution, command validation</td>
+                            <td>Preview required for destructive commands</td>
+                        </tr>
+                        <tr>
+                            <td>AI Analysis of Files</td>
+                            <td>No content transmission to external servers</td>
+                            <td>Local file access only via encrypted channels</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h2>Threat Mitigation Matrix</h2>
+            
+            <div class="threat-analysis">
+                <h3>Security Threat Management</h3>
+                
+                <table class="threat-matrix">
+                    <thead>
+                        <tr>
+                            <th>Threat Category</th>
+                            <th>Threat Description</th>
+                            <th>Protection Method</th>
+                            <th>Risk Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Data Exfiltration</td>
+                            <td>Code transmitted to external servers</td>
+                            <td>Project files remain local, only model requests transmitted</td>
+                            <td><span class="protection-level level-high">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Unauthorized Operations</td>
+                            <td>AI performs harmful system operations</td>
+                            <td>Dual-model isolation with Interpreter mediation</td>
+                            <td><span class="protection-level level-high">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Context Drift</td>
+                            <td>Multiple models with different contexts</td>
+                            <td>Single agent with internal role separation</td>
+                            <td><span class="protection-level level-high">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Project Boundary Violation</td>
+                            <td>Operations outside current project</td>
+                            <td>File operation constraints and path validation</td>
+                            <td><span class="protection-level level-high">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Memory Cross-Contamination</td>
+                            <td>Different users sharing session data</td>
+                            <td>User-specific encrypted memory directories</td>
+                            <td><span class="protection-level level-high">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Subscription Bypass</td>
+                            <td>Access to premium features without payment</td>
+                            <td>Runtime license validation with GitHub encryption</td>
+                            <td><span class="protection-level level-medium">Managed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Model Hallucination</td>
+                            <td>AI generating inaccurate responses</td>
+                            <td>Mediated responses with context validation</td>
+                            <td><span class="protection-level level-medium">Reduced</span></td>
+                        </tr>
+                        <tr>
+                            <td>Credential Exposure</td>
+                            <td>Accidental sharing of secrets</td>
+                            <td>Automatic credential detection and filtering</td>
+                            <td><span class="protection-level level-high">Mitigated</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h2>Security Best Practices</h2>
+            
+            <div class="security-best-practices">
+                <h3>Recommendations for Secure Usage</h3>
+                
+                <div class="security-measure">
+                    <h4>Project Isolation</h4>
+                    <ul>
+                        <li>Always work within dedicated project directories</li>
+                        <li>Use the .bapXcoder directory for project-specific memory</li>
+                        <li>Never include credentials in files processed by AI</li>
+                        <li>Utilize separate projects for different security domains</li>
+                        <li>Regularly review file access permissions</li>
+                    </ul>
+                </div>
+                
+                <div class="security-measure">
+                    <h4>AI Interaction Security</h4>
+                    <ul>
+                        <li>Always review file operation diffs before approval</li>
+                        <li>Verify code changes for security implications</li>
+                        <li>Use AI for code review to identify vulnerabilities</li>
+                        <li>Request security-specific analysis for authentication code</li>
+                        <li>Validate all generated code before deployment</li>
+                    </ul>
+                </div>
+                
+                <div class="security-measure">
+                    <h4>Memory Management Security</h3>
+                    <ul>
+                        <li>Regularly audit session memory for sensitive data</li>
+                        <li>Clear session memory when working with sensitive projects</li>
+                        <li>Use separate user accounts for different security domains</li>
+                        <li>Back up project memory separately from code</li>
+                        <li>Understand that memory files are stored locally and securely</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="security-highlight">
+                <p><strong>Key Security Benefit:</strong> The dual-model architecture with internal role separation provides inherent safety by ensuring that the Developer function (which handles coding tasks) can only execute instructions that have been validated and approved by the Interpreter function (which handles communication and context management).</p>
+            </div>
+            
+            <div class="nav-links">
+                <a href="index.html">← Documentation Home</a>
+                <a href="api.html">← Previous: API Integration</a>
+                <a href="best_practices.html">Next: Best Practices →</a>
+            </div>
+            
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Does bapXcoder send my source code to external servers?</div>
+                <p>A: No, your complete project code remains local. Only your text prompts and requests are sent to AI models via encrypted llama.cpp runtime connections.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: How are my project memories secured?</div>
+                <p>A: Project memory is stored encrypted in the .bapXcoder directory with user-specific access controls and session-based encryption.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Can the AI models access files outside my project?</div>
+                <p>A: No, all file operations are strictly constrained to your project directory with boundary enforcement.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: How does the dual-model architecture enhance security?</div>
+                <p>A: The Interpreter function mediates all operations and validates Developer actions, preventing unauthorized or unsafe operations.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Are my credentials safe when using bapXcoder?</div>
+                <p>A: Yes, the system has built-in credential detection that automatically prevents exposure of sensitive information to AI models.</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025 bapXcoder Security Documentation. All rights reserved.</p>
+            <p>Part of the bapX Media Hub ecosystem.</p>
+        </footer>
+    </div>
+</body>
+</html>

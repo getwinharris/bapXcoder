@@ -33,12 +33,12 @@ def download_file(url, filename, chunk_size=65536):  # Using 65536-byte chunks a
     print(f"\nDownload completed: {filename}")
 
 def main():
-    model_url = "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct-GGUF/resolve/main/Qwen3VL-8B-Instruct-Q8_0.gguf?download=true"
-    model_filename = "Qwen3VL-8B-Instruct-Q8_0.gguf"
+    model_url = "https://huggingface.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/Qwen2.5-Coder-7B-Instruct-Q8_0.gguf?download=true"
+    model_filename = "Qwen2.5-Coder-7B-Instruct-Q8_0.gguf"
 
     print("bapXcoder Model Download")
     print("=" * 30)
-    print(f"This will download the Qwen3VL model (~8.76GB) to {model_filename}")
+    print(f"This will download the Qwen2.5-Coder model (~8GB) to {model_filename}")
     print("This is needed for the AI-powered IDE to work offline.")
 
     # Check if model already exists
@@ -59,7 +59,7 @@ def main():
         print(f"Model size: {size_gb:.2f} GB")
 
         print("\nSetup complete! You can now start the IDE.")
-        print("Run: python qwen3VL_local_cli.py")
+        print("Run: python bapxcoder_local_cli.py")
         print("Then open your browser to http://localhost:7860")
 
     except Exception as e:

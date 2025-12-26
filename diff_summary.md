@@ -4,15 +4,15 @@
 
 ### Main Project Updates:
 1. **README.md**: Updated to reflect dual-model architecture, licensing model, and direct Hugging Face connections
-2. **Core functionality**: Maintained focus on dual-model approach (Qwen3-VL and Qwen3-Coder)
+2. **Core functionality**: Maintained focus on dual-model approach (bapXcoder-VL and bapXcoder-Coder)
 3. **Connection method**: Updated from local downloads to direct Hugging Face connections
 4. **Licensing**: Updated from "free forever" to 60-day trial with licensing requirement
 
-### Research Folders (Reference Only):
-1. **research/qwen-code/**: Reference repository for CLI workflow patterns
-2. **research/Qwen3-Coder/**: Reference repository for advanced coding capabilities
+### Research Folders (Archived References):
+1. **research/qwen-code/**: Reference repository for CLI workflow patterns (archived reference)
+2. **research/Qwen3-Coder/**: Reference repository for advanced coding capabilities (archived reference)
 3. **research/codespaces-base/**: Reference repository for development environment concepts
-4. **research/qwen3-vl-hf/**: Documentation on direct Hugging Face connections
+4. **research/qwen3-vl-hf/**: Documentation on direct Hugging Face connections (archived reference)
 5. **Analysis files**: Various comparison and analysis documents in research folder
 
 ## Detailed README.md Changes
@@ -36,12 +36,12 @@
 
 ### After (Updated):
 ```
-- Dual-model architecture: Qwen3-VL for communication/UI and Qwen3-Coder for coding tasks - connects directly to Hugging Face without local downloads
+- Dual-model architecture: bapXcoder-VL for communication/UI and bapXcoder-Coder for coding tasks - connects directly to Hugging Face without local downloads
 - Online functionality with direct model connections to Hugging Face
-- Direct connection to Hugging Face models without local downloads
+- Direct connection to Hugging Face models without local storage
 - ✅ **No local storage requirements** for models
-- ✅ **Leverages your allocated quotas** for both Qwen3-VL and Qwen3-Coder
-- ✅ **Direct connection to both Qwen3-VL and Qwen3-Coder models**
+- ✅ **Leverages your allocated quotas** for both bapXcoder-VL and bapXcoder-Coder
+- ✅ **Direct connection to both bapXcoder-VL and bapXcoder-Coder models**
 - ✅ **Complete privacy - no model storage on local device required**
 - ✅ **Dual-model architecture for optimal task distribution**
 - ✅ **PWA functionality with direct model connections**

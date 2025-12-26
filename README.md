@@ -1,93 +1,97 @@
-# bapXcoder - Advanced AI-Powered PWA IDE
+# bapXcoder - Advanced AI-Powered IDE with Project Memory
 
-**bapXcoder** is a revolutionary, cross-platform PWA (Progressive Web App) Integrated Development Environment featuring the single "bapXcoder" IDE Agent. This deterministic CLI-first development environment uses one powerful AI agent with internal role separation: an interpreter for user communication and context management, and a developer for coding tasks. Unlike traditional AI tools that lose context or operate in fragments, bapXcoder maintains persistent project memory and executes tasks through a sophisticated internal agent with shared session memory.
+**bapXcoder** is an enterprise-grade, cross-platform Integrated Development Environment powered by advanced AI. Inspired by cutting-edge developments in AI-assisted development like Trae.ai SOLO and Google Antigravity, this intelligent development environment features the revolutionary "bapXcoder" IDE Agent with project-based session memory, multimodal capabilities, and agentic workflows that eliminate context loss and maximize productivity through persistent project awareness.
 
-## What Problem Does bapXcoder Solve?
+"The bapXcoder IDE is architected as a cognitive agent orchestrating multiple specialized functions; model count is an implementation detail that evolved over time with the availability of multimodal models."
 
-### The Fragmentation Problem
-Modern AI development tools suffer from fundamental issues:
-- **Context Loss**: Most tools lose session state between uses
-- **Single-Agent Limitations**: Single-model tools can't specialize effectively
-- **Fragmented Workflow**: Different tools for different tasks create context switching
-- **Privacy Concerns**: Cloud-based tools transmit code to external servers
-- **Limited Autonomy**: Most tools require constant user oversight
+## Revolutionary Project-Based Session Memory
 
-### bapXcoder's Solution
-- **Persistent Project Memory**: Every project maintains its own context with `.bapXcoder` directories
-- **Single IDE Agent**: One AI agent with internal role separation between interpreter and developer functions
-- **Deterministic Execution**: Predictable, safe execution with change previews
-- **Complete Privacy**: All project data stays local; only model access happens externally
-- **Autonomous Modes**: Advanced autonomous execution for complex tasks
+Unlike traditional development tools that lose context between sessions, bapXcoder maintains persistent project memory that continues exactly where you left off. Each project stores its own context in `.bapXcoder` directories with persistent `todo.json` and `sessiontree.json` files.
 
-## Core Architecture: Single Agent with Dual Roles
+## Advanced Agentic Features
 
-bapXcoder implements a unique single-agent architecture with internal role separation:
+### Trae.ai SOLO Inspired Interface
+- **Visual Workspace**: All-in-one visual workspace that keeps users "visually in the loop"
+- **Real-time Feedback**: Dynamic expandable views with real-time feedback into AI operations
+- **Multi-tool Orchestration**: Coordinates browsers, terminals, editors and essential tools
+- **Context Unification**: Brings scattered context (terminal, editor, documentation, browser) into unified intelligence
 
-### The bapXcoder IDE Agent
-- **Single Agent**: One unified AI agent (not multiple models) that handles all development tasks
-- **Internal Role Separation**: Two internal functions working together:
-  - **Interpreter Function**: Handles all communication, UI understanding, multimodal processing, OCR, and context management
-  - **Developer Function**: Executes only structured instructions from interpreter, following internal workflow protocols
-- **Shared Session Memory**: Both functions share the same project context through `.bapXcoder` session tree
-- **Authoritative Memory**: Single source of truth for project state and todos across both functions
+### Google Antigravity Inspired Capabilities
+- **Agentic Development**: Autonomous agents that plan, execute, and verify complex tasks
+- **Mission Control**: Spawning, orchestrating, and observing multiple agents across multiple workspaces in parallel
+- **Transparent Artifacts**: Clear visibility into agent operations and decision-making
+- **Autonomous Planning**: AI agents that can work independently on complex development tasks
 
-### How It Works
-1. **User interacts with Agent**: All prompts go to the single IDE Agent
-2. **Interpreter processes request**: Interpreter function understands the request and context
-3. **Developer executes if needed**: If coding is required, interpreter coordinates with developer function
-4. **Agent responds to user**: Single response back to user through interpreter
-5. **Memory persists**: Both functions update shared session memory (`.bapXcoder/sessiontree.json`, `.bapXcoder/todo.json`)
+### Solo Coder vs Solo Builder Approach
+- **Solo Coder**: Deep planning and precise execution with sub-agent coordination
+- **Solo Builder**: Fast end-to-end execution, turning ideas into live products
+- **Unified bapXcoder Agent**: Combines both approaches in a single intelligent agent
 
-## Key Capabilities
+### Features That Eliminate Time Wastage
 
-### Deterministic AI Interaction
-- **Interpreter Function**: Handles all user communication, multimodal processing, OCR, and context management
-- **Developer Function**: Executes only structured instructions from interpreter, following internal workflow protocols  
-- **Safe Execution**: All changes shown as diffs before approval
-- **Project Context**: Maintains awareness of entire codebase for accurate suggestions
+- **Continuous Context**: Never lose project context - resumes exactly where you left off
+- **Auto-Task Recovery**: Pending tasks automatically recalled when returning to projects
+- **Session Continuity**: "System resumed. You were working on X. Last action was Y. Pending tasks: Z."
+- **Project-Aware Intelligence**: AI maintains full project understanding continuously
 
-### Advanced AI Features
-- **Multimodal Processing**: OCR, image analysis, document understanding with 32+ language support
-- **Voice I/O**: Speech-to-text for input and text-to-speech for auto-play output
+### Advanced AI Capabilities
+
+- **bapXcoder Agent**: Sophisticated internal interpreter and developer functions
+- **Multimodal Processing**: OCR, image analysis, and document understanding with 32+ languages
+- **Voice I/O**: Speech-to-text and text-to-speech for hands-free coding
 - **Web Research**: Integrated search with AI-powered result processing
-- **File Analysis**: Attach and analyze code, image, and document files directly
+- **Intelligent File Analysis**: Attach and analyze code, images, and documents directly
+- **Smart Model Selection**: Automatic selection based on task requirements and developer skill level
 
-### Session Persistence
-- **Project-Based Memory**: Each project gets its own `.bapXcoder` directory with persistent `todo.json` and `sessiontree.json`
-- **Task Management**: Project-specific to-do lists with priority and completion tracking
-- **Cross-Session Awareness**: Context maintained between sessions within each project
-- **Long-Term Learning**: System improves understanding of your codebase over time within each project
+## Enterprise Features
 
-### Why This Architecture Matters
-- **No Hallucinations**: Interpreter maintains authoritative context, Developer only executes authorized changes
-- **Safe Operations**: All code changes go through interpreter's approval process
-- **Consistent Behavior**: Single agent ensures consistent responses and context
-- **Role Separation**: Clear separation between communication and coding tasks for safety
-- **Shared Memory**: Both functions access the same project context for consistency
+- **Privacy-First**: All project data stays local; only model access happens externally
+- **Deterministic Execution**: Predictable, safe operations with change previews
+- **User-Account Integration**: Project memories tied to authenticated user accounts
+- **Cross-Device Continuity**: Maintain context across multiple devices and locations
+- **Intelligent Task Distribution**: Automatically determines optimal approach based on complexity
 
-## How to Get Started
+## Model Selection & Setup
 
-Simply run the following command to start bapXcoder:
+bapXcoder uses the Google Gemma 3 model with intelligent task distribution:
 
-```bash
-./coder.bapx
-```
+### bapXcoder Agent Architecture
+- **Gemma 3**: Advanced open-source model from Google for all development tasks
+- **Adaptive Processing**: Automatically adjusts processing based on task complexity
+- **Skill-Based Optimization**: Tailors responses based on developer experience level
+- **Context-Aware**: Maintains full project context across all operations
 
-For detailed technical documentation, architecture details, and development information, see our [internal documentation](./doc.md).
+### Intelligent Task Distribution
+The system automatically determines the best approach based on:
+- Task complexity and requirements
+- Developer skill level
+- Available computational resources
+- Response time requirements
 
-## Why bapXcoder is Different
+## Download & Licensing
 
-Unlike other AI IDEs that struggle with context, bapXcoder provides:
-- **Complete Project Understanding**: Maintains full codebase context during development
-- **Predictable Results**: Deterministic behavior through interpreter-developer role separation within a single IDE Agent
-- **Safe Operations**: Preview all changes before applying with diff visualization
-- **Privacy-First**: All project data remains local; only model interactions happen externally
-- **Autonomous Execution**: Advanced autonomous modes for complex task execution
+bapXcoder is available under a proprietary license model:
+
+- **60-Day Free Trial**: Full access to all features for evaluation
+- **30-Day Subscription**: $1 every 30 days for continued access after trial
+- **Lifetime License**: $100 one-time for perpetual access
+
+[**GitHub Repository**](https://github.com/getwinharris/bapXcoder)
+
+## Professional Support
+
+- Direct support through GitHub issues
+- Community support available
+- Open-source contribution welcome
 
 ## Learn More
 
-Visit our website: [coder.bapx.in](https://coder.bapx.in)
+Visit our GitHub Pages: [getwinharris.github.io/bapXcoder](https://getwinharris.github.io/bapXcoder/)
 
-## License
+## Documentation
 
-This project is available under a proprietary license model with a 60-day trial period. After the trial, a license is required for continued use.
+For internal development documentation and technical details, see our [development documentation](./doc.md).
+
+---
+
+*© 2025 bapXcoder. All rights reserved. Project-based session memory technology. Time-saving development.*

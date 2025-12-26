@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+y#!/usr/bin/env python3
 """
 bapX Coder CLI Interface
 Command: coder.bapx
@@ -23,89 +23,89 @@ Examples:
   coder.bapx                                # Start the IDE interface
   coder.bapx --project /path/to/project     # Open specific project
   coder.bapx --cli                         # CLI-only mode without web interface
-  
+
 For more information, visit: https://github.com/getwinharris/bapXcoder
         """
     )
-    
+
     parser.add_argument(
         '--project',
         type=str,
         help='Specify project directory to work on',
         default=None
     )
-    
+
     parser.add_argument(
         '--cli',
         action='store_true',
         help='Run in CLI-only mode without web interface',
         default=False
     )
-    
+
     parser.add_argument(
         '--host',
         type=str,
         default='127.0.0.1',
         help='Host address for web interface (default: 127.0.0.1)'
     )
-    
+
     parser.add_argument(
         '--port',
         type=int,
         default=7860,
         help='Port for web interface (default: 7860)'
     )
-    
+
     parser.add_argument(
         '--model',
         type=str,
         help='Path to the GGUF model file',
         default='Qwen3VL-8B-Instruct-Q8_0.gguf'
     )
-    
+
     args = parser.parse_args()
-    
+
     # Set up project directory
     project_dir = args.project or os.getcwd()
     os.chdir(project_dir)
-    
+
     # Ensure .bapXcoder directory exists for this project
     bapxcoder_dir = Path('.bapXcoder')
     bapxcoder_dir.mkdir(exist_ok=True)
-    
+
     # Create/update session tracking
     session_file = bapxcoder_dir / 'sessiontree.json'
     session_data = {}
     if session_file.exists():
         with open(session_file, 'r') as f:
             session_data = json.load(f)
-    
+
     # Add current session
     if 'sessions' not in session_data:
         session_data['sessions'] = []
-    
+
     session_data['sessions'].append({
         'start_time': datetime.now().isoformat(),
         'project_dir': str(Path(project_dir).absolute()),
         'cli_args': sys.argv[1:]
     })
-    
+
     with open(session_file, 'w') as f:
         json.dump(session_data, f, indent=2)
-    
+
     if args.cli:
         # CLI-only mode - would interact directly with models
-        print("bapX Coder CLI mode activated")
+        print("bapXcoder CLI mode activated")
         print(f"Working in project: {project_dir}")
         print("Use the main IDE interface for full capabilities:")
         print(f"  python bapxcoder_local_cli.py --host {args.host} --port {args.port}")
     else:
         # Launch the main web interface
-        print("Starting bapX Coder IDE...")
+        print("Starting bapXcoder IDE...")
         print(f"Project directory: {project_dir}")
         print(f"Access at: http://{args.host}:{args.port}")
         print("Initializing dual-model architecture (Interpreter + Developer)...")
-        
+
         # Pass the arguments to the main application
         main_script = Path(__file__).parent / 'bapxcoder_local_cli.py'
         cmd = [
@@ -114,14 +114,14 @@ For more information, visit: https://github.com/getwinharris/bapXcoder
             '--port', str(args.port),
             '--model', args.model
         ]
-        
+
         try:
             subprocess.run(cmd, check=True)
         except subprocess.CalledProcessError as e:
-            print(f"Error starting bapX Coder: {e}", file=sys.stderr)
+            print(f"Error starting bapXcoder: {e}", file=sys.stderr)
             sys.exit(1)
         except KeyboardInterrupt:
-            print("\nbapX Coder stopped by user")
+            print("\nbapXcoder stopped by user")
 
 if __name__ == "__main__":
     main()

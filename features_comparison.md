@@ -5,21 +5,21 @@
 | Feature | bapXcoder | Continue.dev | Notes |
 |---------|------------|--------------|-------|
 | **Local Offline Operation** | ✅ Full offline after setup | ❌ Cloud-dependent | bapXcoder excels |
-| **Model Integration** | ✅ Qwen3VL-8B (8.76GB) | 🔧 Multiple models (requires setup) | We have one powerful model |
-| **AI-Powered Assistance** | ✅ Advanced Qwen3VL capabilities | ✅ GPT-x, Claude, etc. | Both provide AI assistance |
+| **Model Integration** | ✅ bapXcoder-VL-8B (8.76GB) | 🔧 Multiple models (requires setup) | We have one powerful model |
+| **AI-Powered Assistance** | ✅ Advanced bapXcoder-VL capabilities | ✅ GPT-x, Claude, etc. | Both provide AI assistance |
 | **Code Editing** | ✅ Integrated editor | ✅ VS Code integrated | Both provide code editing |
 | **Terminal Integration** | ✅ Built-in terminal | ✅ Integrated terminal | Feature parity |
 | **Project Management** | ✅ Per-project `.bapXcoder` dir | ✅ VS Code project system | Different approach but functional |
 | **Version Control (Git)** | ✅ Git integration | ✅ VS Code Git support | Both provide Git support |
 | **Voice Input/Output** | ✅ STT and TTS | ❌ Limited/no voice | bapXcoder has advantage |
-| **Image Analysis (OCR)** | ✅ Qwen3VL vision capabilities | ❌ Limited/no vision | bapXcoder has advantage |
+| **Image Analysis (OCR)** | ✅ bapXcoder-VL vision capabilities | ❌ Limited/no vision | bapXcoder has advantage |
 | **Web Search** | ✅ Integrated search | ❌ No direct search | bapXcoder has advantage |
 | **File Attachment** | ✅ Drag-and-drop support | ✅ VS Code file handling | Both support files |
 | **Multi-language Support** | ✅ 32 langs with OCR | ✅ Many langs via plugins | Our OCR advantage |
 | **Continue Reasoning** | ✅ Implemented | ✅ Context window handling | Both handle context |
 | **Customization** | ✅ Project-specific config | ⚙️ VS Code extensibility | Different customization models |
 | **Cross-platform** | ✅ PWA on all platforms | ⚖️ VS Code on all platforms | Both cross-platform |
-| **Pricing** | ✅ Free (one-time setup) | 💰 Subscription/usage fees | Major bapXcoder advantage |
+| **Pricing** | ✅ 60-day trial then 30-day subscription ($1) | 💰 Subscription/usage fees | Major bapXcoder advantage |
 | **Privacy** | ✅ Complete local control | 🔒 Cloud-based processing | Major bapXcoder advantage |
 | **Encoding Support** | ✅ Full encoding support | ⚖️ Standard encoding | Our encoding advantage |
 | **GUI Operation** | ❌ Not yet implemented | ❌ CLI-based currently | This is missing feature |
@@ -56,7 +56,7 @@ bapXcoder already excels in:
 - Voice interaction features
 - Comprehensive encoding support
 - One-time setup with no cloud dependencies
-- Powerful single-model approach with 8.76GB Qwen3VL
+- Powerful single-model approach with 8.76GB bapXcoder-VL
 - Project-based memory system with automatic session tracking
 
 ## Feature Implementation Strategy

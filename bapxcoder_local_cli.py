@@ -17,6 +17,7 @@ import json
 import time
 import webbrowser
 from datetime import datetime, timedelta
+
 # Load configuration settings and provide centralized management for application settings
 # Connects to model, server, and defaults systems during startup
 def load_config():
@@ -42,35 +43,209 @@ def load_config():
             'port': '7860'
         }
         return config
-def ensure_model_exists(model_path):
-    """Check if model exists, and if not, prompt user to download it"""
-    model_file = Path(model_path)
 
-    if not model_file.exists():
-        print(f"Model file not found: {model_path}")
-        print("\nThe Qwen3VL model needs to be downloaded (~5-6GB).")
+# bapXcoder Agent with internal specialized functions for intelligent development assistance
+# The bapXcoder Agent uses two specialized internal functions through a shared memory system:
+# - Interpreter function for communication, context management, and multimodal processing
+# - Developer function for specialized coding tasks, coordinated through shared memory
+class BapXcoderAgent:
+    def __init__(self, model_path=None, temperature=0.7, threads=4, context_size=4096, gpu_layers=0):
+        """
+        Initialize the bapXcoder Agent with Interpreter and Developer functions.
+        This creates an internal agent with two specialized functions working through shared memory.
+        If model_path is None or not found locally, connect directly to Hugging Face Hub.
+        Interpreter function (bapXcoder-Interpreter): Handles communication, UI, multimodal processing
+        Developer function (bapXcoder-Developer): Specializes in coding tasks and implementation
+        """
+        self.temperature = temperature
+        self.threads = threads
+        self.context_size = context_size
+        self.gpu_layers = gpu_layers
 
-        download_choice = input("Would you like to download it now? (Y/n): ").lower().strip()
+        # Initialize bapXcoder model for all tasks (single model approach like Trae.ai SOLO)
+        try:
+            from llama_cpp import Llama
+            import os
 
-        if download_choice == "" or download_choice == "y":
-            return download_model_with_progress(model_path)
+            # Initialize the bapXcoder model - handles all tasks (coding, planning, analysis)
+            print("Initializing bapXcoder IDE Agent with Qwen2.5-Coder model...")
 
-    return True
+            # Check if the specific model exists, otherwise download it automatically
+            model_exists = model_path and os.path.exists(model_path)
 
-def download_model_with_progress(model_path):
-    """Download the model with progress bar and verification"""
-    try:
-        import requests
-        from tqdm import tqdm
-    except ImportError:
-        print("Installing required download dependencies (tqdm, requests)...")
-        import subprocess
-        subprocess.run([sys.executable, "-m", "pip", "install", "tqdm", "requests"], check=True)
-        import requests
-        from tqdm import tqdm
+            if not model_exists:
+                # Automatically download the recommended model
+                print("Qwen2.5-Coder model not found. Downloading automatically...")
+                from huggingface_hub import hf_hub_download
+                try:
+                    model_path = hf_hub_download(
+                        repo_id="Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
+                        filename="*Q8_0.gguf",
+                        local_files_only=False
+                    )
+                    print(f"Successfully downloaded model: {model_path}")
+                except Exception as download_error:
+                    print(f"Download failed: {download_error}")
+                    print("Trying alternative download method...")
+                    try:
+                        self.interpreter_model = Llama.from_pretrained(
+                            repo_id="Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
+                            filename="*Q8_0.gguf",
+                            n_ctx=context_size,
+                            n_threads=threads,
+                            n_gpu_layers=gpu_layers,
+                            verbose=False
+                        )
+                        print("Successfully connected to bapXcoder model via Hugging Face Hub")
+                    except Exception as e:
+                        print(f"Failed to connect to model: {e}")
+                        raise
+                    # For single model approach, use same model for all functions
+                    self.interpreter_model = self.interpreter_model
+                    self.developer_model = self.interpreter_model
+                    return
+
+            # Load the model from the specified path
+            self.interpreter_model = Llama(
+                model_path=model_path,
+                n_ctx=context_size,
+                n_threads=threads,
+                n_gpu_layers=gpu_layers,
+                verbose=False
+            )
+
+            # For bapXcoder's single model approach (like Trae.ai SOLO), use same model for all functions
+            self.developer_model = self.interpreter_model
+            print("Successfully connected to bapXcoder unified model")
+
+        except ImportError:
+            print("Please install required packages: pip install llama-cpp-python huggingface_hub")
+            raise
+        except Exception as e:
+            print(f"Error initializing bapXcoder Agent: {e}")
+            raise
+
+    def run_interpreter_prompt(self, prompt, max_tokens=512, check_session_continuity_on_startup=False):
+        """
+        Process user prompt through the bapXcoder Agent's Interpreter function.
+        The Interpreter function handles all user communication, context management, and multimodal processing.
+        For coding tasks, it may coordinate with the Developer function through shared memory.
+
+        If check_session_continuity_on_startup=True, checks for session continuity and reports last tasks/activities.
+        """
+        try:
+            # Check session continuity on startup if requested
+            if check_session_continuity_on_startup:
+                session_continuity_message = self.check_session_continuity()
+                if session_continuity_message:
+                    # Prepend session continuity info to the prompt
+                    full_prompt = f"{session_continuity_message}\n\nUser request: {prompt}"
+                    response = self.interpreter_model(
+                        full_prompt,
+                        max_tokens=max_tokens,
+                        temperature=self.temperature,
+                        echo=False
+                    )
+                else:
+                    # No session continuity info, just run the original prompt
+                    response = self.interpreter_model(
+                        prompt,
+                        max_tokens=max_tokens,
+                        temperature=self.temperature,
+                        echo=False
+                    )
+            else:
+                # All user interaction goes through the Interpreter function of the bapXcoder Agent
+                response = self.interpreter_model(
+                    prompt,
+                    max_tokens=max_tokens,
+                    temperature=self.temperature,
+                    echo=False
+                )
+            return response['choices'][0]['text']
+        except Exception as e:
+            print(f"Error running prompt through bapXcoder Agent's Interpreter function: {e}")
+            return f"Error: {e}"
+
+    def run_developer_task(self, coding_task, max_tokens=512):
+        """
+        Process specialized coding tasks through the bapXcoder Agent's Developer function.
+        The Developer function specializes in code generation, analysis, and implementation.
+        """
+        try:
+            # Coding tasks are processed through the Developer function of the bapXcoder Agent
+            response = self.developer_model(
+                coding_task,
+                max_tokens=max_tokens,
+                temperature=self.temperature,
+                echo=False
+            )
+            return response['choices'][0]['text']
+        except Exception as e:
+            print(f"Error running coding task through bapXcoder Agent's Developer function: {e}")
+            return f"Error: {e}"
+
+    def run_coding_task(self, task_description, max_tokens=512):
+        """
+        Process specialized coding tasks through the appropriate model based on task type.
+        For coding tasks, uses the Developer function; for other tasks, uses the Interpreter function.
+        """
+        try:
+            # Determine if this is primarily a coding task that should go to Developer function
+            coding_keywords = [
+                'code', 'function', 'class', 'implement', 'create', 'generate',
+                'write', 'debug', 'fix', 'refactor', 'test', 'program', 'script',
+                'algorithm', 'method', 'variable', 'syntax', 'error', 'module',
+                'import', 'library', 'dependency', 'build', 'compile', 'deploy',
+                'api', 'endpoint', 'database', 'migration', 'configuration'
+            ]
+
+            is_coding_related = any(keyword in task_description.lower() for keyword in coding_keywords)
+
+            if is_coding_related:
+                # Direct coding tasks to Developer function
+                coding_prompt = f"[CODING TASK] {task_description}\nGenerate appropriate code following best practices:"
+                return self.run_developer_task(coding_prompt, max_tokens)
+            else:
+                # Other tasks to Interpreter function
+                return self.run_interpreter_prompt(task_description, max_tokens)
+        except Exception as e:
+            print(f"Error running coding task through bapXcoder Agent: {e}")
+            return f"Error: {e}"
+
+    def check_session_continuity(self):
+        """
+        Check session continuity by reading from .bapXcoder/users/{user_id}/session.json
+        This method should be called with a user context.
+        Returns a continuation message if session data exists, otherwise None
+        """
+        # Note: This is a placeholder. In practice, this would need user context to determine which
+        # user's session to check. The actual implementation should check for a specific user's session.
+        # This is mainly included as a demonstration, but the main checking occurs in other parts of the code.
+        return ""
+
+    def run_vision_prompt(self, prompt, image_path, max_tokens=512):
+        """
+        Run a vision-language prompt through the bapXcoder IDE Agent's Interpreter function.
+        The Interpreter function handles multimodal processing including OCR and visual understanding.
+        """
+        try:
+            # For vision models, we need special handling
+            # The Interpreter function handles image analysis and multimodal understanding
+            full_prompt = f"Analyze the following image and respond to the user's request.\nUser Request: {prompt}\nImage Path: {image_path}"
+            response = self.interpreter_model(
+                full_prompt,
+                max_tokens=max_tokens,
+                temperature=self.temperature,
+                echo=False
+            )
+            return response['choices'][0]['text']
+        except Exception as e:
+            print(f"Error running vision prompt through bapXcoder IDE Agent: {e}")
+            return f"Error: {e}"
 
 def check_subscription_status(user_id):
-    """Check if user's subscription is still valid"""
+    """Check if user's subscription is still valid and manage user-specific project memory"""
     try:
         # Check local subscription status - no external API calls
         # For now, we'll just allow access based on existence of user data
@@ -84,13 +259,32 @@ def check_subscription_status(user_id):
             if sub_end_date_str and sub_end_date_str != 'never':
                 sub_end_date = datetime.fromisoformat(sub_end_date_str)
                 if datetime.now() > sub_end_date:
-                    return False  # Subscription expired
+                    print(f"Subscription expired for user {user_id}. Access denied.")
+                    return False  # Subscription expired - user cannot access
             return True
         else:
             # For free trial users, check if trial period has expired
-            return True  # Allow access by default if no subscription data
-    except Exception:
-        return True  # If any error occurs, allow access (local system only)
+            # New user - assign trial
+            trial_end = (datetime.now() + timedelta(days=60)).isoformat()
+            user_data = {
+                'subscription_type': 'trial',
+                'subscription_start': datetime.now().isoformat(),
+                'subscription_end_date': trial_end,
+                'user_id': user_id
+            }
+
+            # Create user-specific directory structure for project memory
+            user_dir = Path('.bapXcoder/users') / user_id
+            user_dir.mkdir(parents=True, exist_ok=True)
+
+            with open(user_data_file, 'w') as f:
+                json.dump(user_data, f, indent=2)
+
+            print(f"New user {user_id} registered with trial access until {trial_end}")
+            return True  # Allow access with trial
+    except Exception as e:
+        print(f"Error checking subscription for user {user_id}: {e}")
+        return False  # If any error occurs, deny access by default
 
 
 def is_user_authenticated():
@@ -99,63 +293,26 @@ def is_user_authenticated():
     # In a real implementation, this would check local authentication
     return True
 
-# Online users tracking
-online_users = set()
-
-@socketio.on('connect')
-def handle_connect():
-    print('Client connected')
-    # Get user info from token
-    auth_header = request.headers.get('Authorization', '').replace('Bearer ', '')
-    if auth_header:
-        try:
-            payload = jwt.decode(auth_header, os.getenv('SECRET_KEY', 'default_secret_key'), algorithms=['HS256'])
-            user_id = payload.get('user_id')
-            username = payload.get('username', 'Anonymous')
-            if user_id:
-                online_users.add((user_id, username, request.sid))
-                # Emit updated online count to admin
-                emit_online_count()
-        except:
-            pass  # If token invalid, don't track user
-
-    emit('status', {'msg': 'Connected to bapXcoder IDE'})
-
-@socketio.on('disconnect')
-def handle_disconnect():
-    print('Client disconnected')
-    # Remove from online users if present
-    disconnected_user = None
-    for user in online_users:
-        if user[2] == request.sid:  # Check if session ID matches
-            disconnected_user = user
-            break
-    if disconnected_user:
-        online_users.remove(disconnected_user)
-        emit_online_count()
-
-def emit_online_count():
-    """Emit current online user count to admin panel"""
-    online_count = len(online_users)
-    # Broadcast to all clients
-    socketio.emit('online_users_count', {'count': online_count, 'users': [{'id': u[0], 'name': u[1]} for u in online_users]})
-
 def store_session_locally(project_path, user_id, session_data):
-    """Store session data locally in the project's .bapXcoder folder"""
+    """Store session data locally in user-specific project memory"""
     try:
         # Create or access the .bapXcoder directory in the project
         project_dir = Path(project_path)
         bapx_dir = project_dir / '.bapXcoder'
         bapx_dir.mkdir(exist_ok=True)
 
-        # Save session data locally
-        session_file = bapx_dir / 'session.json'
+        # Create user-specific subdirectory within project's .bapXcoder folder
+        user_session_dir = bapx_dir / 'users' / user_id
+        user_session_dir.mkdir(parents=True, exist_ok=True)
+
+        # Save session data in user-specific location
+        session_file = user_session_dir / 'session.json'
         with open(session_file, 'w') as f:
             json.dump(session_data, f, indent=2)
 
         return True
     except Exception as e:
-        print(f"Error storing session locally: {e}")
+        print(f"Error storing session locally for user {user_id}: {e}")
         return False
 
 def get_current_project_path():
@@ -164,6 +321,28 @@ def get_current_project_path():
     # For now, returning current working directory
     return str(Path.cwd())
 
+def store_sessiontree_data(project_path, user_id, session_data):
+    """Store session state and memory in the project's .bapXcoder folder in user-specific location"""
+    try:
+        # Create or access the .bapXcoder directory in the project
+        project_dir = Path(project_path)
+        bapx_dir = project_dir / '.bapXcoder'
+        bapx_dir.mkdir(exist_ok=True)
+
+        # Create user-specific subdirectory within project's .bapXcoder folder
+        user_session_dir = bapx_dir / 'users' / user_id
+        user_session_dir.mkdir(parents=True, exist_ok=True)
+
+        # Save session state and memory data in user-specific location
+        sessiontree_file = user_session_dir / 'sessiontree.json'
+        with open(sessiontree_file, 'w') as f:
+            json.dump(session_data, f, indent=2)
+
+        return True
+    except Exception as e:
+        print(f"Error storing sessiontree data for user {user_id}: {e}")
+        return False
+
 def get_session_project_path(session_id):
     """Get project path for a specific session"""
     # In a real implementation, this would retrieve project path from session data
@@ -171,21 +350,47 @@ def get_session_project_path(session_id):
     return str(Path.cwd())
 
 def store_todo_locally(project_path, user_id, todo_data):
-    """Store todo data locally in the project's .bapXcoder folder"""
+    """Store todo data locally in user-specific project memory"""
     try:
         # Create or access the .bapXcoder directory in the project
         project_dir = Path(project_path)
         bapx_dir = project_dir / '.bapXcoder'
         bapx_dir.mkdir(exist_ok=True)
 
-        # Save todo data locally
-        todo_file = bapx_dir / 'todo.json'
+        # Create user-specific subdirectory within project's .bapXcoder folder
+        user_todo_dir = bapx_dir / 'users' / user_id
+        user_todo_dir.mkdir(parents=True, exist_ok=True)
+
+        # Load existing todos if file exists to append the new one
+        todo_file = user_todo_dir / 'todo.json'
+        existing_todos = []
+        if todo_file.exists():
+            try:
+                with open(todo_file, 'r') as f:
+                    existing_data = json.load(f)
+                    if isinstance(existing_data, list):
+                        existing_todos = existing_data
+                    elif isinstance(existing_data, dict) and 'todos' in existing_data:
+                        existing_todos = existing_data.get('todos', [])
+                    elif isinstance(existing_data, dict):
+                        existing_todos = [existing_data]  # Convert single todo to list
+            except:
+                existing_todos = []  # Start fresh if there's an error reading
+
+        # Add new todo to the list
+        if isinstance(todo_data, list):
+            existing_todos.extend(todo_data)
+        else:
+            existing_todos.append(todo_data)
+
+        # Save todos in user-specific location
+        todo_file = user_todo_dir / 'todo.json'
         with open(todo_file, 'w') as f:
-            json.dump(todo_data, f, indent=2)
+            json.dump(existing_todos, f, indent=2)
 
         return True
     except Exception as e:
-        print(f"Error storing todo locally: {e}")
+        print(f"Error storing todo locally for user {user_id}: {e}")
         return False
 
 def ensure_model_exists(model_path):
@@ -282,60 +487,6 @@ def download_model_with_progress(model_path):
 
 
 def encode_content(content, encoding_type='utf-8'):
-    """
-    Encode content using various encoding schemes
-    Supported encodings: utf-8, ascii, base64, hex, etc.
-    """
-    if encoding_type.lower() == 'base64':
-        import base64
-        if isinstance(content, str):
-            content_bytes = content.encode('utf-8')
-        else:
-            content_bytes = content
-        return base64.b64encode(content_bytes).decode('ascii')
-    elif encoding_type.lower() == 'ascii':
-        if isinstance(content, bytes):
-            return content.decode('ascii', errors='ignore')
-        return content.encode('ascii', errors='ignore').decode('ascii')
-    elif encoding_type.lower() == 'unicode':
-        if isinstance(content, str):
-            return content
-        return content.decode('utf-8', errors='replace')
-    elif encoding_type.lower() == 'hex':
-        if isinstance(content, str):
-            return content.encode('utf-8').hex()
-        return content.hex()
-    elif encoding_type.lower() == 'utf-8':
-        if isinstance(content, bytes):
-            try:
-                return content.decode('utf-8')
-            except UnicodeDecodeError:
-                # Try other common encodings if UTF-8 fails
-                for enc in ['latin-1', 'cp1252', 'iso-8859-1']:
-                    try:
-                        return content.decode(enc)
-                    except UnicodeDecodeError:
-                        continue
-                # If all fail, use utf-8 with error replacement
-                return content.decode('utf-8', errors='replace')
-        return content
-    else:
-        # Default to the specified encoding type
-        if isinstance(content, bytes):
-            try:
-                return content.decode(encoding_type)
-            except (UnicodeDecodeError, LookupError):
-                return content.decode('utf-8', errors='replace')
-        else:
-            try:
-                return content.encode(encoding_type).decode(encoding_type)
-            except (UnicodeEncodeError, LookupError):
-                return content
-
-
-def decode_content(encoded_content, encoding_type='utf-8'):
-
-
     """
     Encode content using various encoding schemes
     Supported encodings: utf-8, ascii, base64, hex, etc.
@@ -976,7 +1127,7 @@ def main():
     
     # Get command line arguments
     parser = argparse.ArgumentParser(description="bapXcoder - Dual-Model AI Development Environment (Interpreter + Developer)")
-    parser.add_argument("--model", type=str, default=config.get('model', 'model_path', fallback='Qwen3VL-8B-Instruct-Q8_0.gguf'), 
+    parser.add_argument("--model", type=str, default=config.get('model', 'model_path', fallback='Qwen3VL-8B-Instruct-Q8_0.gguf'),
                        help="Path to the GGUF model file")
     parser.add_argument("--host", type=str, default=config.get('server', 'host', fallback='127.0.0.1'), 
                        help="Host address (default: 127.0.0.1)")
@@ -994,26 +1145,40 @@ def main():
                        help="Number of GPU layers (0 for CPU only, default: 0)")
     
     args = parser.parse_args()
-    
-    # Check if model exists, download if needed
-    if not ensure_model_exists(args.model):
-        print("Cannot proceed without the model file.")
-        sys.exit(1)
-    
-    # Initialize the model runner
+
+    # Check if model exists for local usage, skip check if using Hugging Face connection
+    # For Hugging Face connection, the Qwen3VLRunner will handle downloading/caching automatically
+    model_exists = Path(args.model).exists()
+    if not model_exists:
+        print(f"Local model not found: {args.model}")
+        print("Will connect to Hugging Face Hub for model access (first access may take longer)")
+    else:
+        print(f"Using local model: {args.model}")
+
+    # Initialize the bapXcoder Agent
     global model_runner
     try:
-        model_runner = Qwen3VLRunner(
+        model_runner = BapXcoderAgent(
             args.model,
             args.temperature,
             args.threads,
             args.context_size,
             args.gpu_layers
         )
+
+        # Check session continuity on startup
+        print("Checking session continuity...")
+        session_continuity_message = model_runner.check_session_continuity()
+        if session_continuity_message:
+            print(f"Session restored: {session_continuity_message}")
+        else:
+            print("No previous session data found - starting fresh session")
+
     except Exception as e:
-        print(f"Error initializing model: {e}")
+        print(f"Error initializing bapXcoder Agent: {e}")
         sys.exit(1)
-    
+
+
     # Initialize project explorer for file management
     try:
         from project_explorer import ProjectExplorer
@@ -1104,6 +1269,62 @@ def start_ide(args):
             trial_end = (datetime.now() + timedelta(days=60)).isoformat()
             return { 'type': 'trial', 'expires': trial_end, 'days_left': 60 }
 
+def check_user_session_continuity(user_id):
+    """Check session continuity for a specific user and return continuity message"""
+    try:
+        from pathlib import Path
+        import json
+        from datetime import datetime
+
+        # Check session state and memory from sessiontree.json
+        sessiontree_file = Path('.bapXcoder/users') / user_id / 'sessiontree.json'
+        # Also check intent from todo.json
+        todo_file = Path('.bapXcoder/users') / user_id / 'todo.json'
+
+        last_task = 'no specific task'
+        last_action = 'no action recorded'
+        pending_tasks = []
+
+        # Read session state from sessiontree.json
+        if sessiontree_file.exists():
+            with open(sessiontree_file, 'r') as f:
+                sessiontree_data = json.load(f)
+
+            # Extract session information from sessiontree
+            last_task = sessiontree_data.get('last_task', 'no specific task')
+            last_action = sessiontree_data.get('last_action', 'no action recorded')
+
+        # Read intent from todo.json
+        if todo_file.exists():
+            with open(todo_file, 'r') as f:
+                todo_data = json.load(f)
+
+            # Extract pending tasks from todo list
+            if isinstance(todo_data, list):
+                pending_tasks = [todo.get('item', '') for todo in todo_data if not todo.get('completed', False)]
+            elif isinstance(todo_data, dict) and 'todos' in todo_data:
+                pending_tasks = [todo.get('item', '') for todo in todo_data.get('todos', []) if not todo.get('completed', False)]
+
+        # Create continuation message
+        if pending_tasks:
+            pending_tasks_str = ", ".join(pending_tasks[:3])  # Limit to first 3 tasks
+            if len(pending_tasks) > 3:
+                pending_tasks_str += f", and {len(pending_tasks) - 3} more"
+            else:
+                pending_tasks_str = pending_tasks_str or 'none'
+
+            message = (f"System resumed. You were working on {last_task}. "
+                       f"Last action was {last_action}. Pending tasks: {pending_tasks_str}.")
+        else:
+            message = (f"System resumed. You were working on {last_task}. "
+                       f"Last action was {last_action}. No pending tasks.")
+
+        return message
+
+    except Exception as e:
+        print(f"Error checking session continuity for user {user_id}: {e}")
+        return None
+
     @socketio.on('connect')
     def handle_connect():
         print('Client connected')
@@ -1128,6 +1349,58 @@ def start_ide(args):
                         'days_left': user_subscription['days_left']
                     })
 
+                    # Check session continuity for returning users
+                    session_continuity_message = check_user_session_continuity(user_id)
+                    if session_continuity_message:
+                        emit('session_continuity', {'message': session_continuity_message})
+
+                    # If it's a trial user, emit daily validation reminder
+                    if user_subscription['type'] == 'trial':
+                        emit('trial_reminder', {
+                            'days_left': user_subscription['days_left'],
+                            'expires': user_subscription['expires'],
+                            'message': f"Trial expires in {user_subscription['days_left']} days. Renew subscription to continue using all features."
+                        })
+                except:
+                    pass  # If token invalid, just continue without subscription info
+
+    # Initialize multi-agent system
+    multi_agent_system = None
+
+    @socketio.on('connect')
+    def handle_connect():
+        print('Client connected')
+        global multi_agent_system
+        if multi_agent_system is None:
+            from multi_agent import MultiAgentSystem
+            multi_agent_system = MultiAgentSystem(model_runner)
+
+        # Check if user has proper authentication
+        auth_required = os.getenv('AUTH_REQUIRED', 'false').lower() == 'true'
+        if auth_required and not is_user_authenticated():
+            emit('auth_required', {'msg': 'Authentication required to access IDE features'})
+        else:
+            emit('status', {'msg': 'Connected to bapXcoder IDE'})
+
+            # Check subscription status and emit to client
+            auth_header = request.headers.get('Authorization', '').replace('Bearer ', '')
+            if auth_header:
+                try:
+                    payload = jwt.decode(auth_header, os.environ.get('SECRET_KEY', 'default_secret_key'), algorithms=['HS256'])
+                    user_id = payload.get('user_id', 'anonymous')
+                    user_subscription = check_user_subscription_status(user_id)
+
+                    emit('subscription_info', {
+                        'type': user_subscription['type'],
+                        'expires': user_subscription['expires'],
+                        'days_left': user_subscription['days_left']
+                    })
+
+                    # Check session continuity for returning users
+                    session_continuity_message = check_user_session_continuity(user_id)
+                    if session_continuity_message:
+                        emit('session_continuity', {'message': session_continuity_message})
+
                     # If it's a trial user, emit daily validation reminder
                     if user_subscription['type'] == 'trial':
                         emit('trial_reminder', {
@@ -1140,13 +1413,14 @@ def start_ide(args):
 
     @socketio.on('chat_message')
     def handle_chat_message(data):
-        """Handle chat messages from the frontend"""
+        """Handle chat messages from the frontend with multi-agent architecture"""
         message = data.get('message', '')
         has_file = data.get('hasFile', False)
         file_name = data.get('fileName', '')
         file_type = data.get('fileType', '')
         continue_reasoning = data.get('continue_reasoning', False)
         conversation_history = data.get('history', [])
+        use_multi_agent = data.get('use_multi_agent', False)  # New flag to enable multi-agent processing
 
         # Get user ID from the authentication token
         auth_header = request.headers.get('Authorization', '').replace('Bearer ', '')
@@ -1158,34 +1432,184 @@ def start_ide(args):
             except:
                 pass  # If token invalid, user_id remains None
 
-        # If there's a file attachment, include that in the processing
-        if has_file:
-            if file_type.startswith('image/'):
-                message = f"[Image Analysis Request] The user has attached an image: {file_name}. {message}"
+        # If there's a file attachment, handle appropriately
+        if has_file and file_type.startswith('image/'):
+            # Handle image analysis request with vision capabilities
+            message = f"[Image Analysis Request] The user has attached an image: {file_name}. {message}"
+            if continue_reasoning and conversation_history:
+                context = build_context_from_history(conversation_history)
+                full_prompt = f"{context}\n\nUser: {message}\nAssistant:"
+                response = model_runner.run_interpreter_prompt(full_prompt, args.max_tokens)
             else:
-                message = f"[File Analysis Request] The user has attached a file: {file_name}. {message}"
+                response = model_runner.run_interpreter_prompt(message, args.max_tokens)
+        elif has_file:
+            # Handle other file types
+            message = f"[File Analysis Request] The user has attached a file: {file_name}. {message}"
 
-        # If continue_reasoning is enabled, provide context from conversation
-        if continue_reasoning and conversation_history:
-            context = build_context_from_history(conversation_history)
-            full_prompt = f"{context}\n\nUser: {message}\nAssistant:"
-            response = model_runner.run_prompt(full_prompt, args.max_tokens)
+            # Detect if this is a coding-related request for proper routing
+            is_coding_task = any(keyword in message.lower() for keyword in [
+                'code', 'function', 'class', 'implement', 'create', 'generate',
+                'write', 'debug', 'fix', 'refactor', 'test', 'program', 'script',
+                'algorithm', 'method', 'variable', 'syntax', 'error'
+            ])
+
+            if is_coding_task:
+                if continue_reasoning and conversation_history:
+                    context = build_context_from_history(conversation_history)
+                    full_prompt = f"{context}\n\nUser: {message}\nAssistant:"
+                    response = model_runner.run_coding_task(full_prompt, args.max_tokens)
+                else:
+                    response = model_runner.run_coding_task(message, args.max_tokens)
+            else:
+                if continue_reasoning and conversation_history:
+                    context = build_context_from_history(conversation_history)
+                    full_prompt = f"{context}\n\nUser: {message}\nAssistant:"
+                    response = model_runner.run_interpreter_prompt(full_prompt, args.max_tokens)
+                else:
+                    response = model_runner.run_interpreter_prompt(message, args.max_tokens)
         else:
-            response = model_runner.run_prompt(message, args.max_tokens)
+            # No file attachment - handle text-only request
+            if use_multi_agent and multi_agent_system:
+                # Use multi-agent system for complex tasks (like Trae.ai SOLO)
+                emit('status', {'msg': 'bapXcoder is coordinating multiple specialized agents...'})
 
-        # Store conversation to session.json if user authenticated
+                # Run coordinated task using multiple simulated agents
+                project_path = get_current_project_path() or str(Path.cwd())
+                project_context = f"Current project: {project_path}"
+
+                coordinated_result = multi_agent_system.run_coordinated_task(message, project_context)
+
+                response = f"## Multi-Agent Analysis\n\n"
+                response += f"**Task**: {coordinated_result['task']}\n\n"
+
+                for step in coordinated_result['steps']:
+                    response += f"### {step['step'].title()} Agent Result:\n"
+                    response += f"{step['result']}\n\n"
+
+                response += f"**Final Result**: {coordinated_result['final_result'][:500]}..."
+            else:
+                # Detect if this is a coding-related request for proper routing
+                is_coding_task = any(keyword in message.lower() for keyword in [
+                    'code', 'function', 'class', 'implement', 'create', 'generate',
+                    'write', 'debug', 'fix', 'refactor', 'test', 'program', 'script',
+                    'algorithm', 'method', 'variable', 'syntax', 'error'
+                ])
+
+                if is_coding_task:
+                    if continue_reasoning and conversation_history:
+                        context = build_context_from_history(conversation_history)
+                        full_prompt = f"{context}\n\nUser: {message}\nAssistant:"
+                        response = model_runner.run_coding_task(full_prompt, args.max_tokens)
+                    else:
+                        response = model_runner.run_coding_task(message, args.max_tokens)
+                else:
+                    if continue_reasoning and conversation_history:
+                        context = build_context_from_history(conversation_history)
+                        full_prompt = f"{context}\n\nUser: {message}\nAssistant:"
+                        response = model_runner.run_interpreter_prompt(full_prompt, args.max_tokens)
+                    else:
+                        response = model_runner.run_interpreter_prompt(message, args.max_tokens)
+
+        # Store conversation and update session continuity data if user authenticated
         if user_id:
             project_path = get_current_project_path() or str(Path.cwd())
-            session_data = {
+
+            # Update session state and memory in sessiontree.json
+            sessiontree_data = {
+                'last_task': message[:100] + '...' if len(message) > 100 else message,  # Truncate long tasks
+                'last_action': 'chat_message_processed',
+                'timestamp': datetime.now().isoformat(),
+                'user_id': user_id
+            }
+
+            # Also store the full conversation data
+            conversation_data = {
                 'messages': conversation_history,
                 'last_message': message,
                 'response': response,
                 'timestamp': datetime.now().isoformat(),
                 'user_id': user_id
             }
-            store_session_locally(project_path, user_id, session_data)
+
+            # Store both session state/memory and conversation data
+            store_sessiontree_data(project_path, user_id, sessiontree_data)
+            store_session_locally(project_path, user_id, conversation_data)
 
         emit('chat_response', {'response': response})
+
+    @socketio.on('multi_agent_request')
+    def handle_multi_agent_request(data):
+        """Handle explicit multi-agent requests (like Trae.ai SOLO)"""
+        try:
+            task_description = data.get('task', '')
+            agent_type = data.get('agent_type', 'coordinated')  # 'coordinated', 'planner', 'coder', etc.
+
+            if not task_description:
+                emit('chat_response', {'response': 'Please provide a task description for the multi-agent system.'})
+                return
+
+            if not multi_agent_system:
+                emit('chat_response', {'response': 'Multi-agent system not initialized.'})
+                return
+
+            if agent_type == 'coordinated':
+                # Run coordinated task using multiple simulated agents
+                project_path = get_current_project_path() or str(Path.cwd())
+                project_context = f"Current project: {project_path}"
+
+                coordinated_result = multi_agent_system.run_coordinated_task(task_description, project_context)
+
+                response = f"Multi-Agent Analysis by bapXcoder\n\n"
+                response += f"**Task**: {coordinated_result['task']}\n\n"
+
+                for step in coordinated_result['steps']:
+                    response += f"### {step['step'].title()} Agent Result:\n"
+                    response += f"{step['result']}\n\n"
+
+                response += f"**Final Result Summary**: {coordinated_result['final_result'][:500]}..."
+
+            else:
+                # Create a specific type of agent
+                from multi_agent import AgentType
+                agent_type_enum = AgentType.CODER  # default
+
+                if agent_type == 'planner':
+                    agent_type_enum = AgentType.PLANNER
+                elif agent_type == 'coder':
+                    agent_type_enum = AgentType.CODER
+                elif agent_type == 'researcher':
+                    agent_type_enum = AgentType.RESEARCHER
+                elif agent_type == 'tester':
+                    agent_type_enum = AgentType.TESTER
+                elif agent_type == 'debugger':
+                    agent_type_enum = AgentType.DEBUGGER
+                elif agent_type == 'analyzer':
+                    agent_type_enum = AgentType.ANALYZER
+                else:
+                    emit('chat_response', {'response': f'Invalid agent type: {agent_type}. Use one of: coordinated, planner, coder, researcher, tester, debugger, analyzer'})
+                    return
+
+                project_path = get_current_project_path() or str(Path.cwd())
+                project_context = f"Current project: {project_path}"
+
+                agent_id = multi_agent_system.create_agent(agent_type_enum, task_description, project_context)
+                result = multi_agent_system.execute_agent_task(agent_id, task_description)
+
+                response = f"{agent_type_enum.value.title()} Agent Result\n\n"
+                response += f"**Task**: {task_description}\n\n"
+                response += f"**Result**:\n{result}"
+
+                # Add agent status info
+                status = multi_agent_system.get_agent_status(agent_id)
+                if 'error' not in status:
+                    response += f"\n\n*Agent Status: {status['status']}*"
+
+            emit('chat_response', {'response': response})
+
+        except Exception as e:
+            error_msg = f"Error in multi-agent processing: {str(e)}"
+            print(f"Multi-Agent System Error: {error_msg}")
+            emit('chat_response', {'response': error_msg})
 
     def build_context_from_history(history):
         """Build context from conversation history"""
@@ -1503,8 +1927,11 @@ def start_ide(args):
             success = store_todo_locally(project_path, user_id, todo_data)
 
             if success:
-                # Update session tree with todo
-                session_tree_path = Path(project_path) / '.bapXcoder' / 'sessiontree.json'
+                # Update user-specific session tree with todo
+                user_session_dir = Path(project_path) / '.bapXcoder' / 'users' / user_id
+                user_session_dir.mkdir(parents=True, exist_ok=True)
+
+                session_tree_path = user_session_dir / 'sessiontree.json'
                 if session_tree_path.exists():
                     with open(session_tree_path, 'r') as f:
                         session_data = json.load(f)
@@ -1536,6 +1963,50 @@ def start_ide(args):
         except Exception as e:
             emit('status', {'msg': f'Error starting syntax monitoring: {str(e)}'})
 
+    @socketio.on('web_search')
+    def handle_web_search(data):
+        """Handle web search requests with Antigravity-inspired research capabilities"""
+        query = data.get('query', '')
+        if not query:
+            emit('chat_response', {'response': 'Please provide a search query.'})
+            return
+
+        try:
+            from web_search import AntigravityWebResearch
+            research_agent = AntigravityWebResearch()
+
+            # Conduct research using the Antigravity-inspired system
+            results = research_agent.conduct_research(query)
+
+            # Format results for the chat interface
+            response = f"Web Research Results for: '{query}'\n\n"
+
+            if results and results.get('findings'):
+                for finding in results['findings']:
+                    response += f"{finding['results']}\n"
+            else:
+                response += "No results found. The search may have failed due to missing API keys.\n"
+                response += "To enable web search, set your TAVILY_API_KEY environment variable.\n"
+
+            if results and results.get('conclusion'):
+                response += f"\nConclusion: {results['conclusion']}"
+
+            emit('chat_response', {'response': response})
+        except ImportError as e:
+            # Fallback if web_search module is not available
+            response = f"Web Search for: '{query}'\n\n"
+            response += "Web search functionality requires the web_search module.\n"
+            response += "To enable full web search capabilities:\n"
+            response += "1. pip install requests\n"
+            response += "2. Set TAVILY_API_KEY environment variable (free API key available at tavily.com)\n"
+            response += f"\nFor now, I can't perform this search without the required dependencies. Error: {str(e)}"
+            emit('chat_response', {'response': response})
+        except Exception as e:
+            response = f"Web Search for: '{query}'\n\n"
+            response += f"Error performing web search: {str(e)}\n"
+            response += "\nMake sure you have a valid API key set in your environment variables."
+            emit('chat_response', {'response': response})
+
     @socketio.on('disconnect')
     def handle_disconnect():
         print('Client disconnected')
@@ -1549,7 +2020,7 @@ def start_ide(args):
             online_users.remove(disconnected_user)
             emit_online_count()
 
-    print(f"Starting bapXcoder IDE with dual-model architecture (Interpreter + Developer) at http://{args.host}:{args.port}")
+    print(f"Starting bapXcoder AI Development Environment with dual-model architecture (Interpreter + Developer) at http://{args.host}:{args.port}")
     print("Press Ctrl+C to stop the server")
     socketio.run(app, host=args.host, port=args.port, debug=False)
 

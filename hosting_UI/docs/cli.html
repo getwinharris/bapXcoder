@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bapXcoder CLI Interface - Command-Line AI Development Environment</title>
+    <meta name="description" content="Complete CLI documentation for bapXcoder with dual-model architecture and persistent project memory." />
+    <meta name="keywords" content="bapXcoder CLI, AI CLI, command-line IDE, terminal AI, CLI development tools" />
+    <link rel="canonical" href="https://docs.coder.bapx.in/cli.html" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0f13 0%, #1a1a25 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(124, 92, 255, 0.2);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #7c5cff;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #7c5cff;
+        }
+        
+        .subtitle {
+            color: #a0a0c0;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        
+        h2 {
+            color: #7c5cff;
+            margin: 30px 0 15px 0;
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            color: #50fa7b;
+            margin: 20px 0 10px 0;
+            font-size: 1.3rem;
+        }
+        
+        .cli-section {
+            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .code-block {
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .terminal-header {
+            background: rgba(124, 92, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 6px 6px 0 0;
+            font-size: 0.8rem;
+            color: #7c5cff;
+        }
+        
+        .cli-command {
+            background: rgba(80, 250, 123, 0.05);
+            border-left: 4px solid #50fa7b;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .command-syntax {
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+        }
+        
+        .parameter-table th, .parameter-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2d2d40;
+        }
+        
+        .parameter-table th {
+            background: rgba(124, 92, 255, 0.2);
+            color: #7c5cff;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(124, 92, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .nav-links a {
+            color: #7c5cff;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: rgba(124, 92, 255, 0.2);
+        }
+        
+        .nav-links a:hover {
+            background: rgba(124, 92, 255, 0.3);
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid rgba(124, 92, 255, 0.2);
+            color: #a0a0c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">⬡ bapXcoder</div>
+            <h1>CLI Interface</h1>
+            <p class="subtitle">Command-line AI development with dual-model integration and persistent project memory</p>
+        </header>
+        
+        <main class="content">
+            <h2>Overview of CLI Interface</h2>
+            <p>The bapXcoder CLI interface provides direct terminal access to the dual-model AI development environment with full project memory integration. The command-line interface maintains all the features of the web interface while offering the flexibility of terminal-based development workflows.</p>
+            
+            <div class="cli-highlights">
+                <p><strong>Core Principle:</strong> CLI-first architecture with web UI as an overlay - all functionality available through terminal commands with dual-model AI integration and persistent session memory.</p>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>⌨️ Terminal Native</h4>
+                    <p>Full IDE functionality accessible via command line</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🤖 Dual-Model Access</h4>
+                    <p>Both Interpreter and Developer functions available through CLI</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>💾 Project Memory</h4>
+                    <p>CLI operations maintain persistent project context</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>⚡ Session Continuity</h4>
+                    <p>Terminal sessions maintain context across restarts</p>
+                </div>
+            </div>
+            
+            <h2>Getting Started with CLI</h2>
+            
+            <div class="cli-section">
+                <h3>Basic Commands</h3>
+                
+                <div class="cli-command">
+                    <h4>Start bapXcoder CLI</h4>
+                    <div class="command-syntax">
+./coder.bapx --cli
+                    </div>
+                    <p>Starts the bapXcoder IDE in CLI-only mode with dual-model access and session continuity.</p>
+                </div>
+                
+                <div class="cli-command">
+                    <h4>Start with Project Directory</h4>
+                    <div class="command-syntax">
+./coder.bapx --cli --project /path/to/your/project
+                    </div>
+                    <p>Opens bapXcoder IDE in CLI mode targeting a specific project with project memory.</p>
+                </div>
+                
+                <div class="cli-command">
+                    <h4>Full CLI with Parameters</h4>
+                    <div class="command-syntax">
+./coder.bapx --cli --host 0.0.0.0 --port 8080 --model bapXcoder-VL-8B-Instruct-Q8_0.gguf
+                    </div>
+                    <p>Starts CLI with custom host, port, and model settings.</p>
+                </div>
+                
+                <table class="parameter-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>--cli</td>
+                            <td>flag</td>
+                            <td>false</td>
+                            <td>Run in command-line only mode without web interface</td>
+                        </tr>
+                        <tr>
+                            <td>--project</td>
+                            <td>string</td>
+                            <td>current directory</td>
+                            <td>Specify project directory to work on</td>
+                        </tr>
+                        <tr>
+                            <td>--host</td>
+                            <td>string</td>
+                            <td>127.0.0.1</td>
+                            <td>Host address for web interface (when not using --cli)</td>
+                        </tr>
+                        <tr>
+                            <td>--port</td>
+                            <td>integer</td>
+                            <td>7860</td>
+                            <td>Port for web interface (when not using --cli)</td>
+                        </tr>
+                        <tr>
+                            <td>--model</td>
+                            <td>string</td>
+                            <td>bapXcoder-VL-8B-Instruct-Q8_0.gguf</td>
+                            <td>Path to GGUF model file</td>
+                        </tr>
+                        <tr>
+                            <td>--threads</td>
+                            <td>integer</td>
+                            <td>4</td>
+                            <td>Number of CPU threads for model processing</td>
+                        </tr>
+                        <tr>
+                            <td>--context-size</td>
+                            <td>integer</td>
+                            <td>4096</td>
+                            <td>Context size in tokens for model processing</td>
+                        </tr>
+                        <tr>
+                            <td>--gpu-layers</td>
+                            <td>integer</td>
+                            <td>0</td>
+                            <td>Number of GPU layers (0 for CPU only)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h2>CLI Development Workflow</h2>
+            
+            <div class="cli-workflow">
+                <h3>Terminal-Based Development Process</h3>
+                
+                <p>The CLI workflow seamlessly integrates with the dual-model architecture:</p>
+                
+                <div class="terminal-diagram">
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   User Input   │───▶│  Interpreter     │───▶│   Developer     │
+│   (Terminal)   │    │  Function (CLI)  │    │  Function (CLI) │
+│                │    │ • Context        │    │ • Code Gen      │
+│ bash$ ai "..." │    │ • Communication  │    │ • Implementation│
+│                │    │ • Multimodal     │    │ • Validation    │
+└─────────────────┘    │ • Instructions   │    │ • Execution     │
+                      └──────────────────┘    └─────────────────┘
+                           │                       │
+                           ▼                       ▼
+                    ┌─────────────────┐    ┌─────────────────┐
+                    │  Project Memory │    │  File System    │
+                    │  (.bapXcoder)   │    │  Operations     │
+                    │ • sessiontree.json│   │ • Create files  │
+                    │ • todo.json     │    │ • Modify files  │
+                    │ • session continuity│  │ • Git ops     │
+                    └─────────────────┘    └─────────────────┘
+                </div>
+                
+                <h4>Sample CLI Development Session</h4>
+                
+                <div class="code-block">
+$ ./coder.bapx --cli --project ./my-awesome-project
+bapXcoder CLI Mode Activated
+System resumed. You were working on implementing user authentication. Last action was debugging OAuth flow. Pending tasks: Fix token refresh, Add rate limiting, Write tests.
+
+bapXcoder> Hi there! I need to implement a user profile page.
+Interpreter: I'll help you implement a user profile page. Let me analyze your project structure first...
+Developer: [Generates React component with proper state management]
+Interpreter: I've created the UserProfile component with authentication context. It follows the existing patterns in your project. Would you like me to explain the implementation?
+
+bapXcoder> Yes, and I want it to connect to the existing auth system.
+Interpreter: The component now connects to your existing AuthenticationContext and UserService. Both the Interpreter and Developer functions have updated your project memory with this implementation detail.
+
+bapXcoder> /todo Add: Implement profile image upload - Priority: high
+Interpreter: Added "Implement profile image upload" to your project's todo.json with high priority.
+                </div>
+            </div>
+            
+            <h2>File Operations via CLI</h2>
+            
+            <div class="cli-section">
+                <h3>Integrated File Management</h3>
+                
+                <p>CLI provides direct access to all file operations with AI assistance:</p>
+                
+                <h4>File Reading and Analysis</h4>
+                <div class="code-block">
+bapXcoder> /read src/services/auth.service.js
+Interpreter: Reading src/services/auth.service.js to understand your current auth implementation...
+[Displays file content with AI analysis of key functions and patterns]
+                </div>
+                
+                <h4>File Creation and Modification</h4>
+                <div class="code-block">
+bapXcoder> Create a new React component for user profile management
+Developer: [Generates code with proper patterns from existing codebase]
+Interpreter: [Validates security and consistency]
+Interpreter: Generated UserProfileManagement component following existing patterns. Preview:
+
+  --- src/components/UserProfile.jsx ---
+  + import { useState, useContext } from 'react';
+  + import { AuthContext } from '../contexts/AuthContext';
+  + 
+  + const UserProfile = () => {
+  +   const { user, updateUser } = useContext(AuthContext);
+  +   const [profile, setProfile] = useState(user.profile);
+  +   // ... implementation
+  + };
+  + 
+  + export default UserProfile;
+
+Apply changes? (Y/n): y
+Changes applied successfully. Updated sessiontree.json with new component creation.
+                </div>
+                
+                <h4>Project Navigation</h4>
+                <p>Advanced project navigation commands:</p>
+                <ul>
+                    <li><code>/ls</code> - List project files with intelligence</li>
+                    <li><code>/find</code> - Search for patterns across files</li>
+                    <li><code>/grep</code> - Advanced pattern matching</li>
+                    <li><code>/tree</code> - Show project structure</li>
+                    <li><code>/cd</code> - Navigate project directories</li>
+                    <li><code>/pwd</code> - Show current project context</li>
+                </ul>
+            </div>
+            
+            <h2>Memory and Session Management</h2>
+            
+            <div class="cli-section">
+                <h3>CLI-Specific Memory Commands</h3>
+                
+                <p>All CLI operations maintain the same persistent memory system:</p>
+                
+                <h4>Session Continuity Commands</h4>
+                <div class="cli-command">
+                    <h4>Check Session Continuity</h4>
+                    <div class="command-syntax">
+/continuity
+                    </div>
+                    <p>Shows your current session state and what you were working on last.</p>
+                </div>
+                
+                <div class="cli-command">
+                    <h4>Check Todo List</h4>
+                    <div class="command-syntax">
+/todo list
+                    </div>
+                    <p>Shows pending tasks from your project's todo.json file.</p>
+                </div>
+                
+                <div class="cli-command">
+                    <h4>Add Todo Item</h4>
+                    <div class="command-syntax">
+/todo add "Implement user settings page" -p high -c feature
+                    </div>
+                    <p>Adds a task to your project's todo.json with priority and category.</p>
+                </div>
+                
+                <h4>Memory Structure in CLI Mode</h4>
+                
+                <div class="code-block">
+.bapXcoder/
+└── users/
+    └── {user_id}/
+        ├── sessiontree.json    # CLI session state and memory
+        ├── todo.json          # CLI todo management
+        ├── validation_log.json # CLI testing and validation results
+        └── cli_session.json   # Terminal-specific session data
+                </div>
+                
+                <p>CLI operations update the same memory files used by the web interface, ensuring continuity across interfaces.</p>
+            </div>
+            
+            <h2>Advanced CLI Features</h2>
+            
+            <div class="cli-advanced">
+                <h3>Power User Commands</h3>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>/reason</h4>
+                        <p>Continue complex reasoning across multiple CLI commands</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>/search</h4>
+                        <p>Web research functionality from terminal</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>/voice</h4>
+                        <p>Voice input/output commands</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>/image</h4>
+                        <p>Upload and analyze images from CLI</p>
+                    </div>
+                </div>
+                
+                <h4>Development Automation</h4>
+                
+                <div class="code-block">
+# Create multiple files for a feature
+bapXcoder> /bulk-create "user-profile" --files "component,service,test" --language react
+
+# Run AI-assisted testing
+bapXcoder> /test-run --target src/components/UserProfile.jsx --coverage
+
+# Generate documentation
+bapXcoder> /document --target src/services/user.service.js --format jsdoc
+
+# Refactor code with AI assistance
+bapXcoder> /refactor --target src/utils/helpers.js --pattern "functional to class-based"
+                </div>
+            </div>
+            
+            <h2>Coding Task Management</h2>
+            
+            <div class="cli-section">
+                <h3>AI-Assisted Development Tasks</h3>
+                
+                <p>CLI provides specialized coding task management:</p>
+                
+                <h4>Coding Task Workflow</h4>
+                
+                <div class="terminal-diagram">
+Developer Task Flow via CLI:
+1. User enters request: "Implement login with JWT"
+2. Interpreter analyzes project context, existing auth files
+3. Interpreter determines if Developer function needed
+4. If needed, Interpreter sends structured request to Developer  
+5. Developer implements login functionality following project patterns
+6. Interpreter validates and checks security of generated code
+7. Interpreter presents diff for user approval
+8. Upon approval, changes applied and memory updated
+9. sessiontree.json updated with "Implemented login with JWT"
+10. todo.json updated with "Add password reset" as next priority
+                </div>
+                
+                <h4>Task Automation Commands</h4>
+                
+                <div class="code-block">
+# Create a project plan with tasks
+bapXcoder> /plan "Implement user authentication system" --breakdown --tasks
+
+# Run code analysis
+bapXcoder> /analyze --target src/ --issues security,performance,bugs
+
+# Generate tests for existing code
+bapXcoder> /test-gen --target src/services/auth.service.js --type integration
+
+# Refactor with safety checks
+bapXcoder> /refactor-safe --target src/models/user.js --operation "add validation schema"
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <a href="index.html">← Documentation Home</a>
+                <a href="continuity.html">← Previous: Session Continuity</a>
+                <a href="api.html">Next: API Integration →</a>
+            </div>
+            
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Can CLI mode access both Interpreter and Developer functions?</div>
+                <p>A: Yes, CLI mode has full access to both internal functions with the same dual-model architecture as the web interface.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Does CLI maintain session continuity like the web interface?</div>
+                <p>A: Yes, CLI uses the same sessiontree.json and todo.json files for persistent session memory.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Can I switch between CLI and web interface without losing context?</div>
+                <p>A: Yes, both interfaces share the same project memory system for seamless continuity.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Are CLI commands subject to the same licensing as GUI usage?</div>
+                <p>A: Yes, all access methods (GUI, CLI, API) consume from the same license quota and subscription tier.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: How does file path security work in CLI mode?</div>
+                <p>A: All CLI operations are constrained to the current project directory with the same security boundaries as GUI.</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025 bapXcoder CLI Interface Documentation. All rights reserved.</p>
+            <p>Part of the bapX Media Hub ecosystem.</p>
+        </footer>
+    </div>
+</body>
+</html>

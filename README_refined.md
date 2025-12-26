@@ -1,17 +1,17 @@
 # bapXcoder - Advanced AI-Powered PWA IDE
 
-bapXcoder is an advanced, cross-platform PWA (Progressive Web App) Integrated Development Environment featuring the "bapXcoder" AI persona. This comprehensive multimodal AI-powered development environment includes chat interface, voice input/output, image analysis (OCR), encoding-aware text processing (Base64, ASCII, Unicode, etc.), web search, Git integration with OAuth, and all necessary tools for AI development. The project uses a dual-model architecture with Interpreter model (Qwen3-VL) handling user communication and context management, and Developer model (Qwen3-Coder) for specialized coding tasks, connecting via llama.cpp to models. Works on Mac, Windows, Linux and mobile devices through any modern web browser.
+bapXcoder is an advanced, cross-platform PWA (Progressive Web App) Integrated Development Environment featuring the "bapXcoder" AI persona. This comprehensive multimodal AI-powered development environment includes chat interface, voice input/output, image analysis (OCR), encoding-aware text processing (Base64, ASCII, Unicode, etc.), web search, Git integration with OAuth, and all necessary tools for AI development. The project uses a dual-model architecture with Interpreter model (bapXcoder-VL) handling user communication and context management, and Developer model (bapXcoder-Coder) for specialized coding tasks, connecting via llama.cpp to models. Works on Mac, Windows, Linux and mobile devices through any modern web browser. 
 
 ## Key Architecture: Dual-Model Pipeline
 
 The bapXcoder project implements a sophisticated dual-model architecture:
 
-### Interpreter Model (Qwen3-VL)
+### Interpreter Model (bapXcoder-VL)
 - **Handles**: All user communication, multimodal processing, OCR, voice input/output, web research
 - **Responsibility**: Maintains session context, processes user input, manages project state
 - **Connection**: Via llama.cpp runtime to Hugging Face models
 
-### Developer Model (Qwen3-Coder)
+### Developer Model (bapXcoder-Coder)
 - **Handles**: All coding tasks, code generation, analysis, implementation based on structured instructions
 - **Responsibility**: Executes only structured instructions received from Interpreter model
 - **Connection**: Via llama.cpp runtime to Hugging Face models
@@ -75,7 +75,7 @@ The bapXcoder project implements a sophisticated dual-model architecture:
 bapXcoder runs as a web-based PWA accessible through your browser on any platform:
 
 ```bash
-python qwen3VL_local_cli.py
+python bapxcoder_local_cli.py
 ```
 
 Then open your browser to `http://localhost:7860`
@@ -84,13 +84,13 @@ After accessing the application in your browser, you can install it as a PWA on 
 
 ## Core AI Capabilities:
 
-### Interpreter Model (Qwen3-VL)
+### Interpreter Model (bapXcoder-VL)
 - **Multimodal Processing**: Advanced vision-language understanding for image analysis, OCR, document processing
-- **Voice Features**: Speech-to-text for input and text-to-speech for auto-play output  
+- **Voice Features**: Speech-to-text for input and text-to-speech for auto-play output
 - **Web Research**: Integrated search for current information and research retrieval
 - **File Analysis**: Attach and analyze images and documents directly
 
-### Developer Model (Qwen3-Coder)
+### Developer Model (bapXcoder-Coder)
 - **Code Assistance**: Real-time coding help and suggestions with context awareness based on structured instructions from Interpreter
 - **File Analysis**: Attach and analyze code files directly
 
@@ -117,12 +117,12 @@ bapXcoder implements a sophisticated dual-server model:
 
 **Backend Architecture:**
 - **Authentication Server**: Flask/SocketIO server handling GitHub/Google OAuth and Stripe payments
-- **User Data Storage**: Encrypted subscription metadata stored in GitHub repositories (not our servers)  
-- **Model Handlers**: Dual-model architecture - Interpreter model (Qwen3-VL) for communication/UI and Developer model (Qwen3-Coder) for coding tasks, both accessing models via llama.cpp runtime, no local storage required
+- **User Data Storage**: Encrypted subscription metadata stored in GitHub repositories (not our servers)
+- **Model Handlers**: Dual-model architecture - Interpreter model (bapXcoder-VL) for communication/UI and Developer model (bapXcoder-Coder) for coding tasks, both accessing models via llama.cpp runtime, no local storage required
 - **Project Manager**: Project_explorer.py handles local file operations via CLI
 - **Validation System**: AI-driven testing (validation_system.py) runs entirely locally
 - **Project Memory**: .bapXcoder directories with persistent todo.json and sessiontree.json stored locally
-- **Dual-Model Coordinator**: Interpreter model (Qwen3-VL) acts as coordinator, receiving all user prompts and issuing structured instructions to Developer model (Qwen3-Coder)
+- **Dual-Model Coordinator**: Interpreter model (bapXcoder-VL) acts as coordinator, receiving all user prompts and issuing structured instructions to Developer model (bapXcoder-Coder)
 
 ## Project-Based Memory System
 - **Persistent Context**: Unlike cloud IDEs that lose session context, bapXcoder maintains project-specific memory with `.bapXcoder` directories
@@ -133,10 +133,10 @@ bapXcoder implements a sophisticated dual-server model:
 
 ## Resources Integration
 The project includes a `resources/` directory with reference implementations and documentation:
-- **Qwen Code Resources**: `resources/qwen-code/` - Reference for CLI workflow patterns and direct model connection approaches
-- **Qwen3-Coder Resources**: `resources/Qwen3-Coder/` - Reference for advanced coding model capabilities
+- **bapXcoder Code Resources**: `resources/qwen-code/` - Reference for CLI workflow patterns and direct model connection approaches
+- **bapXcoder Developer Resources**: `resources/developer_agent/` - Reference for advanced coding model capabilities (archived reference)
 - **Codespaces Resources**: `resources/codespaces-base/` - Reference for development environment concepts
-- **Hugging Face Connection Documentation**: `resources/qwen3-vl-hf/` - Documentation on direct model access approaches
+- **Hugging Face Connection Documentation**: `resources/qwen3-vl-hf/` - Documentation on direct model access approaches (archived reference)
 
 These resources provide insight into implementation patterns but are not part of the main application distribution.
 
@@ -173,7 +173,7 @@ These resources provide insight into implementation patterns but are not part of
 - **File Organization**: Automatic project structure maintenance with AI-aware file handling
 
 ## Phase-Based Auto Execution & Testing
-- **AI-Driven Testing System**: Interpreter model (Qwen3-VL) coordinates comprehensive validation that validates code after each change
+- **AI-Driven Testing System**: Interpreter model (bapXcoder-VL) coordinates comprehensive validation that validates code after each change
 - **Individual File Testing**: Each file tab has its own "Test & Validate File" button (play icon)
 - **Project-Wide Validation**: "Validate Full Project" button for complete project analysis
 - **Phase-Based Execution**: System tracks validation history and project phases through sessiontree.json
@@ -181,32 +181,32 @@ These resources provide insight into implementation patterns but are not part of
 - **AI-Integrated Testing**: Interpreter model mediates interactions with AI to execute tests from the test folder
 
 ## Dual-Model Connection & Installation Process
-- **Runtime-Based Access**: Both Qwen3-VL (Interpreter) and Qwen3-Coder (Developer) models accessed via llama.cpp runtime without local storage
+- **Runtime-Based Access**: Both bapXcoder-VL (Interpreter) and bapXcoder-Coder (Developer) models accessed via llama.cpp runtime without local storage
 - **No Local Storage Required**: Models accessed via llama.cpp runtime with runtime access
-- **Runtime Integration**: Direct connection to Qwen models using llama-cpp-python
-- **Dual-Model Pipeline**: Interpreter model (Qwen3-VL) manages all user interaction; Developer model (Qwen3-Coder) executes structured instructions only
+- **Runtime Integration**: Direct connection to bapXcoder models using llama-cpp-python
+- **Dual-Model Pipeline**: Interpreter model (bapXcoder-VL) manages all user interaction; Developer model (bapXcoder-Coder) executes structured instructions only
 - **Quota-Free Access**: Runtime-based access without storage quotas
 
 ## Advanced Multimodal AI Assistance
-- **Dual-Model Processing**: Interpreter model (Qwen3-VL) handles communication, UI understanding, and multimodal tasks while Developer model (Qwen3-Coder) specializes in coding activities
-- **Enhanced Vision Processing**: Using Interpreter model's (Qwen3-VL) advanced visual capabilities to analyze UI mockups, diagrams, charts, and screenshots - then coordinating with Developer model (Qwen3-Coder) for code generation
-- **OCR Excellence**: Leveraging Interpreter model's (Qwen3-VL) 32 language support and robust text extraction to process images of documents, handwritten notes, and code snippets
-- **Spatial Understanding**: Interpreter model (Qwen3-VL) comprehends layouts, positioning, and visual relationships in design materials, then coordinates with Developer model (Qwen3-Coder) for implementation
-- **Specialized Code Generation**: Developer model (Qwen3-Coder) focuses on high-quality code generation based on Interpreter model's (Qwen3-VL) understanding and user requirements
+- **Dual-Model Processing**: Interpreter model (bapXcoder-VL) handles communication, UI understanding, and multimodal tasks while Developer model (bapXcoder-Coder) specializes in coding activities
+- **Enhanced Vision Processing**: Using Interpreter model's (bapXcoder-VL) advanced visual capabilities to analyze UI mockups, diagrams, charts, and screenshots - then coordinating with Developer model (bapXcoder-Coder) for code generation
+- **OCR Excellence**: Leveraging Interpreter model's (bapXcoder-VL) 32 language support and robust text extraction to process images of documents, handwritten notes, and code snippets
+- **Spatial Understanding**: Interpreter model (bapXcoder-VL) comprehends layouts, positioning, and visual relationships in design materials, then coordinates with Developer model (bapXcoder-Coder) for implementation
+- **Specialized Code Generation**: Developer model (bapXcoder-Coder) focuses on high-quality code generation based on Interpreter model's (bapXcoder-VL) understanding and user requirements
 
 ## Capabilities via Dual-Model Architecture
 
-The dual-model architecture with Qwen3-VL and Qwen3-Coder via llama.cpp runtime enables these unique capabilities in bapXcoder:
+The dual-model architecture with bapXcoder-VL and bapXcoder-Coder via llama.cpp runtime enables these unique capabilities in bapXcoder:
 
-- **Full repo context**: Interpreter model (Qwen3-VL) processes entire project context for comprehensive understanding
+- **Full repo context**: Interpreter model (bapXcoder-VL) processes entire project context for comprehensive understanding
 - **Persistent memory**: Session-based memory system keeps context across runs
-- **Multimodal Understanding**: Interpreter model (Qwen3-VL) processes both text and images in the same context
-- **Advanced OCR**: Interpreter model (Qwen3-VL) recognizes text from images in 32+ languages
-- **Visual GUI Analysis**: Interpreter model (Qwen3-VL) understands and interprets UI designs from screenshots
+- **Multimodal Understanding**: Interpreter model (bapXcoder-VL) processes both text and images in the same context
+- **Advanced OCR**: Interpreter model (bapXcoder-VL) recognizes text from images in 32+ languages
+- **Visual GUI Analysis**: Interpreter model (bapXcoder-VL) understands and interprets UI designs from screenshots
 - **Instruction Translation**: Interpreter model converts user intent into structured instructions for Developer model
-- **Document Understanding**: Interpreter model (Qwen3-VL) processes complex documents with embedded images
-- **Spatial Reasoning**: Interpreter model (Qwen3-VL) understands positional relationships in images
-- **Specialized Coding**: Developer model (Qwen3-Coder) handles all coding tasks with advanced code understanding and generation
+- **Document Understanding**: Interpreter model (bapXcoder-VL) processes complex documents with embedded images
+- **Spatial Reasoning**: Interpreter model (bapXcoder-VL) understands positional relationships in images
+- **Specialized Coding**: Developer model (bapXcoder-Coder) handles all coding tasks with advanced code understanding and generation
 - **Dual-Model Pipeline**: All user prompts go to Interpreter; Developer executes only structured instructions from Interpreter
 - **Mediated Communication**: Interpreter manages all user interactions while Developer focuses on structured task execution
 - **Deterministic Behavior**: Predictable session-based intelligence that persists between runs
@@ -221,8 +221,8 @@ bapXcoder implements a sophisticated architecture combining both dual-server and
 - **Local Application** (downloaded by users): Full IDE functionality with llama.cpp runtime model connections
 
 **AI Model Architecture:**
-- **Interpreter Model (Qwen3-VL)**: Handles communication, UI understanding, multimodal processing, OCR, and user interactions
-- **Developer Model (Qwen3-Coder)**: Specializes in coding tasks, code generation, analysis, and implementation
+- **Interpreter Model (bapXcoder-Interpreter)**: Handles communication, UI understanding, multimodal processing, OCR, and user interactions
+- **Developer Model (bapXcoder-Developer)**: Specializes in coding tasks, code generation, analysis, and implementation
 - **Direct Hugging Face Connection**: Both models connect via llama.cpp runtime
 - **Quota-Based Operation**: Uses your allocated runtime quotas for both models
 
@@ -234,8 +234,8 @@ Most AI IDEs use a single model that directly interacts with users. This creates
 - No safety checks
 
 bapXcoder uses a deterministic pipeline:
-- **Interpreter** (Qwen3-VL) receives all user input and maintains context
-- **Developer** (Qwen3-Coder) only executes structured instructions from Interpreter
+- **Interpreter** (bapXcoder-Interpreter) receives all user input and maintains context
+- **Developer** (bapXcoder-Developer) only executes structured instructions from Interpreter
 - No direct user-to-Developer communication prevents inconsistency
 - Session persistence maintained through Interpreter model
 
@@ -244,8 +244,8 @@ bapXcoder uses a deterministic pipeline:
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   User Input   │───▶│  Interpreter     │───▶│   Developer     │
-│                │    │  Model (Qwen3-VL)│    │  Model (Qwen3-  │
-│ (Natural       │    │ • Context        │    │   Coder)       │
+│                │    │  Model (bapXcoder-Interpreter)│    │  Model (bapXcoder-  │
+│ (Natural       │    │ • Context        │    │   Developer)   │
 │  Language)     │    │ • Communication  │    │ • Code Gen     │
 │                │    │ • Multimodal     │    │ • Implementation│
 └─────────────────┘    │ • Instructions   │    │ • Execution    │
@@ -260,10 +260,10 @@ bapXcoder uses a deterministic pipeline:
 
 ## Models Documentation & Images
 
-### Qwen3-VL (Interpreter Model)
-The Qwen3-VL model provides the interpretation layer of bapXcoder:
+### bapXcoder-VL (Interpreter Model)
+The bapXcoder-VL model provides the interpretation layer of bapXcoder:
 
-![Qwen3-VL Model Architecture](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Coder/qwen3_coder.png)
+![bapXcoder-VL Model Architecture](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Coder/qwen3_coder.png)
 
 **Key Capabilities**:
 - Multimodal understanding (text, images, GUI elements)
@@ -271,10 +271,10 @@ The Qwen3-VL model provides the interpretation layer of bapXcoder:
 - Context management across sessions
 - User communication and instruction generation
 
-### Qwen3-Coder (Developer Model) 
-The Qwen3-Coder model provides the specialized coding capabilities:
+### bapXcoder-Coder (Developer Model)
+The bapXcoder-Coder model provides the specialized coding capabilities:
 
-![Qwen3-Coder Model Architecture](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Coder/qwen3-coder-main.jpg)
+![bapXcoder-Coder Model Architecture](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Coder/qwen3-coder-main.jpg)
 
 **Key Capabilities**:
 - Specialized code generation and analysis
@@ -311,7 +311,7 @@ The `resources/codespaces-base/` folder contains reference for development envir
 | **Operation** | Dual-model with llama.cpp runtime (similar to Cursor/Continue) | Hybrid (local LLMs) | Cloud-based |
 | **Cost** | License-based with 60-day trial | Subscription | Pay-per-use |
 | **Privacy** | Project data local, session intelligence persists locally via llama.cpp | Local processing | Data goes to cloud |
-| **Model** | Dual-model: Interpreter (Qwen3-VL) for UI/communication + Developer (Qwen3-Coder) for coding via llama.cpp runtime | Multiple configurable models | Various cloud models |
+| **Model** | Dual-model: Interpreter (bapXcoder-VL) for UI/communication + Developer (bapXcoder-Coder) for coding via llama.cpp runtime | Multiple configurable models | Various cloud models |
 | **AI Capability** | Vision, OCR, text, code with dual-model specialization | Text completion | Text completion |
 | **Connectivity** | Requires internet for runtime access | Needs cloud API keys | Requires internet for runtime access |
 | **Customization** | Project-based memory system with dual-model coordination | VS Code extensions | Browser-based |
@@ -321,9 +321,9 @@ The `resources/codespaces-base/` folder contains reference for development envir
 ### Dual-Model Architecture
 The system implements a strict separation of concerns:
 
-1. **User Communication Layer**: Interpreter model (Qwen3-VL) handles all user input/output
+1. **User Communication Layer**: Interpreter model (bapXcoder-VL) handles all user input/output
 2. **Instruction Generation**: Interpreter converts user intent into structured developer instructions
-3. **Code Execution Layer**: Developer model (Qwen3-Coder) executes only structured instructions
+3. **Code Execution Layer**: Developer model (bapXcoder-Coder) executes only structured instructions
 4. **Response Mediation**: All responses go back through Interpreter model to user
 
 ### Session Persistence
@@ -376,11 +376,11 @@ This project welcomes contributions! If you'd like to help enhance bapXcoder:
 
 ## Architecture Overview
 
-The bapXcoder IDE leverages a dual-model architecture with Interpreter model (Qwen3-VL) for user communication and context management, and Developer model (Qwen3-Coder) for specialized coding tasks, providing a comprehensive development environment:
+The bapXcoder IDE leverages a dual-model architecture with Interpreter model (bapXcoder-VL) for user communication and context management, and Developer model (bapXcoder-Coder) for specialized coding tasks, providing a comprehensive development environment:
 
 ### Core AI Capabilities:
-- **Interpreter Model (Qwen3-VL)**: Handles user communication, multimodal processing, OCR, voice input/output, web research, and attaches file analysis for images
-- **Developer Model (Qwen3-Coder)**: Executes coding tasks, code generation, and code analysis based on structured instructions from Interpreter
+- **Interpreter Model (bapXcoder-VL)**: Handles user communication, multimodal processing, OCR, voice input/output, web research, and attaches file analysis for images
+- **Developer Model (bapXcoder-Coder)**: Executes coding tasks, code generation, and code analysis based on structured instructions from Interpreter
 - **Dual-Model Pipeline**: All user prompts go to Interpreter; Developer executes only structured instructions from Interpreter, never seeing user directly
 - **Structured Instruction System**: Interpreter converts user intent into specific instructions for Developer model execution
 - **File Analysis**: Interpreter handles image/document analysis; Developer handles code analysis and execution
@@ -407,8 +407,8 @@ The bapXcoder IDE leverages a dual-model architecture with Interpreter model (Qw
 - **File Operations**: Direct file manipulation through CLI operations, with web UI providing convenience layer
 - **System Integration**: All system interactions handled via terminal commands at the backend
 
-### Phase-Based Auto Execution & Testing:
-- **AI-Driven Testing System**: Interpreter model (Qwen3-VL) coordinates comprehensive validation that validates code after each change
+## Phase-Based Auto Execution & Testing
+- **AI-Driven Testing System**: Interpreter model (bapXcoder-VL) coordinates comprehensive validation that validates code after each change
 - **Individual File Testing**: Each file tab has its own "Test & Validate File" button (play icon)
 - **Project-Wide Validation**: "Validate Full Project" button for complete project analysis
 - **Phase-Based Execution**: System tracks validation history and project phases through sessiontree.json
@@ -420,7 +420,7 @@ The bapXcoder IDE leverages a dual-model architecture with Interpreter model (Qw
 As mentioned, the `resources/` folder contains valuable reference implementations that informed the development of bapXcoder:
 
 - **Qwen Code Resources**: Reference for CLI workflow patterns and direct model connections
-- **Qwen3-Coder Resources**: Reference for advanced coding model capabilities  
+- **bapXcoder-Coder Resources**: Reference for advanced coding model capabilities
 - **Codespaces Resources**: Reference for development environment concepts
 - **Hugging Face Connection Documentation**: Approaches for direct model access without local downloads
 
@@ -437,14 +437,14 @@ These serve as valuable references for understanding implementation patterns but
 ## Advanced Features
 
 ### Multimodal Processing
-The Interpreter model (Qwen3-VL) handles all multimodal inputs:
+The Interpreter model (bapXcoder-VL) handles all multimodal inputs:
 - Image analysis with OCR capabilities
 - Document understanding with layout preservation
 - Visual GUI element recognition
 - Spatial relationship understanding
 
 ### Code Generation Pipeline
-The Developer model (Qwen3-Coder) handles all coding tasks:
+The Developer model (bapXcoder-Coder) handles all coding tasks:
 - Code generation based on structured requirements
 - Code analysis and optimization
 - Implementation of specific developer instructions
@@ -478,11 +478,11 @@ For support, questions, or to report issues, please use the GitHub repository is
 
 ---
 
-## About the Qwen Models
+## About the Underlying Models
 
-The Qwen3-VL and Qwen3-Coder models powering bapXcoder are available as open-source models from Alibaba Cloud. These files are compatible with llama.cpp runtime, supporting inference on CPU, NVIDIA GPU (CUDA), Apple Silicon (Metal), Intel GPUs (SYCL), and more. You can mix precisions for optimal performance.
+The dual-model system powering bapXcoder connects to Qwen3-VL and Qwen3-Coder models through the llama.cpp runtime integration. These models are compatible with llama.cpp runtime, supporting inference on CPU, NVIDIA GPU (CUDA), Apple Silicon (Metal), Intel GPUs (SYCL), and more. You can mix precisions for optimal performance.
 
-Thank you to Alibaba for making these powerful multimodal models available as open source, enabling projects like bapXcoder to provide advanced AI capabilities locally without cloud dependencies.
+The system leverages Alibaba Cloud's open-source Qwen models to provide advanced AI capabilities locally without cloud dependencies.
 
 ## Project Status
 

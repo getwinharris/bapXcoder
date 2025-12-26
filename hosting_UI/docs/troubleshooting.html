@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bapXcoder Troubleshooting - Resolve Issues with AI IDE</title>
+    <meta name="description" content="Complete troubleshooting guide for bapXcoder with solutions for dual-model AI, project memory, and licensing issues." />
+    <meta name="keywords" content="bapXcoder troubleshooting, IDE issues, AI model problems, project memory issues, licensing errors" />
+    <link rel="canonical" href="https://coder.bapx.in/docs/troubleshooting.html" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0f13 0%, #1a1a25 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(124, 92, 255, 0.2);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #7c5cff;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #7c5cff;
+        }
+        
+        .subtitle {
+            color: #a0a0c0;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        
+        h2 {
+            color: #7c5cff;
+            margin: 30px 0 15px 0;
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            color: #50fa7b;
+            margin: 20px 0 10px 0;
+            font-size: 1.3rem;
+        }
+        
+        .troubleshooting-section {
+            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .error-solution {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid #ff6b6b;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .solution-steps {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid #50fa7b;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .step {
+            padding: 8px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background: #7c5cff;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .command-example {
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .faq-item {
+            background: rgba(124, 92, 255, 0.05);
+            border: 1px solid #7c5cff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .problem-header {
+            color: #ff6b6b;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .solution-header {
+            color: #50fa7b;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(124, 92, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .nav-links a {
+            color: #7c5cff;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: rgba(124, 92, 255, 0.2);
+        }
+        
+        .nav-links a:hover {
+            background: rgba(124, 92, 255, 0.3);
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid rgba(124, 92, 255, 0.2);
+            color: #a0a0c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">⬡ bapXcoder</div>
+            <h1>Troubleshooting Guide</h1>
+            <p class="subtitle">Solutions for dual-model AI IDE with project memory and session continuity</p>
+        </header>
+        
+        <main class="content">
+            <h2>Overview</h2>
+            <p>This troubleshooting guide covers common issues with bapXcoder's dual-model architecture, persistent project memory system, and session continuity features. Solutions are categorized by problem type with specific guidance for the Interpreter and Developer model functions.</p>
+            
+            <div class="troubleshooting-highlight">
+                <p><strong>Important:</strong> Most issues can be resolved by clearing user-specific memory in <code>.bapXcoder/users/{user_id}/</code> or refreshing your subscription status.</p>
+            </div>
+            
+            <h2>Common Installation Issues</h2>
+            
+            <div class="error-solution">
+                <div class="problem-header">Problem: Installation fails with dependency errors</div>
+                <p><strong>Possible Causes:</strong> Missing system dependencies, incompatible Python version, insufficient permissions</p>
+                
+                <div class="solution-steps">
+                    <div class="solution-header">Solution Steps:</div>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>Verify Python 3.8+ is installed: <code>python3 --version</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>Update pip and install dependencies: <code>pip install --upgrade pip && pip install -r requirements.txt</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>Install llama.cpp dependencies based on your system (CUDA for NVIDIA, Metal for Apple Silicon, etc.)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="error-solution">
+                <div class="problem-header">Problem: Model connection fails during startup</div>
+                <p><strong>Possible Causes:</strong> Network connectivity, Hugging Face rate limits, or authentication issues</p>
+                
+                <div class="solution-steps">
+                    <div class="solution-header">Solution Steps:</div>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>Check internet connection and firewall settings</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>Verify Hugging Face Hub connection: <code>huggingface-cli scan-cache</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>Clear model cache if needed: <code>huggingface-cli delete-cache</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>Restart the application with fresh model connection</div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>Session Continuity Issues</h2>
+            
+            <div class="error-solution">
+                <div class="problem-header">Problem: Session continuity not restoring properly</div>
+                <p><strong>Symptoms:</strong> Continuity message doesn't appear on startup, context lost between sessions</p>
+                
+                <div class="solution-steps">
+                    <div class="solution-header">Solution Steps:</div>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>Check if <code>.bapXcoder/users/{user_id}/sessiontree.json</code> exists and has valid content</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>Verify user authentication and session persistence in <code>todo.json</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>Rebuild session continuity: <code>ai --rebuild-session</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>Restart the IDE to trigger fresh session initialization</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="error-solution">
+                <div class="problem-header">Problem: License status not reflecting correctly</div>
+                <p><strong>Symptoms:</strong> Continuity message shows expired license despite active subscription</p>
+                
+                <div class="solution-steps">
+                    <div class="solution-header">Solution Steps:</div>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>Refresh license status: <code>ai --refresh-license</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>Re-authenticate with GitHub/Google OAuth</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>Check Stripe subscription status in admin panel</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>Clear authentication cache and re-login</div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>Model Performance Issues</h2>
+            
+            <div class="troubleshooting-section">
+                <h3>Interpreter Model (Communication/UI) Issues</h3>
+                
+                <div class="error-solution">
+                    <div class="problem-header">Problem: Interpreter model not responding to chat</div>
+                    <p><strong>Possible Causes:</strong> Connection issues, context overflow, or model overload</p>
+                    
+                    <div class="solution-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div>Check context length - large conversations can cause slowdowns</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div>Try a fresh conversation context to eliminate context overflow</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div>Verify multimodal processing capabilities are enabled</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div>Check system resources and memory allocation</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="error-solution">
+                    <div class="problem-header">Problem: Image analysis not working</div>
+                    <p><strong>Symptoms:</strong> OCR and visual understanding features failing</p>
+                    
+                    <div class="solution-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div>Ensure image format is supported (PNG, JPG, JPEG, GIF, WebP)</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div>Verify vision model components are properly loaded</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div>Check that image files are not corrupted or too large</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div>Test with sample images provided in the resources directory</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="troubleshooting-section">
+                <h3>Developer Model (Coding) Issues</h3>
+                
+                <div class="error-solution">
+                    <div class="problem-header">Problem: Code generation slow or failing</div>
+                    <p><strong>Possible Causes:</strong> Complex code analysis, system resources, or context issues</p>
+                    
+                    <div class="solution-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div>Break complex tasks into smaller, specific requests</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div>Provide clearer context about existing project architecture</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div>Check that the dual-model coordination is working properly</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div>Review if the request is being properly routed to Developer function</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="error-solution">
+                    <div class="problem-header">Problem: Dual-model architecture not separating tasks properly</div>
+                    <p><strong>Symptoms:</strong> Coding tasks not being properly routed to Developer function</p>
+                    
+                    <div class="solution-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div>Verify keyword detection for coding tasks ('code', 'function', 'implement', etc.)</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div>Check that routing logic is properly detecting coding intent</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div>Inspect internal logs for model coordination issues</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div>Reset model coordination with: <code>ai --reset-coordination</code></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>Project Memory System Issues</h2>
+            
+            <div class="error-solution">
+                <div class="problem-header">Problem: .bapXcoder directory not being created or updated</div>
+                <p><strong>Possible Causes:</strong> Permission issues, existing project memory corruption, or IDE startup problems</p>
+                
+                <div class="solution-steps">
+                    <div class="solution-header">Solution Steps:</div>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>Check directory permissions: <code>ls -la .bapXcoder</code> (if directory exists)</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>Manually create the directory: <code>mkdir -p .bapXcoder/users/{your_user_id}</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>Verify that project memory files are being written: <code>ls -la .bapXcoder/users/{user_id}/</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>Restart IDE with elevated permissions if necessary</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="error-solution">
+                <div class="problem-header">Problem: Session memory disappearing after IDE restart</div>
+                <p><strong>Symptoms:</strong> Continuity messages don't reflect previous session</p>
+                
+                <div class="solution-steps">
+                    <div class="solution-header">Solution Steps:</div>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>Check if sessiontree.json and todo.json files are being updated: <code>cat .bapXcoder/users/*/sessiontree.json</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>Verify file write permissions in project directory</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>Look for error messages during IDE shutdown that might prevent memory writes</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>Check that the correct user ID is being used for memory storage</div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>Performance Optimization</h2>
+            
+            <div class="troubleshooting-section">
+                <h3>Slow Response Times</h3>
+                <p>If responses are taking too long, try these optimizations:</p>
+                
+                <div class="solution-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>Check system resources: <code>htop</code> or Task Manager</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>Reduce context size in settings to improve processing speed</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>Enable GPU acceleration if available (CUDA, Metal, etc.)</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>Use smaller quantization models for faster inference</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div>Clear old session data that might be impacting performance</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="troubleshooting-section">
+                <h3>Memory and Resource Management</h3>
+                
+                <div class="solution-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>Monitor memory usage with: <code>python -m memory_profiler bapxcoder_local_cli.py</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>Reduce context window size in config.ini for better performance</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>Clear old session files: <code>find .bapXcoder -name "*.json" -newer sessiontree.json -delete</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>Adjust thread counts in settings to optimize for your CPU</div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>Authentication and Licensing Issues</h2>
+            
+            <div class="error-solution">
+                <div class="problem-header">Problem: Authentication fails after 60-day trial period</div>
+                <p><strong>Possible Causes:</strong> Expired trial, subscription processing issues, or license validation problems</p>
+                
+                <div class="solution-steps">
+                    <div class="solution-header">Solution Steps:</div>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>Verify subscription status in admin panel or via Stripe</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>Check that your GitHub/Google account is properly linked</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>Re-authenticate to refresh license information</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>Check that subscription information is properly stored in your GitHub repo</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="error-solution">
+                <div class="problem-header">Problem: License countdown not displaying correctly</div>
+                <p><strong>Symptoms:</strong> GUI shows incorrect time remaining or license status</p>
+                
+                <div class="solution-steps">
+                    <div class="solution-header">Solution Steps:</div>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>Refresh license status in the top-right GUI panel</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>Check system clock alignment with internet time</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>Force license refresh via command line: <code>ai --refresh-license</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>Verify license server connectivity if using custom license server</div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>Advanced Troubleshooting</h2>
+            
+            <div class="troubleshooting-section">
+                <h3>Memory Corruption Recovery</h3>
+                <p>If project memory becomes corrupted, use these steps to recover:</p>
+                
+                <div class="command-example">
+                # Backup existing memory
+                cp -r .bapXcoder .bapXcoder_backup
+
+                # Remove corrupted files (keeping user data structure)
+                rm .bapXcoder/users/*/sessiontree.json
+                rm .bapXcoder/users/*/todo.json
+                
+                # Restart IDE to recreate clean memory files
+                ./coder.bapx
+                </div>
+            </div>
+            
+            <div class="troubleshooting-section">
+                <h3>Complete Reset Procedure</h3>
+                <p>If all else fails, perform a complete reset:</p>
+                
+                <div class="solution-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>Stop all bapXcoder processes</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>Backup important session data: <code>cp -r .bapXcoder ~/backup_bapxcoder</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>Remove project memory: <code>rm -rf .bapXcoder</code></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>Clear authentication tokens in system cache</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div>Re-authenticate and allow system to rebuild memory</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <a href="index.html">← All Docs</a>
+                <a href="plugins.html">← Previous: Plugin System</a>
+                <a href="performance.html">Next: Performance Tuning →</a>
+            </div>
+            
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Why does session continuity sometimes fail to restore context?</div>
+                <p>A: This usually happens due to corrupted session files in .bapXcoder/users/{user_id}/ or authentication issues. Try refreshing your login or rebuilding your session memory.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: How do I check if my license is still valid?</div>
+                <p>A: Check the top-right corner of the GUI interface where license status and remaining days are displayed. You can also use the CLI command: ai --check-license</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: My project memory isn't persisting after IDE restart. How do I fix this?</div>
+                <p>A: Verify that .bapXcoder directory exists in your project root and that sessiontree.json and todo.json files exist in your user-specific subdirectory.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Are my project memories stored securely?</div>
+                <p>A: Yes, all project memories are stored locally in your project directory with user-specific encryption in .bapXcoder/users/{user_id}/</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: How do I clear project memory if it becomes corrupted?</div>
+                <p>A: You can delete files in .bapXcoder/users/{user_id}/ leaving only the directory structure, or use the CLI command: ai --reset-memory {user_id}</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025 bapXcoder Documentation. All rights reserved.</p>
+            <p>Part of the bapX Media Hub ecosystem.</p>
+        </footer>
+    </div>
+</body>
+</html>

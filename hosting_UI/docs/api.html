@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bapXcoder API - Programmatic Access to Dual-Model AI IDE</title>
+    <meta name="description" content="Complete API documentation for bapXcoder's dual-model AI development environment with persistent project memory." />
+    <meta name="keywords" content="bapXcoder API, AI IDE API, dual-model API, project memory API, development environment API" />
+    <link rel="canonical" href="https://docs.coder.bapx.in/api.html" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0f13 0%, #1a1a25 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(124, 92, 255, 0.2);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #7c5cff;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #7c5cff;
+        }
+        
+        .subtitle {
+            color: #a0a0c0;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        
+        h2 {
+            color: #7c5cff;
+            margin: 30px 0 15px 0;
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            color: #50fa7b;
+            margin: 20px 0 10px 0;
+            font-size: 1.3rem;
+        }
+        
+        .api-section {
+            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .endpoint-box {
+            background: rgba(124, 92, 255, 0.1);
+            border-left: 4px solid #7c5cff;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .http-method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 10px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+        
+        .get { background: #50fa7b; color: #000; }
+        .post { background: #ff6b6b; color: white; }
+        .put { background: #50fa7b; color: #000; }
+        .delete { background: #ff6b6b; color: white; }
+        
+        .code-block {
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+        }
+        
+        .param-table th, .param-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2d2d40;
+        }
+        
+        .param-table th {
+            background: rgba(124, 92, 255, 0.2);
+            color: #7c5cff;
+        }
+        
+        .response-example {
+            background: rgba(80, 250, 123, 0.1);
+            border: 1px solid #50fa7b;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .auth-section {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid #ff6b6b;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .rate-limit {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid gold;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(124, 92, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .nav-links a {
+            color: #7c5cff;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: rgba(124, 92, 255, 0.2);
+        }
+        
+        .nav-links a:hover {
+            background: rgba(124, 92, 255, 0.3);
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid rgba(124, 92, 255, 0.2);
+            color: #a0a0c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">⬡ bapXcoder</div>
+            <h1>bapXcoder API Documentation</h1>
+            <p class="subtitle">Programmatic access to dual-model AI development environment with persistent project memory</p>
+        </header>
+        
+        <main class="content">
+            <h2>API Overview</h2>
+            <p>The bapXcoder API provides programmatic access to the dual-model AI system with full integration to the persistent project memory system. The API enables integration with external tools, automation scripts, and development pipelines while maintaining session continuity and project context.</p>
+            
+            <div class="api-highlights">
+                <p><strong>Base URL:</strong> <code>https://api.coder.bapx.in/v1</code> (when using cloud access) or <code>http://localhost:7860/api/v1</code> (when running locally).</p>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🤖 Dual-Model Access</h4>
+                    <p>Access both Interpreter and Developer functions through unified API</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>💾 Persistent Memory</h4>
+                    <p>Session continuity and project memory integrated with API</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🔒 Secure Authentication</h4>
+                    <p>GitHub/Google OAuth with JWT token validation</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🔄 Continuity APIs</h4>
+                    <p>Session state and todo management via API endpoints</p>
+                </div>
+            </div>
+            
+            <h2>Authentication</h2>
+            
+            <div class="auth-section">
+                <h3>Required Authentication</h3>
+                <p>All API endpoints require authentication using JWT tokens obtained through GitHub or Google OAuth:</p>
+                
+                <div class="code-block">
+curl -X POST https://api.coder.bapx.in/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"provider": "github", "code": "oauth_code_from_callback"}'
+                </div>
+                
+                <p>Use the returned token in subsequent requests:</p>
+                
+                <div class="code-block">
+curl -X GET https://api.coder.bapx.in/v1/status \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+                </div>
+            </div>
+            
+            <h2>Rate Limits & Quotas</h2>
+            
+            <div class="rate-limit">
+                <h3>Subscription-Based Limits</h3>
+                <ul>
+                    <li><strong>Trial (60 days)</strong>: 1,000 requests/hour, 50,000 requests/month</li>
+                    <li><strong>Monthly ($1/30 days)</strong>: 2,000 requests/hour, 200,000 requests/month</li>
+                    <li><strong>Lifetime ($100)</strong>: 5,000 requests/hour, unlimited requests/month</li>
+                </ul>
+            </div>
+            
+            <h2>Core API Endpoints</h2>
+            
+            <div class="api-endpoint">
+                <div class="endpoint-header">
+                    <span class="http-method post">POST</span>
+                    <span class="endpoint-url">/v1/chat/message</span>
+                </div>
+                
+                <h3>Send Chat Message to Dual-Model System</h3>
+                <p>Submit a message to the bapXcoder Agent which routes to appropriate internal function based on content.</p>
+                
+                <h4>Request Body</h4>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>message</td>
+                            <td>string</td>
+                            <td>Yes</td>
+                            <td>User message or coding request</td>
+                        </tr>
+                        <tr>
+                            <td>continue_reasoning</td>
+                            <td>boolean</td>
+                            <td>No</td>
+                            <td>Include conversation history for context</td>
+                        </tr>
+                        <tr>
+                            <td>history</td>
+                            <td>array</td>
+                            <td>No</td>
+                            <td>Previous conversation history if continue_reasoning is true</td>
+                        </tr>
+                        <tr>
+                            <td>projectId</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Project identifier for context management</td>
+                        </tr>
+                        <tr>
+                            <td>hasFile</td>
+                            <td>boolean</td>
+                            <td>No</td>
+                            <td>Indicates if file attachment is included</td>
+                        </tr>
+                        <tr>
+                            <td>fileType</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>MIME type of attached file</td>
+                        </tr>
+                        <tr>
+                            <td>fileName</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Name of attached file</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>Example Request</h4>
+                <div class="code-block">
+curl -X POST "https://api.coder.bapx.in/v1/chat/message" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Implement a user authentication system with JWT tokens",
+    "continue_reasoning": true,
+    "projectId": "bapx-project-123",
+    "hasFile": false
+  }'
+                </div>
+                
+                <h4>Response Format</h4>
+                <div class="response-example">
+{
+  "status": "success",
+  "response": "Based on your project structure, I'll implement a JWT authentication system...",
+  "model_used": "interpreter",  // or "developer" if routed to coding function
+  "tokens_used": 245,
+  "project_memory_updated": true
+}
+                </div>
+            </div>
+            
+            <div class="api-section">
+                <div class="endpoint-header">
+                    <span class="http-method get">GET</span>
+                    <span class="endpoint-url">/v1/project/memory</span>
+                </div>
+                
+                <h3>Retrieve Project Memory State</h3>
+                <p>Get the current project memory including session state and todo information.</p>
+                
+                <h4>Query Parameters</h4>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>userId</td>
+                            <td>string</td>
+                            <td>Yes</td>
+                            <td>Authenticated user identifier</td>
+                        </tr>
+                        <tr>
+                            <td>projectId</td>
+                            <td>string</td>
+                            <td>Yes</td>
+                            <td>Project identifier to retrieve memory for</td>
+                        </tr>
+                        <tr>
+                            <td>memoryType</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Type of memory to retrieve: 'sessiontree', 'todo', or 'all' (default)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>Example Request</h4>
+                <div class="code-block">
+curl -X GET "https://api.coder.bapx.in/v1/project/memory?userId=12345&projectId=myproject&memoryType=all" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+                </div>
+                
+                <h4>Response Format</h4>
+                <div class="response-example">
+{
+  "status": "success",
+  "data": {
+    "sessiontree": {
+      "last_task": "Implementing user authentication system",
+      "last_action": "Debugging JWT token refresh flow",
+      "session_state": "active",
+      "last_access": "2025-01-15T10:30:00Z",
+      "active_files": ["auth.service.js", "user.model.js"]
+    },
+    "todo": {
+      "pending_tasks": [
+        {"id": 1, "item": "Fix token refresh issue", "priority": "high", "completed": false},
+        {"id": 2, "item": "Add rate limiting", "priority": "medium", "completed": false}
+      ],
+      "completed_tasks": 15,
+      "total_tasks": 17
+    }
+  }
+}
+                </div>
+            </div>
+            
+            <h2>Todo Management API</h2>
+            
+            <div class="api-endpoint">
+                <div class="endpoint-header">
+                    <span class="http-method post">POST</span>
+                    <span class="endpoint-url">/v1/todo/add</span>
+                </div>
+                
+                <h3>Add Todo Item to Project Memory</h3>
+                <p>Add a task to the persistent todo system for project-specific intent tracking.</p>
+                
+                <h4>Request Body</h4>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>userId</td>
+                            <td>string</td>
+                            <td>Yes</td>
+                            <td>Authenticated user identifier</td>
+                        </tr>
+                        <tr>
+                            <td>projectId</td>
+                            <td>string</td>
+                            <td>Yes</td>
+                            <td>Project identifier for todo storage</td>
+                        </tr>
+                        <tr>
+                            <td>item</td>
+                            <td>string</td>
+                            <td>Yes</td>
+                            <td>Description of the task to add</td>
+                        </tr>
+                        <tr>
+                            <td>priority</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Priority level: 'low', 'medium', 'high', 'critical' (default: 'medium')</td>
+                        </tr>
+                        <tr>
+                            <td>category</td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Category for organizing tasks: 'bug', 'feature', 'refactor', 'documentation' (default: 'feature')</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>Example Request</h4>
+                <div class="code-block">
+curl -X POST "https://api.coder.bapx.in/v1/todo/add" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "12345",
+    "projectId": "myproject",
+    "item": "Implement password reset functionality",
+    "priority": "high",
+    "category": "feature"
+  }'
+                </div>
+                
+                <h4>Response Format</h4>
+                <div class="response-example">
+{
+  "status": "success",
+  "data": {
+    "id": 123,
+    "item": "Implement password reset functionality",
+    "priority": "high",
+    "category": "feature",
+    "completed": false,
+    "timestamp": "2025-01-15T11:45:00Z"
+  }
+}
+                </div>
+            </div>
+            
+            <div class="api-endpoint">
+                <div class="endpoint-header">
+                    <span class="http-method get">GET</span>
+                    <span class="endpoint-url">/v1/todo/list</span>
+                </div>
+                
+                <h3>Get Todo List for Project</h3>
+                <p>Retrieve the current todo list from the persistent intent tracking system.</p>
+                
+                <div class="code-block">
+curl -X GET "https://api.coder.bapx.in/v1/todo/list?userId=12345&projectId=myproject&status=active" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+                </div>
+                
+                <div class="response-example">
+{
+  "status": "success",
+  "data": {
+    "pending_tasks": [
+      {"id": 1, "item": "Fix authentication bug", "priority": "high", "category": "bug", "added": "2025-01-10T09:00:00Z"},
+      {"id": 2, "item": "Add rate limiting", "priority": "medium", "category": "security", "added": "2025-01-12T14:30:00Z"}
+    ],
+    "completed_tasks": 42,
+    "total_tasks": 44,
+    "last_updated": "2025-01-15T11:45:00Z"
+  }
+}
+                </div>
+            </div>
+            
+            <div class="api-endpoint">
+                <div class="endpoint-header">
+                    <span class="http-method put">PUT</span>
+                    <span class="endpoint-url">/v1/todo/update</span>
+                </div>
+                
+                <h3>Update Todo Item Status</h3>
+                <p>Mark a todo as completed or update its status in the project memory.</p>
+                
+                <div class="code-block">
+curl -X PUT "https://api.coder.bapx.in/v1/todo/update" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "12345",
+    "taskId": 1,
+    "completed": true,
+    "notes": "Fixed the JWT token refresh issue with proper error handling"
+  }'
+                </div>
+            </div>
+            
+            <h2>File Operations API</h2>
+            
+            <div class="api-section">
+                <div class="endpoint-header">
+                    <span class="http-method post">POST</span>
+                    <span class="endpoint-url">/v1/files/read</span>
+                </div>
+                
+                <h3>Read Project File</h3>
+                <p>Read a file from the project with proper authentication and project isolation.</p>
+                
+                <div class="code-block">
+{
+  "userId": "12345",
+  "projectId": "myproject",
+  "filePath": "src/services/auth.service.js"
+}
+                </div>
+                
+                <h4>Response Format</h4>
+                <div class="response-example">
+{
+  "status": "success",
+  "data": {
+    "filePath": "src/services/auth.service.js",
+    "content": "// File content here...",
+    "size": 2456,
+    "lastModified": "2025-01-15T10:30:00Z"
+  }
+}
+                </div>
+            </div>
+            
+            <div class="api-endpoint">
+                <div class="endpoint-header">
+                    <span class="http-method post">POST</span>
+                    <span class="endpoint-url">/v1/files/write</span>
+                </div>
+                
+                <h3>Write Project File</h3>
+                <p>Write content to a project file with proper approval workflow.</p>
+                
+                <h4>Request Body</h4>
+                <div class="code-block">
+{
+  "userId": "12345",
+  "projectId": "myproject",
+  "filePath": "src/services/auth.service.js",
+  "content": "// Updated file content...",
+  "reason": "Implementing JWT authentication"
+}
+                </div>
+            </div>
+            
+            <h2>Model-Specific Endpoints</h2>
+            
+            <div class="api-section">
+                <h3>Direct Interpreter Function Access</h3>
+                
+                <div class="endpoint-header">
+                    <span class="http-method post">POST</span>
+                    <span class="endpoint-url">/v1/models/interpreter</span>
+                </div>
+                
+                <p>Submit requests directly to the Interpreter function for communication, context management, and multimodal processing.</p>
+                
+                <div class="code-block">
+curl -X POST "https://api.coder.bapx.in/v1/models/interpreter" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Analyze this UI mockup and suggest React implementation",
+    "projectId": "myproject",
+    "imageUrl": "data:image/png;base64,..."  // Optional image for multimodal processing
+  }'
+                </div>
+                
+                <h3>Direct Developer Function Access</h3>
+                
+                <div class="endpoint-header">
+                    <span class="http-method post">POST</span>
+                    <span class="endpoint-url">/v1/models/developer</span>
+                </div>
+                
+                <p>Submit coding tasks directly to the Developer function (requires proper authorization from Interpreter system).</p>
+                
+                <div class="code-block">
+curl -X POST "https://api.coder.bapx.in/v1/models/developer" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "task": "Generate Express.js authentication middleware with JWT",
+    "projectId": "myproject",
+    "contextFiles": ["/src/models/user.js", "/src/config/jwt.config.js"]
+  }'
+                </div>
+            </div>
+            
+            <h2>Subscription and Licensing API</h2>
+            
+            <div class="api-section">
+                <h3>Check Subscription Status</h3>
+                
+                <div class="endpoint-header">
+                    <span class="http-method get">GET</span>
+                    <span class="endpoint-url">/v1/license/status</span>
+                </div>
+                
+                <p>Retrieve current licensing status and remaining trial/subscription time.</p>
+                
+                <div class="code-block">
+curl -X GET "https://api.coder.bapx.in/v1/license/status" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+                </div>
+                
+                <div class="response-example">
+{
+  "status": "success",
+  "license": {
+    "type": "trial",  // or 'monthly', 'annual', 'lifetime'
+    "daysLeft": 15,
+    "expiresAt": "2025-02-15T10:00:00Z",
+    "featuresEnabled": ["full_ai_access", "project_memory", "multimodal_processing"],
+    "quota": {
+      "requestsUsed": 543,
+      "requestsRemaining": 456,
+      "requestsLimit": 1000
+    }
+  }
+}
+                </div>
+            </div>
+            
+            <h2>Error Handling</h2>
+            
+            <p>All API endpoints return consistent error formats:</p>
+            
+            <div class="response-example">
+{
+  "status": "error",
+  "error": {
+    "code": "SUBSCRIPTION_EXPIRED",
+    "message": "Your subscription has expired. Please renew to continue using API.",
+    "details": "Access to API features requires valid subscription",
+    "retryAfter": "2025-01-16T10:00:00Z"
+  }
+}
+            </div>
+            
+            <h3>Common Error Codes</h3>
+            <ul>
+                <li><code>AUTH_INVALID</code>: Invalid or expired authentication token</li>
+                <li><code>LICENSE_EXPIRED</code>: Subscription has expired</li>
+                <li><code>QUOTA_EXCEEDED</code>: Rate limit or request quota exceeded</li>
+                <li><code>PROJECT_NOT_FOUND</code>: Specified project doesn't exist for user</li>
+                <li><code>FILE_ACCESS_DENIED</code>: File operations outside project boundary</li>
+                <li><code>MODEL_UNAVAILABLE</code>: Requested model currently unavailable</li>
+                <li><code>MEMORY_CORRUPTED</code>: Project memory file corrupted, needs reset</li>
+            </ul>
+            
+            <div class="nav-links">
+                <a href="index.html">← Documentation Home</a>
+                <a href="auth.html">← Previous: Authentication</a>
+                <a href="best_practices.html">Next: Best Practices →</a>
+            </div>
+            
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Can I access both Interpreter and Developer functions via API?</div>
+                <p>A: Yes, both functions are accessible via dedicated endpoints, but Developer functions require proper authorization from the Interpreter system.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: How does the API handle project memory continuity?</div>
+                <p>A: The API integrates with the same .bapXcoder project memory system, maintaining session state and todo tracking across calls.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Are API requests subject to the same licensing as GUI usage?</div>
+                <p>A: Yes, all access methods (GUI, CLI, API) consume from the same license quota and subscription tier.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Can I automate coding tasks using the API?</div>
+                <p>A: Yes, the API allows programmatic access to both Interpreter and Developer functions for automation.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="problem-header">Q: Does API access maintain session continuity?</div>
+                <p>A: Yes, all API calls are tied to specific projects and user IDs, updating the same sessiontree.json and todo.json files used by other interfaces.</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025 bapXcoder API Documentation. All rights reserved.</p>
+            <p>Part of the bapX Media Hub ecosystem.</p>
+        </footer>
+    </div>
+</body>
+</html>

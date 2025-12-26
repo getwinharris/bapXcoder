@@ -3,8 +3,8 @@
 ## Project Overview
 bapXcoder is now properly documented as a dual-model AI-powered IDE with:
 
-1. **Qwen3-VL Model**: Handles communication, UI understanding, multimodal processing, OCR, and user interactions
-2. **Qwen3-Coder Model**: Specializes in coding tasks, code generation, analysis, and implementation
+1. **bapXcoder-VL Model**: Handles communication, UI understanding, multimodal processing, OCR, and user interactions
+2. **bapXcoder-Coder Model**: Specializes in coding tasks, code generation, analysis, and implementation
 3. **Direct Model Access via llama.cpp**: Both models connect via llama.cpp runtime without local downloads
 4. **Runtime-Based Operation**: Uses llama.cpp runtime for both models
 
@@ -37,14 +37,14 @@ bapXcoder is now properly documented as a dual-model AI-powered IDE with:
 6. **Deterministic behavior**: Interpreter model handles all user interaction while Developer model specializes in coding
 
 ## Dual-Model Workflow
-- User interacts with Qwen3-VL (Interpreter) model through the interface
+- User interacts with bapXcoder-VL (Interpreter) model through the interface
 - Interpreter manages project state and context
-- Qwen3-Coder (Developer) model executes specialized coding tasks based on instructions from Interpreter
+- bapXcoder-Coder (Developer) model executes specialized coding tasks based on instructions from Interpreter
 - All model access happens via direct llama.cpp runtime connection
 
 ## Licensing Model
 - 60-day trial period
-- Monthly license ($1/month) after trial
+- 30-day subscription ($1 every 30 days) after trial
 - Lifetime license ($100 one-time) for perpetual access
 - Session intelligence persists locally via llama.cpp runtime access
 

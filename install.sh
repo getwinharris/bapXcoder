@@ -134,26 +134,10 @@ install_dependencies() {
     print_success "Dependencies installed successfully"
 }
 
-# Download model if not present
+# Skip model download since we're using Hugging Face connection
 download_model() {
-    print_status "Checking for AI model file..."
-
-    MODEL_FILE="Qwen3VL-8B-Instruct-Q8_0.gguf"
-
-    if [[ -f "$MODEL_FILE" ]]; then
-        print_status "Model file already exists, skipping download"
-    else
-        print_status "Downloading Qwen3VL model (~8.76GB)..."
-        
-        # Create progress bar for download
-        if [[ "$DOWNLOADER" == "curl" ]]; then
-            curl -L --output "$MODEL_FILE" --progress-bar "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct-GGUF/resolve/main/Qwen3VL-8B-Instruct-Q8_0.gguf?download=true"
-        else
-            wget --show-progress --progress=bar:force:noscroll -O "$MODEL_FILE" "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct-GGUF/resolve/main/Qwen3VL-8B-Instruct-Q8_0.gguf?download=true"
-        fi
-        
-        print_success "Model downloaded successfully"
-    fi
+    print_status "Skipping local model download - using Hugging Face connection"
+    print_status "Model will be accessed directly via llama.cpp from Hugging Face Hub"
 }
 
 # Move the entire application to system applications directory
@@ -302,7 +286,7 @@ setup_system_app() {
 main() {
     print_header
     print_status "Starting bapXcoder installation with system path integration..."
-    print_status "This will install bapXcoder to system applications with Qwen3VL AI model locally"
+    print_status "This will install bapXcoder to system applications with bapXcoder AI model"
     print_status "The hidden .IDEbapXcoder directory will be embedded inside the system app"
     
     detect_system_paths

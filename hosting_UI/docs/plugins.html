@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bapXcoder Plugin System - Extending AI IDE Capabilities</title>
+    <meta name="description" content="Plugin system for bapXcoder with AI integration and persistent project memory extensions." />
+    <meta name="keywords" content="bapXcoder plugins, IDE extensions, AI plugin system, development tools, custom integrations" />
+    <link rel="canonical" href="https://coder.bapx.in/docs/plugins.html" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0f13 0%, #1a1a25 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(124, 92, 255, 0.2);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #7c5cff;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #7c5cff;
+        }
+        
+        .subtitle {
+            color: #a0a0c0;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        
+        h2 {
+            color: #7c5cff;
+            margin: 30px 0 15px 0;
+            font-size: 1.5rem;
+        }
+        
+        h3 {
+            color: #50fa7b;
+            margin: 20px 0 10px 0;
+            font-size: 1.3rem;
+        }
+        
+        .plugin-feature {
+            background: linear-gradient(180deg, #161622 0%, #14141c 100%);
+            border: 1px solid #2d2d40;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .plugin-api {
+            background: rgba(124, 92, 255, 0.1);
+            border: 1px solid #7c5cff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .plugin-example {
+            background: #161622;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .plugin-structure {
+            background: #0f0f13;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(124, 92, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .nav-links a {
+            color: #7c5cff;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: rgba(124, 92, 255, 0.2);
+        }
+        
+        .nav-links a:hover {
+            background: rgba(124, 92, 255, 0.3);
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid rgba(124, 92, 255, 0.2);
+            color: #a0a0c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">⬡ bapXcoder</div>
+            <h1>Plugin System</h1>
+            <p class="subtitle">Extend bapXcoder's AI capabilities with custom plugins integrated into persistent project memory</p>
+        </header>
+        
+        <main class="content">
+            <h2>Plugin Architecture Overview</h2>
+            <p>bapXcoder's plugin system allows extending the dual-model AI environment with custom functionality that integrates seamlessly with the persistent project memory system. Plugins can enhance both the Interpreter and Developer functions while maintaining session continuity.</p>
+            
+            <div class="plugin-highlight">
+                <p><strong>Key Principle:</strong> Plugins extend functionality while preserving the core dual-model architecture and project memory persistence.</p>
+            </div>
+            
+            <h2>Plugin Directory Structure</h2>
+            <p>Plugins are stored in the project's local directory and work with the existing memory system:</p>
+            
+            <div class="structure-diagram">
+            project-root/
+            ├── .bapXcoder/
+            │   ├── plugins/                # User-installed plugins
+            │   │   ├── {plugin_name}/      # Individual plugin directory
+            │   │   │   ├── plugin.json     # Plugin metadata and config
+            │   │   │   ├── main.py         # Main plugin implementation
+            │   │   │   ├── hooks.py        # Event hooks and triggers
+            │   │   │   └── models/         # Plugin-specific models
+            │   │   └── active_plugins.json  # Active plugin configuration
+            │   ├── users/
+            │   │   └── {user_id}/         # User-specific plugin data
+            │   │       ├── plugin_memory.json  # Plugin session memory
+            │   │       └── plugin_settings.json # User preferences
+            │   └── sessiontree.json        # Main session memory
+            ├── plugins/                    # Development plugins
+            └── Your project files...
+            </div>
+            
+            <h2>Creating a Plugin</h2>
+            <p>Plugins are Python-based and integrate with the dual-model system:</p>
+            
+            <div class="plugin-example">
+            # Example plugin: git_helper.py
+            import os
+            import json
+            from datetime import datetime
+            
+            class GitHelperPlugin:
+                def __init__(self, project_path, user_id):
+                    self.project_path = project_path
+                    self.user_id = user_id
+                    self.plugin_dir = os.path.join(
+                        project_path, '.bapXcoder', 'plugins', 'git_helper'
+                    )
+                    os.makedirs(self.plugin_dir, exist_ok=True)
+                
+                def git_commit_helper(self, message):
+                    """Enhanced git commit with AI analysis"""
+                    # Access project memory for context
+                    session_file = os.path.join(
+                        self.project_path, '.bapXcoder', 'users', self.user_id, 'sessiontree.json'
+                    )
+                    
+                    if os.path.exists(session_file):
+                        with open(session_file, 'r') as f:
+                            session_data = json.load(f)
+                        
+                        # Use AI to analyze changes and suggest better commit messages
+                        context = f"Project context: {session_data.get('last_task', 'unknown project')}"
+                        
+                        # This would call the Interpreter model for analysis
+                        analysis = f"AI analysis suggests: {message} - good fit for recent project activity"
+                        return {"message": message, "analysis": analysis, "context": context}
+                    else:
+                        return {"message": message, "analysis": "No project context available", "context": "new project"}
+                
+                def get_plugin_info(self):
+                    return {
+                        "name": "Git Helper",
+                        "version": "1.0.0",
+                        "author": "bapXcoder Team",
+                        "description": "AI-enhanced Git operations with context awareness",
+                        "hooks": ["git_commit", "git_push", "commit_message_analysis"],
+                        "integration_points": ["interpreter", "session_manager"]
+                    }
+            </div>
+            
+            <h3>Plugin Metadata (plugin.json)</h3>
+            <div class="plugin-example">
+            {
+                "name": "Git Helper",
+                "version": "1.0.0",
+                "author": "bapXcoder Team",
+                "description": "AI-enhanced Git operations with project context awareness",
+                "main": "git_helper.py",
+                "hooks": [
+                    {
+                        "name": "git_commit",
+                        "description": "Enhance git commit messages with AI analysis",
+                        "model_required": "interpreter",
+                        "project_memory_access": true
+                    },
+                    {
+                        "name": "commit_analyzer",
+                        "description": "Analyze commit patterns and suggest improvements",
+                        "model_required": "developer",
+                        "project_memory_access": true
+                    }
+                ],
+                "permissions": [
+                    "filesystem",
+                    "git_operations",
+                    "project_memory_read",
+                    "sessiontree_update"
+                ],
+                "compatibility": {
+                    "bapxcoder_version": ">=1.0.0",
+                    "models_supported": ["Qwen3-VL", "Qwen3-Coder"]
+                },
+                "activation_on_install": true,
+                "memory_integration": {
+                    "sessiontree_fields": ["git_activity", "latest_commit_analysis"],
+                    "todo_integration": ["outstanding_git_tasks"]
+                }
+            }
+            </div>
+            
+            <h2>Plugin Integration Points</h2>
+            <p>Plugins can integrate with various parts of the bapXcoder system:</p>
+            
+            <div class="integration-points">
+                <h3>1. Interpreter Function Integration</h3>
+                <p>Plugins that enhance communication, UI, and multimodal processing:</p>
+                <ul>
+                    <li>Custom command processors</li>
+                    <li>Multimodal input handlers</li>
+                    <li>Specialized context providers</li>
+                    <li>Communication enhancement tools</li>
+                    <li>Vision/OCR processing extensions</li>
+                </ul>
+                
+                <h3>2. Developer Function Integration</h3>
+                <p>Plugins that enhance coding and implementation:</p>
+                <ul>
+                    <li>Code generator extensions</li>
+                    <li>Framework-specific helpers</li>
+                    <li>Language-specific analyzers</li>
+                    <li>Build system integrations</li>
+                    <li>Testing framework helpers</li>
+                </ul>
+                
+                <h3>3. Project Memory Integration</h3>
+                <p>Plugins that work with persistent project memory:</p>
+                <ul>
+                    <li>Session state extensions</li>
+                    <li>Custom data persistence</li>
+                    <li>Memory analysis tools</li>
+                    <li>Continuity enhancement plugins</li>
+                    <li>Project-specific utilities</li>
+                </ul>
+            </div>
+            
+            <h2>Plugin Installation and Management</h2>
+            <p>Plugins are managed through both CLI and GUI interfaces:</p>
+            
+            <h3>CLI Plugin Commands</h3>
+            <div class="plugin-example">
+            # Install plugin from repository
+            ai plugin install git-helper
+            
+            # List installed plugins
+            ai plugin list
+            
+            # Enable/disable specific plugin
+            ai plugin enable git-helper
+            ai plugin disable git-helper
+            
+            # Update plugin
+            ai plugin update git-helper
+            
+            # Remove plugin
+            ai plugin remove git-helper
+            
+            # Check plugin compatibility
+            ai plugin check git-helper
+            </div>
+            
+            <h3>Plugin Hooks System</h3>
+            <p>Plugins can register hooks into various system events:</p>
+            
+            <div class="plugin-api">
+                <h4>Event Hooks Available</h4>
+                <ul>
+                    <li><strong>on_project_load</strong>: Called when project starts loading</li>
+                    <li><strong>on_session_resume</strong>: Called when session continuity is restored</li>
+                    <li><strong>on_ai_request</strong>: Intercept AI requests for preprocessing</li>
+                    <li><strong>on_file_operation</strong>: Hook into file operations</li>
+                    <li><strong>on_context_change</strong>: Respond to context changes</li>
+                    <li><strong>on_task_completion</strong>: Called when tasks finish</li>
+                    <li><strong>on_memory_update</strong>: Hook into memory updates</li>
+                    <li><strong>on_user_action</strong>: Capture user interactions</li>
+                </ul>
+            </div>
+            
+            <h3>Example Plugin with Hooks</h3>
+            <div class="plugin-example">
+            # hooks.py
+            from datetime import datetime
+            import os
+            import json
+            
+            def on_session_resume(plugin_context, session_data):
+                """Called when session continuity is restored"""
+                # Enhance session continuity message with plugin context
+                plugin_session_file = os.path.join(
+                    plugin_context['project_path'], 
+                    '.bapXcoder', 'plugins', 
+                    'git_helper', 'session_state.json'
+                )
+                
+                if os.path.exists(plugin_session_file):
+                    with open(plugin_session_file, 'r') as f:
+                        plugin_session = json.load(f)
+                    
+                    recent_activity = plugin_session.get('recent_git_activity', 'no Git activity')
+                    session_data['plugin_enhancement'] = f"Git: {recent_activity}"
+                
+                return session_data
+            
+            def on_ai_request(plugin_context, request_data):
+                """Process AI requests with Git context"""
+                # Add Git context to AI requests
+                current_branch = plugin_context.get('git_branch', 'main')
+                git_context = f"Current Git branch: {current_branch}. Consider version control implications."
+                
+                request_data['enhanced_prompt'] = f"{git_context}\n\n{request_data.get('prompt', '')}"
+                return request_data
+            
+            def on_task_completion(plugin_context, task_result):
+                """Process task completion with Git implications"""
+                # Check if task affects Git-tracked files
+                affected_files = task_result.get('affected_files', [])
+                
+                if affected_files:
+                    # Suggest Git operations based on task completion
+                    suggestion = f"Task completed affecting: {', '.join(affected_files[:3])}. Consider committing changes."
+                    task_result['git_recommendation'] = suggestion
+                
+                return task_result
+            </div>
+            
+            <h2>Security and Permissions</h2>
+            <p>Plugin security model ensures safe operation:</p>
+            
+            <div class="plugin-security">
+                <h3>Permission System</h3>
+                <ul>
+                    <li><strong>Filesystem Access</strong>: Restricted to project directory only</li>
+                    <li><strong>Model Access</strong>: Limited to available models</li>
+                    <li><strong>Memory Access</strong>: User-specific memory access only</li>
+                    <li><strong>Network Access</strong>: Controlled via proxy</li>
+                    <li><strong>System Commands</strong>: Sanitized execution</li>
+                </ul>
+            </div>
+            
+            <h3>Plugin Validation</h3>
+            <p>All plugins are validated before execution:</p>
+            <ul>
+                <li>Code signature verification</li>
+                <li>Sandbox execution for safety</li>
+                <li>Memory access validation</li>
+                <li>Model usage accounting</li>
+                <li>License compliance checking</li>
+            </ul>
+            
+            <h2>Official Plugin Examples</h2>
+            <p>bapXcoder comes with several official plugins:</p>
+            
+            <div class="plugin-gallery">
+                <div class="plugin-card">
+                    <h3>Git Assistant</h3>
+                    <p>AI-powered Git operations with project context awareness</p>
+                    <ul>
+                        <li>Smart commit message generation</li>
+                        <li>Branch management with AI insights</li>
+                        <li>Merge conflict resolution</li>
+                        <li>Change impact analysis</li>
+                    </ul>
+                </div>
+                
+                <div class="plugin-card">
+                    <h3>Code Reviewer</h3>
+                    <p>Automatic code quality and security analysis</p>
+                    <ul>
+                        <li>Pattern detection</li>
+                        <li>Best practice validation</li>
+                        <li>Security vulnerability scanning</li>
+                        <li>Performance optimization suggestions</li>
+                    </ul>
+                </div>
+                
+                <div class="plugin-card">
+                    <h3>Project Insight</h3>
+                    <p>Project structure and dependency analysis</p>
+                    <ul>
+                        <li>Architecture visualization</li>
+                        <li>Dependency mapping</li>
+                        <li>Code ownership analysis</li>
+                        <li>Task complexity estimation</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2>Memory Integration with Plugins</h2>
+            <p>Plugins integrate with the persistent memory system:</p>
+            
+            <ul>
+                <li>Plugin-specific data stored in user directories</li>
+                <li>Session continuity includes plugin state</li>
+                <li>Todo system can include plugin-generated tasks</li>
+                <li>Context enhancements from plugins preserved</li>
+                <li>Plugin preferences maintained across sessions</li>
+            </ul>
+            
+            <h3>Plugin Memory Schema</h3>
+            <p>Each plugin can define its memory schema:</p>
+            
+            <div class="plugin-example">
+            # Plugin memory schema example
+            {
+                "plugin_name": "example_plugin",
+                "version": "1.0",
+                "created": "2025-01-15T10:00:00Z",
+                "modified": "2025-01-15T10:00:00Z",
+                "data": {
+                    "user_preferences": {...},
+                    "plugin_state": {...},
+                    "session_context": {...},
+                    "cached_analysis": [...]
+                },
+                "integrations": {
+                    "sessiontree_extension": {
+                        "fields": ["plugin_specific_context"],
+                        "updates": ["on_event_x", "on_action_y"]
+                    }
+                }
+            }
+            </div>
+            
+            <div class="nav-links">
+                <a href="index.html">← All Docs</a>
+                <a href="api.html">← Previous: API Integration</a>
+                <a href="troubleshooting.html">Next: Troubleshooting →</a>
+            </div>
+            
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: Can plugins access the project memory system?</div>
+                <p>A: Yes, plugins have controlled access to project memory including sessiontree.json and todo.json files for enhanced functionality.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: Do plugins maintain state during session continuity?</div>
+                <p>A: Yes, plugins can store state that persists across IDE restarts through the plugin memory system.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: Can plugins access both Interpreter and Developer functions?</div>
+                <p>A: Yes, plugins can register hooks with both model functions while respecting the dual-architecture safety model.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: Are plugins subject to the same licensing as the main IDE?</div>
+                <p>A: Yes, plugin usage is included in your main subscription with the same access rules and limitations.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Q: How do plugins handle different model types (Qwen3-VL vs Qwen3-Coder)?</div>
+                <p>A: Plugins can specify which model function they require and the system routes accordingly while maintaining safety.</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025 bapXcoder Documentation. All rights reserved.</p>
+            <p>Part of the bapX Media Hub ecosystem.</p>
+        </footer>
+    </div>
+</body>
+</html>

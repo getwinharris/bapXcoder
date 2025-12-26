@@ -1,158 +1,127 @@
-# bapXcoder Internal Architecture Documentation
+# bapXcoder Development Documentation
 
-## Overview of Single Agent Architecture
+## Internal Architecture Overview
 
-The bapXcoder IDE implements a unique single-agent architecture with internal role separation. Rather than using multiple distinct AI models, it employs one powerful IDE Agent that internally coordinates between two specialized functions:
+The bapXcoder IDE implements a sophisticated single-agent architecture with internal role separation. This design prioritizes deterministic behavior, user control, and persistent project context over magical functionality.
 
-1. **Interpreter Function**: Handles communication, context management, and multimodal processing
-2. **Developer Function**: Executes coding tasks and code manipulation
+### Core Architecture Principles
 
-### Architecture Rationale
+1. **Single IDE Agent**: Instead of multiple models, one unified agent with internal coordination
+2. **Internal Role Separation**: Two specialized functions within single agent:
+   - Interpreter Function: Handles user communication and context management
+   - Developer Function: Executes specialized coding tasks
+3. **Shared Session Memory**: Both functions access same project context through `.bapXcoder` system
+4. **Deterministic Execution**: Predictable responses with clear role boundaries
 
-This architecture was chosen to address critical limitations in other AI IDEs:
+### Project-Based Session Memory System
 
-- **Context Consistency**: Single agent prevents context drift between different models
-- **Safety**: Developer function only executes authorized instructions from Interpreter
-- **Predictability**: Deterministic behavior with clear role separation
-- **Memory Coherence**: Shared session memory prevents conflicting state
+**Files Structure:**
+- `.bapXcoder/users/{user_id}/sessiontree.json` - Session state and memory (session continuity)
+- `.bapXcoder/users/{user_id}/todo.json` - User intent and task tracking
+- `.bapXcoder/users/{user_id}/validation_log.json` - AI-driven testing results
 
-## Core Components
+**How Continuity Works:**
+1. On startup, CLI checks `.bapXcoder/users/{user_id}/sessiontree.json`
+2. Reads: "last task", "last action", "pending tasks" from sessiontree.json and todo.json
+3. Constructs message: "System resumed. You were working on X. Last action was Y. Pending tasks: Z."
 
-### The IDE Agent
+### Internal Functions Documentation
 
-The core of bapXcoder is the single IDE Agent that operates as follows:
+#### BapXcoderIDEAgent class functions:
 
-```
-User Input → IDE Agent → (Internal Routing) → Interpreter Function → (If needed) → Developer Function → Output to User
-```
+**`def __init__(self, model_path=None, temperature=0.7, threads=4, context_size=4096, gpu_layers=0):`**
+- Initialize the bapXcoder IDE Agent with Interpreter and Developer models
+- Sets up internal agent with two specialized models working through shared memory
+- Connects to Qwen3-VL for interpreter function and Qwen3-8B for developer function
 
-### Internal Function Roles
+**`def run_prompt(self, prompt, max_tokens=512, check_session_on_startup=False):`**
+- Process user prompt through the bapXcoder IDE Agent's Interpreter function
+- If check_session_on_startup=True, prepends session continuity info to prompt
+- Handles all user communication, context management, and multimodal processing
 
-#### Interpreter Function
-- **Purpose**: Handles all user interaction and context management
-- **Responsibilities**:
-  - Processing user prompts and requests
-  - Managing project context and session state
-  - Handling multimodal inputs (voice, images, OCR)
-  - Maintaining shared `.bapXcoder` session memory
-  - Validating and approving changes from Developer function
-  - Communicating with external runtime (llama.cpp) for model access
-- **Authority**: Sole interface between user and internal architecture
+**`def check_session_continuity(self):`**
+- Checks session state and memory from .bapXcoder/users/{user_id}/sessiontree.json
+- Reads user intent from .bapXcoder/users/{user_id}/todo.json
+- Returns continuity message for context restoration
 
-#### Developer Function  
-- **Purpose**: Executes coding-specific tasks and file operations
-- **Responsibilities**:
-  - Code generation and modification
-  - File operations and code refactoring
-  - Syntax analysis and code validation
-  - Following structured instructions from Interpreter
-- **Limitations**: Cannot communicate directly with user; only responds to Interpreter
-- **Authority**: Executes only pre-approved instructions from Interpreter
+**`def run_coding_task(self, task_description, max_tokens=512):`**
+- Execute specialized coding task through bapXcoder IDE Agent's Developer function
+- Handles code generation, refactoring, and analysis via specialized coding model
 
-## Memory System
+### Memory and Session Management
 
-### Shared Session Memory
-- **Location**: `.bapXcoder/` directory in each project
-- **Files**:
-  - `sessiontree.json`: Tracks file usage, activity, and session state
-  - `todo.json`: Project-specific task lists with priorities and completion tracking
-  - `validation_log.json`: AI-driven testing results and validation history
+**User-Specific Directories:**
+- `.bapXcoder/users/{user_id}/` - Contains user-specific session data
+- Separate session memory per user per project (multi-user isolation)
 
-### Memory Characteristics
-- **Persistent**: Survives IDE restarts and maintains project context
-- **Authoritative**: Single source of truth for project state
-- **Shared**: Both interpreter and developer functions access the same memory
-- **Project-Scoped**: Each project has its own memory space
+**Functions:**
+- `store_sessiontree_data()` - Updates session state and memory in sessiontree.json
+- `store_todo_locally()` - Updates user intent in todo.json
+- `check_user_session_continuity()` - Checks both sessiontree.json and todo.json for continuity
 
-## Execution Flow
+### Authentication and User System
 
-### Standard Request Flow
-1. User submits request to IDE Agent
-2. Request routed to Interpreter function
-3. Interpreter analyzes context and determines if Developer action needed
-4. If yes, Interpreter generates structured instructions for Developer
-5. Developer executes instructions and returns results to Interpreter
-6. Interpreter validates results and prepares final response
-7. Response delivered to user
-8. Session memory updated by Interpreter
+**User Verification:**
+- JWT token validation for user authentication
+- User-ID verification through authentication headers
+- Subscription status checked per user account
 
-### File Modification Flow
-1. User requests file change
-2. Interpreter analyzes current state and requirements
-3. Interpreter sends structured change request to Developer
-4. Developer modifies file and returns diff to Interpreter
-5. Interpreter shows diff to user for approval
-6. Upon approval, Interpreter commits change to file system
-7. Session memory updated with change record
+**Session Continuity:**
+- Triggered on user connect via socket handlers
+- Emits 'session_continuity' events to client
+- Restores project context based on user-specific files
 
-## Technical Implementation
+### File Operations and Project Management
 
-### Runtime Connection
-- **Model Access**: Direct connection to external models via llama.cpp runtime
-- **No Local Storage**: Models accessed via runtime without local downloads
-- **Quota Management**: Uses allocated runtime quotas for both interpreter and developer functions
+**Project Explorer:**
+- Handles file system navigation
+- Manages project directory structure
+- Maintains file statistics and recent file tracking
 
-### Safety Measures
-- **Approval Workflow**: All changes require user approval before application
-- **Diff Visualization**: Changes shown as diffs before user approval
-- **Role Isolation**: Developer cannot bypass Interpreter to access user directly
-- **Boundary Enforcement**: All file operations constrained to current project
+**File Management:**
+- All operations happen through CLI backend
+- Web UI provides convenience layer over CLI operations
+- Project-based file operations in user context
 
-## Benefits of This Architecture
+### Model Integration
 
-### Predictable Behavior
-- Single agent ensures consistent responses
-- Clear role separation prevents unauthorized actions
-- Deterministic execution flow with safety checks
+**Dual-Model Architecture:**
+- Interpreter Model: Qwen3-VL for communication, UI, multimodal processing
+- Developer Model: Qwen3-Coder for coding tasks and analysis
+- Both models connected via llama.cpp runtime without local download
 
-### Safety
-- All code changes go through approval process
-- Developer function cannot initiate actions without Interpreter approval
-- Context maintained consistently across sessions
+**Runtime Connection:**
+- Direct connection to Hugging Face via llama.cpp
+- No local model storage required
+- Quota-based access through runtime connections
 
-### Context Preservation
-- Shared memory prevents context drift
-- Both functions operate with same project understanding
-- Session state persists across IDE restarts
+### Technical Implementation
 
-## Comparison to Traditional Approaches
+**Key Dependencies:**
+- llama-cpp-python: For model inference
+- flask/flask-socketio: For web interface and real-time communication
+- jwt: For authentication
+- huggingface_hub: For model access
 
-### vs Multiple Independent Models
-- Traditional: Multiple models may have conflicting contexts
-- bapXcoder: Single agent ensures coherent context
+**Safety Measures:**
+- All code changes require user approval
+- Diff visualization before application
+- Role isolation between interpreter and developer functions
+- Boundary enforcement within project scope
 
-### vs Single General Model  
-- Traditional: One model handles all tasks without specialization
-- bapXcoder: Specialized functions within single authoritative agent
+### Event System
 
-### vs Cloud-Based Architectures
-- Traditional: Data may be transmitted to external servers
-- bapXcoder: Project data remains local; only model access goes externally
+**Socket.IO Handlers:**
+- `connect`: Checks user authentication and session continuity
+- `chat_message`: Processes messages through dual-model system
+- `add_todo`: Updates user intent in todo.json
+- Various file and project management events
 
-## Development Philosophy
+### Error Handling and Fallbacks
 
-This architecture reflects our design principles:
+- Graceful degradation when models unavailable
+- Fallback to same model for both functions if specialized model fails
+- Local session data preserved when connection lost
+- User-specific data isolation maintained during errors
 
-1. **Deterministic over Magical**: Predictable behavior through role separation
-2. **Safety over Convenience**: Approval workflows ensure user control
-3. **Consistency over Flexibility**: Shared memory prevents context conflicts
-4. **Local over Cloud**: Project data remains on user's machine
-
-## Integration Points
-
-### CLI Integration
-- All file operations happen through local CLI operations
-- Interpreter manages CLI commands based on user intent
-- Developer executes CLI operations as directed by Interpreter
-
-### Web UI Overlay
-- Clean interface translates UI actions to underlying CLI operations
-- Interpreter manages UI state and responses
-- All functionality executed via CLI with web UI providing convenience layer
-
-### Project Memory System
-- `.bapXcoder` directories maintain project-specific state
-- Both functions update shared memory for consistency
-- Authoritative session tree prevents conflicts
-
-This architecture creates a powerful yet safe AI development environment that prioritizes deterministic behavior, user control, and project context coherence.
+This comprehensive architecture ensures deterministic behavior, persistent project memory, and seamless session continuity for maximum time-saving and productivity.
